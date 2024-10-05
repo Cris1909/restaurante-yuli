@@ -1,0 +1,35 @@
+{
+  "name": "next-nextui-i18n-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@nextui-org/react": "^2.2.10",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.0.28",
+    "i18next": "^23.11.1",
+    "i18next-resources-to-backend": "^1.2.1",
+    "next": "14.2.0",
+    "next-themes": "^0.3.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "zustand": "^5.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@egoist/tailwindcss-icons": "^1.7.4",
+    "@iconify/json": "^2.2.200",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

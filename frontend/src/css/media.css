@@ -1,0 +1,29 @@
+/* Media queries for responsive design */
+
+/*? sm */
+@media (min-width: 640px) {
+}
+
+/*? md */
+@media (min-width: 768px) {
+  .main-container {
+    padding: 24px;
+  }
+}
+
+/*? lg */
+@media (min-width: 1024px) {
+  .main-container {
+    padding: 32px;
+  }
+}
+
+/*? xl */
+@media (min-width: 1280px) {
+  
+}
+
+/*? 2xl */
+@media (min-width: 1536px) {
+  
+}
