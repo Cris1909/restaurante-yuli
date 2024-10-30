@@ -1,0 +1,66 @@
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración de IDEs
+*.iml
+.idea/
+.vscode/
+*.swp
+
+# Archivos de compilación de Maven
+target/
+
+# Dependencias de Maven
+.mvn/
+.mvnw
+.mvnw.cmd
+
+# Archivos de logs y variables de entorno
+logs/
+*.log
+.env
+
+# Archivos temporales del sistema
+tmp/
+*.tmp
+
+# Archivos de configuración sensibles
+src/main/resources/application-*.yml
+src/main/resources/application-*.properties
+secrets/
+
+# Archivos específicos de Spring Boot
+**/db/
+**/test-output/
+**/.factorypath
+
