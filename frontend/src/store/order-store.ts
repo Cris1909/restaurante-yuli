@@ -23,7 +23,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     // 1. Revisar si el producto existe en el carrito
     const productInOrder = products.some(
-      (product) => product._id === productOrdered._id
+      (product) => product.cod_prod === productOrdered.cod_prod
     );
 
     if (!productInOrder) {
@@ -33,7 +33,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     // 2. Si el producto existe en el carrito, actualizar la cantidad
     const updatedOrderProducts = products.map((product) => {
-      if (product._id === productOrdered._id) {
+      if (product.cod_prod === productOrdered.cod_prod) {
         return {
           ...product,
           quantity: product.quantity + productOrdered.quantity,
@@ -49,7 +49,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
   incraseProductQuantity: (productId: string) => {
     const { products } = get();
     const updatedOrderProducts = products.map((product) => {
-      if (product._id === productId) {
+      if (product.cod_prod === productId) {
         return {
           ...product,
           quantity: product.quantity + 1,
@@ -73,7 +73,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
     }
 
     const updatedOrderProducts = products.map((product) => {
-      if (product._id === productId) {
+      if (product.cod_prod === productId) {
         return {
           ...product,
           quantity: product.quantity - 1,
@@ -88,7 +88,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
   removeProduct: (productId: string) => {
     const { products } = get();
     const updatedOrderProducts = products.filter(
-      (product) => product._id !== productId
+      (product) => product.cod_prod !== productId
     );
 
     set({ products: updatedOrderProducts });
@@ -96,7 +96,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
   getProductInOrder: (productId: string) => {
     const { products } = get();
-    return products.find((product) => product._id === productId);
+    return products.find((product) => product.cod_prod === productId);
   },
 
   clearOrder: () => {

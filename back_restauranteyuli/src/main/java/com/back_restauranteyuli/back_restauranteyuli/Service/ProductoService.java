@@ -1,6 +1,6 @@
 package com.back_restauranteyuli.back_restauranteyuli.Service;
 
-import com.back_restauranteyuli.back_restauranteyuli.model.producto;
+import com.back_restauranteyuli.back_restauranteyuli.model.Producto;
 import com.back_restauranteyuli.back_restauranteyuli.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ public class ProductoService implements IProductoService {
     private ProductoRepository productoRepository;
 
     @Override
-    public List<producto> getProductos() {
-        List<producto> listaProductos = productoRepository.findAll();
+    public List<Producto> getProductos() {
+        List<Producto> listaProductos = productoRepository.findAll();
         return listaProductos;
     }
 
     @Override
-    public void saveProducto(producto Producto) {
+    public void saveProducto(Producto Producto) {
         productoRepository.save(Producto);
     }
 
@@ -38,7 +38,7 @@ public class ProductoService implements IProductoService {
     */
 
     @Override
-    public void editProducto(producto Producto) {
+    public void editProducto(Producto Producto) {
         this.saveProducto(Producto);
     }
 }

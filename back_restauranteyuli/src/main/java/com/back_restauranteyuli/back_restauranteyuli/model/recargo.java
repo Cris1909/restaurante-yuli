@@ -19,7 +19,7 @@ public class recargo {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fkcod_prod_rec", referencedColumnName = "cod_prod")
-    private producto Producto;
+    private com.back_restauranteyuli.back_restauranteyuli.model.Producto Producto;
 
     @NotNull
     @ManyToOne
@@ -30,7 +30,7 @@ public class recargo {
         super();
     }
 
-    public recargo(Integer cod_rec, Integer recargo_cliente, producto Producto, tipo_clientes Tipo_clientes) {
+    public recargo(Integer cod_rec, Integer recargo_cliente, com.back_restauranteyuli.back_restauranteyuli.model.Producto Producto, tipo_clientes Tipo_clientes) {
         this.cod_rec = cod_rec;
         this.recargo_cliente = recargo_cliente;
         this.Producto = Producto;

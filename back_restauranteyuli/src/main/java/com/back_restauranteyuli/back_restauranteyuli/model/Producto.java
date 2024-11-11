@@ -6,12 +6,12 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tmproductos")
-public class producto {
+public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_prod")
-    private Integer id;
+    private Integer cod_prod;
 
     @NotEmpty
     @Column(name = "nom_prod")
@@ -29,17 +29,16 @@ public class producto {
     @Column(name = "img_prod")
     private String img_prod;
 
-
     @ManyToOne
     @JoinColumn(name = "fkcods_prod", referencedColumnName = "cods")
     public status status;
 
-    public producto() {
+    public Producto() {
         super();
     }
 
-    public producto(String nom_prod, String dprod, Integer precio_base,
-             String img_prod, status status) {
+    public Producto(String nom_prod, String dprod, Integer precio_base,
+                    String img_prod, status status) {
         this.nom_prod = nom_prod;
         this.dprod = dprod;
         this.precio_base = precio_base;
@@ -47,12 +46,12 @@ public class producto {
 
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getCod_prod() {
+        return cod_prod;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCod_prod(Integer cod_prod) {
+        this.cod_prod = cod_prod;
     }
 
     public String getNom_prod() {

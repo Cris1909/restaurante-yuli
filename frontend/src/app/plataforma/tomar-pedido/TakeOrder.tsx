@@ -69,9 +69,9 @@ export const TakeOrder: React.FC<Props> = ({ products }) => {
           <AnimatePresence>
             {products
               .filter(
-                ({ name, description }) =>
-                  name.toLowerCase().includes(inputText.toLowerCase()) ||
-                  description.toLowerCase().includes(inputText.toLowerCase())
+                ({ nom_prod, dprod }) =>
+                  nom_prod.toLowerCase().includes(inputText.toLowerCase()) ||
+                  dprod.toLowerCase().includes(inputText.toLowerCase())
               )
               .map((product, i) => (
                 <ProductOrderCard

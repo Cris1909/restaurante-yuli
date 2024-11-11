@@ -13,10 +13,10 @@ interface Props {
 }
 
 export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
-  const { _id, name, img, description, price } = product;
+  const { cod_prod, nom_prod, img_prod, dprod, precio_base } = product;
 
   const { addProductToOrder, getProductInOrder } = useOrderStore();
-  const productInOrder = getProductInOrder(_id);
+  const productInOrder = getProductInOrder(cod_prod);
 
   const highlightMatches = (text: string, keyword: string) => {
     if (!keyword) return text;
@@ -37,11 +37,11 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
 
   const handleAddProduct = () => {
     addProductToOrder({
-      _id,
-      name,
-      price,
+      cod_prod,
+      nom_prod,
+      precio_base,
       quantity: 1,
-      img,
+      img_prod,
     });
   };
 
@@ -52,18 +52,17 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
       exit={{ opacity: 0 }}
       className="card-menu-meals"
     >
-      <Image width={120} height={120} src={img} alt={name} />
+      <Image width={120} height={120} src={img_prod} alt={nom_prod} />
       <div className="content-card">
-        <h3>{highlightMatches(name, inputText)}</h3>{" "}
         {/* Nombre con texto resaltado */}
-        <p className="line-2">
-          {highlightMatches(description, inputText)}
-        </p>{" "}
+        <h3>{highlightMatches(nom_prod, inputText)}</h3>{" "}
         {/* Descripción con texto resaltado */}
+        {/* <p className="line-2">{highlightMatches(dprod, inputText)}</p>{" "} */}
+        <p className="line-2">{dprod}</p>{" "}
         <div className="price-add-container">
-          <span>${price}</span>
+          <span>${precio_base}</span>
           {productInOrder ? (
-            <ProductQuantity productId={_id} />
+            <ProductQuantity productId={cod_prod} />
           ) : (
             <button
               className="btn btn-primary"

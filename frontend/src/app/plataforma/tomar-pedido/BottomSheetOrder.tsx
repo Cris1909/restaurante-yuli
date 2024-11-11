@@ -64,23 +64,23 @@ export const BottomSheetOrder = () => {
 
             {/* Row */}
             {products.map((product) => (
-              <div className="row" key={product._id}>
+              <div className="row" key={product.cod_prod}>
                 <div className="cell icon">
                   <Image
                     width={32}
                     height={32}
-                    src={product.img}
+                    src={product.img_prod}
                     alt="Brocoli Beef"
                     className="product-image"
                   />
                 </div>
                 <div className="cell full-width">Brocoli Beef</div>
-                <div className="cell">$ {product.price.toLocaleString()}</div>
+                <div className="cell">$ {product.img_prod.toLocaleString()}</div>
                 <div className="cell">
-                  <ProductQuantity productId={product._id} />
+                  <ProductQuantity productId={product.cod_prod} />
                 </div>
                 <div className="cell">
-                  $ {(product.price * product.quantity).toLocaleString()}
+                  $ {(product.precio_base * product.quantity).toLocaleString()}
                 </div>
               </div>
             ))}
