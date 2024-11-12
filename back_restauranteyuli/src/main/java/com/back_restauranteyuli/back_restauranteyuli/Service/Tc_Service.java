@@ -1,6 +1,6 @@
 package com.back_restauranteyuli.back_restauranteyuli.Service;
 
-import com.back_restauranteyuli.back_restauranteyuli.model.tipo_clientes;
+import com.back_restauranteyuli.back_restauranteyuli.model.TipoClientes;
 import com.back_restauranteyuli.back_restauranteyuli.repository.Tc_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class Tc_Service implements ITc_Service {
     private Tc_Repository tcRepository;
 
     @Override
-    public List<tipo_clientes> getTipo_clientes() {
+    public List<TipoClientes> getTipo_clientes() {
         return tcRepository.findAll();
     }
 }

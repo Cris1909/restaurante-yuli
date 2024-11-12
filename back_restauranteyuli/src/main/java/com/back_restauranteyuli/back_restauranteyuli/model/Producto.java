@@ -1,5 +1,8 @@
 package com.back_restauranteyuli.back_restauranteyuli.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -33,8 +36,12 @@ public class Producto {
     @JoinColumn(name = "fkcods_prod", referencedColumnName = "cods")
     public status status;
 
+    @OneToMany(mappedBy = "producto")
+    private List<Recargo> recargos;
+
     public Producto() {
         super();
+        recargos = new ArrayList<>();
     }
 
     public Producto(String nom_prod, String dprod, Integer precio_base,
@@ -43,7 +50,7 @@ public class Producto {
         this.dprod = dprod;
         this.precio_base = precio_base;
         this.img_prod = img_prod;
-
+        recargos = new ArrayList<>();
     }
 
     public Integer getCod_prod() {
@@ -86,4 +93,19 @@ public class Producto {
         this.img_prod = img_prod;
     }
 
+    public List<Recargo> getRecargos() {
+        return recargos;
+    }
+
+    public void setRecargos(List<Recargo> recargos) {
+        this.recargos = recargos;
+    }
+
+    public void addRecargo(Recargo recargo) {
+        recargos.add(recargo);
+    }
+
+    public void removeRecargo(Recargo recargo) {
+        recargos.remove(recargo);
+    }
 }

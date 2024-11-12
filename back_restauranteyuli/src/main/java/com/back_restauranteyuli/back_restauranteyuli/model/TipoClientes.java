@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tmtipo_clientes")
-public class tipo_clientes {
+public class TipoClientes {
 
     @Id
     @NotNull
@@ -20,11 +20,11 @@ public class tipo_clientes {
     @Column(name = "dtipo_cliente")
     private String dtipo_cliente;
 
-    public tipo_clientes(){
+    public TipoClientes(){
         super();
     }
 
-    public tipo_clientes(Integer id, String dtipo_cliente) {
+    public TipoClientes(Integer id, String dtipo_cliente) {
         this.id = id;
         this.dtipo_cliente = dtipo_cliente;
     }

@@ -2,6 +2,8 @@ import { getProducts } from "@/actions";
 import { Product } from "@/interfaces";
 import { TakeOrder } from "./TakeOrder";
 import { Metadata } from "next";
+import { getRecargos } from "@/actions/recargos.actions";
+import { getClientTypes } from "@/actions/client-types.actions";
 
 export const metadata: Metadata = {
   title: "Tomar pedido",
@@ -50,6 +52,16 @@ export const metadata: Metadata = {
 // ];
 
 export default async function TomarPedidoPage() {
-  const products = await getProducts();
+  const [products, recargos, clientTypes] = await Promise.all([
+    getProducts(),
+    getRecargos(),
+    getClientTypes(),
+  ]);
+
+  console.log({
+    products,
+    recargos,
+    clientTypes,
+  })
   return <TakeOrder products={products} />;
 }

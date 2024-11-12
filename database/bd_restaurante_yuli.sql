@@ -86,7 +86,7 @@ insert into tmproductos(nom_prod, dprod, precio_base, img_prod) VALUES
 SELECT * FROM tmproductos;
 
 CREATE TABLE tmrecargos(
-    cod_pre SERIAL not null primary key,
+    cod_rec SERIAL not null primary key,
     recargo_cliente decimal(6,2) not null,
     fkcod_prod_rec integer not null,
     fkcod_tc_rec integer not null,

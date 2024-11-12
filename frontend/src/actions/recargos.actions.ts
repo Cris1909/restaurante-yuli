@@ -1,11 +1,10 @@
 "use server";
 
 import { YuliApi } from "@/api";
-import { Product } from "@/interfaces";
 
-export const getProducts = async () => {
+export const getRecargos = async () => {
   try {
-    const response = await YuliApi.get<Product[]>(`/productos/listar`);
+    const response = await YuliApi.get<[]>(`/recargos/listar`);
     return response.data;
   } catch (error: any) {
     console.log(error)
