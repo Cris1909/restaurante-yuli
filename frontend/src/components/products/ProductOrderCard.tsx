@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
 import { ProductQuantity } from "./ProductQuantity";
+import { formatMoney } from "@/helpers";
 
 interface Props {
   product: Product;
@@ -55,6 +56,8 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
     });
   };
 
+  const productPrice = formatMoney(precio_base + calculateRecargo(recargos))
+
   return (
     <motion.div
       animate={{ opacity: 1 }}
@@ -70,7 +73,7 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
         {/* <p className="line-2">{highlightMatches(dprod, inputText)}</p>{" "} */}
         <p className="line-2">{dprod}</p>{" "}
         <div className="price-add-container">
-          <span>$ {precio_base + calculateRecargo(recargos)}</span>
+          <span>$ {productPrice}</span>
           {productInOrder ? (
             <ProductQuantity productId={cod_prod} />
           ) : (

@@ -10,6 +10,9 @@ import { motion } from "framer-motion";
 import { createFacturaWithDetails } from "@/actions/facturas.actions"; // Asegúrate de importar la función correctamente
 import { toast } from "react-toastify";
 
+import "@/css/bottom-sheet.css";
+import { formatMoney } from "@/helpers";
+
 interface Props {
   clientTypes: ClientType[];
 }
@@ -56,7 +59,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
     <>
       <div className="order-detail">
         <p className="subtitle">
-          Total a pagar: <b> $ {getTotalPrice().toLocaleString()} </b>
+          Total a pagar: <b> $ {formatMoney(getTotalPrice())} </b>
         </p>
         <button
           className="btn btn-primary"
@@ -118,19 +121,19 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                 <div className="cell full-width">{product.nom_prod}</div>
                 <div className="cell">
                   ${" "}
-                  {(
+                  {formatMoney(
                     product.precio_base + calculateRecargo(product.recargos)
-                  ).toLocaleString()}
+                  )}
                 </div>
                 <div className="cell">
                   <ProductQuantity productId={product.cod_prod} />
                 </div>
                 <div className="cell">
                   ${" "}
-                  {(
+                  {formatMoney(
                     (product.precio_base + calculateRecargo(product.recargos)) *
                     product.quantity
-                  ).toLocaleString()}
+                  )}
                 </div>
               </div>
             ))}
@@ -145,7 +148,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
               </div>
               <div className="cell"></div>
               <div className="cell">Total a pagar</div>
-              <div className="cell">$ {getTotalPrice().toLocaleString()}</div>
+              <div className="cell">$ {formatMoney(getTotalPrice())}</div>
             </div>
           </div>
           <div className="mt-2">
@@ -193,7 +196,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
             <span className="text-footer">
               Total a pagar:{" "}
               <span className="price">
-                $ {getTotalPrice().toLocaleString()}
+                $ {formatMoney(getTotalPrice())}
               </span>
             </span>
             <button
