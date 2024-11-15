@@ -1,4 +1,4 @@
 export interface ClientType {
-  id: number;
+  cod_tc: number;
   dtipo_cliente: string;
 }

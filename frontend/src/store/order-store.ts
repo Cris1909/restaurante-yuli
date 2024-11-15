@@ -111,12 +111,9 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     const total = products.reduce((acc, product) => {
       const recargo = product.recargos.find(
-        (recargo) => recargo.fkcod_tc_rec === clientType?.id
-      );
-      return (
-        acc +
-        (product.precio_base + recargo?.recargoCliente! || 0) * product.quantity
-      );
+        (recargo) => recargo.fkcod_tc_rec === clientType?.cod_tc
+      ) || { recargo_cliente: 0 };
+      return acc + (product.precio_base + recargo.recargo_cliente) * product.quantity;
     }, 0);
 
     return total;

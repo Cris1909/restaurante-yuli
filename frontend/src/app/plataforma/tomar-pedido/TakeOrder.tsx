@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductOrderCard } from "@/components";
+import { ProductOrderCard, SelectClientTypes } from "@/components";
 import { ClientType, Product, Recargo } from "@/interfaces";
 import { useOrderStore } from "@/store";
 import { AnimatePresence, motion } from "framer-motion";
@@ -12,13 +12,9 @@ interface Props {
   clientTypes: ClientType[];
 }
 
-export const TakeOrder: React.FC<Props> = ({
-  products,
-  clientTypes,
-}) => {
+export const TakeOrder: React.FC<Props> = ({ products, clientTypes }) => {
   const {
     setClientType,
-    clientType,
     products: productsOrdered,
   } = useOrderStore();
 
@@ -37,14 +33,6 @@ export const TakeOrder: React.FC<Props> = ({
     const clientType = clientTypes[0];
     setClientType(clientType);
   }, []);
-
-  const handleSelectClientType = (e: any) => {
-    const clientType = clientTypes.find(
-      (clientType) => clientType.id === +e.target.value
-    );
-    if (!clientType) return;
-    setClientType(clientType);
-  };
 
   return (
     <>
@@ -76,22 +64,7 @@ export const TakeOrder: React.FC<Props> = ({
               </span>
             )}
           </div>
-          <div>
-            <label htmlFor="client-type">Tipo de cliente:</label>
-            <select
-              className="select-client"
-              name="client-type"
-              id="client-type"
-              value={clientType?.id}
-              onChange={handleSelectClientType}
-            >
-              {clientTypes.map((clientType) => (
-                <option key={clientType.id} value={clientType.id}>
-                  {clientType.dtipo_cliente}
-                </option>
-              ))}
-            </select>
-          </div>
+          <SelectClientTypes clientTypes={clientTypes} />
         </div>
 
         <section className="order-menu-container">
@@ -113,7 +86,9 @@ export const TakeOrder: React.FC<Props> = ({
         </section>
       </div>
 
-      {productsOrdered.length ? <BottomSheetOrder clientTypes={clientTypes} /> : null}
+      {productsOrdered.length ? (
+        <BottomSheetOrder clientTypes={clientTypes} />
+      ) : null}
     </>
   );
 };

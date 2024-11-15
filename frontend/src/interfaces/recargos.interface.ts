@@ -1,5 +1,5 @@
 export interface Recargo {
   cod_rec: number;
   fkcod_tc_rec: number;
-  recargoCliente: number;  
+  recargo_cliente: number;  
 }

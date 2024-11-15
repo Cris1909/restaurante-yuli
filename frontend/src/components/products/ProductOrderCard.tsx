@@ -47,10 +47,10 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
   const calculateRecargo = () => {
     if (!clientType) return 0;
     const recargo = recargos.find(
-      (recargo) => recargo.fkcod_tc_rec === clientType.id
+      (recargo) => recargo.fkcod_tc_rec === clientType.cod_tc
     );
     if (!recargo) return 0;
-    return recargo.recargoCliente;
+    return recargo.recargo_cliente;
   };
 
   const handleAddProduct = () => {

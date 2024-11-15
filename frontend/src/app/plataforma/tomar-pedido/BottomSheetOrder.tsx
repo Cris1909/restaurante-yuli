@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductQuantity } from "@/components";
+import { ProductQuantity, SelectClientTypes } from "@/components";
 import { ClientType, Recargo } from "@/interfaces";
 import { useOrderStore } from "@/store";
 import clsx from "clsx";
@@ -11,9 +11,7 @@ interface Props {
   clientTypes: ClientType[];
 }
 
-export const BottomSheetOrder: React.FC<Props> = ({
-  clientTypes,
-}) => {
+export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
   const [isOpen, setisOpen] = useState(false);
 
   const { products, clientType, getTotalPrice, setClientType } =
@@ -22,15 +20,15 @@ export const BottomSheetOrder: React.FC<Props> = ({
   const calculateRecargo = (recargos: Recargo[] = []) => {
     if (!clientType) return 0;
     const recargo = recargos.find(
-      (recargo) => recargo.fkcod_tc_rec === clientType.id
+      (recargo) => recargo.fkcod_tc_rec === clientType.cod_tc
     );
     if (!recargo) return 0;
-    return recargo.recargoCliente;
+    return recargo.recargo_cliente;
   };
 
   const handleSelectClientType = (e: any) => {
     const clientType = clientTypes.find(
-      (clientType) => clientType.id === +e.target.value
+      (clientType) => clientType.cod_tc === +e.target.value
     );
     if (!clientType) return;
     setClientType(clientType);
@@ -102,7 +100,9 @@ export const BottomSheetOrder: React.FC<Props> = ({
                 <div className="cell full-width">{product.nom_prod}</div>
                 <div className="cell">
                   ${" "}
-                  {(product.precio_base + calculateRecargo(product.recargos)).toLocaleString()}
+                  {(
+                    product.precio_base + calculateRecargo(product.recargos)
+                  ).toLocaleString()}
                 </div>
                 <div className="cell">
                   <ProductQuantity productId={product.cod_prod} />
@@ -123,20 +123,7 @@ export const BottomSheetOrder: React.FC<Props> = ({
                 <i className="i-mdi-user user-icon"></i>
               </div>
               <div className="cell full-width">
-                <label htmlFor="client-type">Tipo de cliente: </label>
-                <select
-                  className="select-client"
-                  name="client-type"
-                  id="client-type"
-                  value={clientType?.id}
-                  onChange={handleSelectClientType}
-                >
-                  {clientTypes.map((clientType) => (
-                    <option key={clientType.id} value={clientType.id}>
-                      {clientType.dtipo_cliente}
-                    </option>
-                  ))}
-                </select>
+                <SelectClientTypes clientTypes={clientTypes} />
               </div>
               <div className="cell"></div>
               <div className="cell">Total a pagar</div>
