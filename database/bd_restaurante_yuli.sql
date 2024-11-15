@@ -104,11 +104,11 @@ insert into tmrecargos(fkcod_prod_rec, fkcod_tc_rec, recargo_cliente) VALUES
 
 SELECT * FROM tmrecargos;
 
-CREATE TABLE tdfactura(
+CREATE TABLE tdfactura (
     cod_fac SERIAL not null primary key,
     monto_total DOUBLE PRECISION not null,
-    fecha_fac date not null,
-    hora_fac time not null,
+    fecha_fac date not null default CURRENT_DATE,
+    hora_fac time not null default CURRENT_TIME,
     obs_fac varchar(500) not null,
     tc_fac integer not null,
     fkced_vendedor varchar(12) not null,
