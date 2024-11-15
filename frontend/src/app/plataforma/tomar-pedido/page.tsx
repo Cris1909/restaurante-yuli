@@ -1,6 +1,5 @@
 import { getProducts } from "@/actions";
 import { getClientTypes } from "@/actions/client-types.actions";
-import { getRecargos } from "@/actions/recargos.actions";
 import { Metadata } from "next";
 import { TakeOrder } from "./TakeOrder";
 
@@ -14,10 +13,5 @@ export default async function TomarPedidoPage() {
     getClientTypes(),
   ]);
 
-  return (
-    <TakeOrder
-      products={products}
-      clientTypes={clientTypes}
-    />
-  );
+  return <TakeOrder products={products} clientTypes={clientTypes} />;
 }

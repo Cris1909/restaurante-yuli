@@ -17,6 +17,7 @@
     "i18next-resources-to-backend": "^1.2.1",
     "next": "14.2.0",
     "next-themes": "^0.3.0",
+    "pg": "^8.13.1",
     "react": "^18",
     "react-dom": "^18",
     "zustand": "^5.0.0-rc.2"
@@ -25,6 +26,7 @@
     "@egoist/tailwindcss-icons": "^1.7.4",
     "@iconify/json": "^2.2.200",
     "@types/node": "^20",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
