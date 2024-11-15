@@ -70,7 +70,7 @@ CREATE TABLE tmproductos(
     cod_prod SERIAL not null primary key,
     nom_prod varchar(100) not null,
     dprod varchar(200) not null,
-    precio_base decimal(7,2) not null,
+    precio_base DOUBLE PRECISION not null,
     img_prod varchar not null,
     fkcods_prod integer not null default 1,
     foreign key(fkcods_prod) references tmstatus(cods) on update cascade on delete restrict 
@@ -87,7 +87,7 @@ SELECT * FROM tmproductos;
 
 CREATE TABLE tmrecargos(
     cod_rec SERIAL not null primary key,
-    recargo_cliente decimal(6,2) not null,
+    recargo_cliente DOUBLE PRECISION not null,
     fkcod_prod_rec integer not null,
     fkcod_tc_rec integer not null,
     foreign key(fkcod_prod_rec) references tmproductos(cod_prod) on update cascade on delete restrict,
@@ -105,12 +105,12 @@ insert into tmrecargos(fkcod_prod_rec, fkcod_tc_rec, recargo_cliente) VALUES
 SELECT * FROM tmrecargos;
 
 CREATE TABLE tdfactura(
-    cod_ped SERIAL not null primary key,
-    monto_total decimal(7,2) not null,
-    fecha_ped date not null,
-    hora_ped time not null,
-    obs_ped varchar(500) not null,
-    tc_ped integer not null,
+    cod_fac SERIAL not null primary key,
+    monto_total DOUBLE PRECISION not null,
+    fecha_fac date not null,
+    hora_fac time not null,
+    obs_fac varchar(500) not null,
+    tc_fac integer not null,
     fkced_vendedor varchar(12) not null,
     fkcods_factura integer not null default 1,
     foreign key(fkced_vendedor) references tmusuarios(ced_user) on update cascade on delete restrict,
@@ -120,16 +120,16 @@ CREATE TABLE tdfactura(
 SELECT * FROM tdfactura;
 
 CREATE TABLE tddfactura(
-    cod_pp SERIAL not null primary key,
+    cod_dfac SERIAL not null primary key,
     cantidad_platos integer not null,
-    precio_base decimal(7,2) not null,
-    recargo_clie decimal(6,2) not null,
-    fkcod_prod_pp integer not null,
-    fkcod_ped_pp integer not null,
-    fkcods_pp integer not null default 1,
-    foreign key(fkcod_prod_pp) references tmproductos(cod_prod) on update cascade on delete restrict,
-    foreign key(fkcod_ped_pp) references tdfactura(cod_ped) on update cascade on delete restrict,
-    foreign key(fkcods_pp) references tmstatus(cods) on update cascade on delete restrict
+    precio_base DOUBLE PRECISION not null,
+    recargo_clie DOUBLE PRECISION not null,
+    fkcod_prod_dfac integer not null,
+    fkcod_fac_dfac integer not null,
+    fkcods_dfac integer not null default 1,
+    foreign key(fkcod_prod_dfac) references tmproductos(cod_prod) on update cascade on delete restrict,
+    foreign key(fkcod_fac_dfac) references tdfactura(cod_fac) on update cascade on delete restrict,
+    foreign key(fkcods_dfac) references tmstatus(cods) on update cascade on delete restrict
 );
 
 SELECT * FROM tddfactura;
