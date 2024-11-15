@@ -1,4 +1,4 @@
-import { ClientType, ProductOrdered } from "@/interfaces";
+import { ClientType, ProductOrdered, Recargo } from "@/interfaces";
 import { create } from "zustand";
 
 interface State {
@@ -18,6 +18,8 @@ interface Actions {
   setClientType: (clientType: ClientType) => void;
 
   getTotalPrice: () => number;
+
+  calculateRecargo: (recargos: Recargo[]) => number;
 }
 
 export const useOrderStore = create<State & Actions>()((set, get) => ({
@@ -113,9 +115,20 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
       const recargo = product.recargos.find(
         (recargo) => recargo.fkcod_tc_rec === clientType?.cod_tc
       ) || { recargo_cliente: 0 };
-      return acc + (product.precio_base + recargo.recargo_cliente) * product.quantity;
+      return (
+        acc + (product.precio_base + recargo.recargo_cliente) * product.quantity
+      );
     }, 0);
 
     return total;
+  },
+  calculateRecargo: (recargos: Recargo[] = []) => {
+    const { clientType } = get();
+    if (!clientType) return 0;
+    const recargo = recargos.find(
+      (recargo) => recargo.fkcod_tc_rec === clientType.cod_tc
+    );
+    if (!recargo) return 0;
+    return recargo.recargo_cliente;
   },
 }));

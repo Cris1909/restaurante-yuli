@@ -7,29 +7,49 @@ import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { createFacturaWithDetails } from "@/actions/facturas.actions"; // Asegúrate de importar la función correctamente
+import { toast } from "react-toastify";
 
 interface Props {
   clientTypes: ClientType[];
 }
 
 export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
+
   const [isOpen, setisOpen] = useState(false);
   const [showObservations, setShowObservations] = useState(false);
   const [observations, setObservations] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { products, clientType, getTotalPrice } = useOrderStore();
+  const { products, clientType, getTotalPrice, calculateRecargo, clearOrder } =
+    useOrderStore();
 
-  const calculateRecargo = (recargos: Recargo[] = []) => {
-    if (!clientType) return 0;
-    const recargo = recargos.find(
-      (recargo) => recargo.fkcod_tc_rec === clientType.cod_tc
-    );
-    if (!recargo) return 0;
-    return recargo.recargo_cliente;
-  };
+  const handleCreateOrder = async () => {
+    setIsLoading(true);
+    const factura = {
+      monto_total: getTotalPrice(),
+      obs_fac: observations,
+      tc_fac: clientType?.cod_tc,
+      fkced_vendedor: "88220270", // TODO: obtener el ced del vendedor, desde el server
+    };
 
-  const handleCreateOrder = () => {
-    // Lógica para crear la orden
+    const detalle_factura = products.map((product) => ({
+      cantidad_platos: product.quantity,
+      precio_base: product.precio_base,
+      recargo_clie: calculateRecargo(product.recargos),
+      fkcod_prod_dfac: product.cod_prod,
+    }));
+
+    try {
+      await createFacturaWithDetails(factura, detalle_factura);
+      toast.success("Pedido creado exitosamente");
+      clearOrder();
+    } catch (error) {
+      toast.error("Error al crear el pedido");
+      console.error("Error al crear el pedido:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -176,8 +196,12 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                 $ {getTotalPrice().toLocaleString()}
               </span>
             </span>
-            <button onClick={handleCreateOrder} className="btn btn-primary">
-              Confirmar orden
+            <button
+              onClick={handleCreateOrder}
+              className="btn btn-primary"
+              disabled={isLoading}
+            >
+              {isLoading ? "Creando pedido..." : "Confirmar orden"}
             </button>
           </div>
         </div>

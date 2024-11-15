@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { motion } from "framer-motion";
-import React from "react";
 import { Product } from "@/interfaces";
-import { ProductQuantity } from "./ProductQuantity";
 import { useOrderStore } from "@/store";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import React from "react";
+import { ProductQuantity } from "./ProductQuantity";
 
 interface Props {
   product: Product;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
-  const { clientType } = useOrderStore();
+  const { calculateRecargo } = useOrderStore();
 
   const {
     cod_prod,
@@ -44,15 +44,6 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
     );
   };
 
-  const calculateRecargo = () => {
-    if (!clientType) return 0;
-    const recargo = recargos.find(
-      (recargo) => recargo.fkcod_tc_rec === clientType.cod_tc
-    );
-    if (!recargo) return 0;
-    return recargo.recargo_cliente;
-  };
-
   const handleAddProduct = () => {
     addProductToOrder({
       cod_prod,
@@ -79,7 +70,7 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
         {/* <p className="line-2">{highlightMatches(dprod, inputText)}</p>{" "} */}
         <p className="line-2">{dprod}</p>{" "}
         <div className="price-add-container">
-          <span>$ {precio_base + calculateRecargo()}</span>
+          <span>$ {precio_base + calculateRecargo(recargos)}</span>
           {productInOrder ? (
             <ProductQuantity productId={cod_prod} />
           ) : (

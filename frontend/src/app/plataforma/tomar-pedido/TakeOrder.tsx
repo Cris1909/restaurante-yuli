@@ -16,6 +16,7 @@ export const TakeOrder: React.FC<Props> = ({ products, clientTypes }) => {
   const {
     setClientType,
     products: productsOrdered,
+    clearOrder,
   } = useOrderStore();
 
   const [inputText, setInputText] = useState("");

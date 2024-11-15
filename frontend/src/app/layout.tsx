@@ -1,6 +1,8 @@
 import { Providers } from "@/providers";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import "../css/main.css";
 
@@ -26,6 +28,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
+        <ToastContainer />
         <Providers>{children}</Providers>
       </body>
     </html>
