@@ -6,6 +6,7 @@ import { useOrderStore } from "@/store";
 import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 interface Props {
   clientTypes: ClientType[];
@@ -13,9 +14,10 @@ interface Props {
 
 export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
   const [isOpen, setisOpen] = useState(false);
+  const [showObservations, setShowObservations] = useState(false);
+  const [observations, setObservations] = useState("");
 
-  const { products, clientType, getTotalPrice, setClientType } =
-    useOrderStore();
+  const { products, clientType, getTotalPrice } = useOrderStore();
 
   const calculateRecargo = (recargos: Recargo[] = []) => {
     if (!clientType) return 0;
@@ -26,12 +28,8 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
     return recargo.recargo_cliente;
   };
 
-  const handleSelectClientType = (e: any) => {
-    const clientType = clientTypes.find(
-      (clientType) => clientType.cod_tc === +e.target.value
-    );
-    if (!clientType) return;
-    setClientType(clientType);
+  const handleCreateOrder = () => {
+    // Lógica para crear la orden
   };
 
   return (
@@ -130,47 +128,46 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
               <div className="cell">$ {getTotalPrice().toLocaleString()}</div>
             </div>
           </div>
-          {/* <div className="order-table">
-            <div className="title-bar-resume">
-              <i className="i-mdi-image-outline"></i>
-              <span className="name">Nombre</span>
-              <span className="price">Precio</span>
-              <span className="quantity">Cantidad</span>
-              <span className="subtotal">Subtotal</span>
-            </div>
-            <div className="info-delivery">
-              <Image
-                className="image-food"
-                src="/public/images/bandeja paisa.jpg"
-                alt=""
-                width={32}
-                height={32}
-              />
-              <span className="name">Bandeja Paisa</span>
-              <span className="price">$ 15.000</span>
-              <span className="quantity-selector">
-                <button className="quantity-left" id="decrease">
-                  <i className="i-mdi-minus"></i>
+          <div className="mt-2">
+            <div>
+              {!showObservations ? (
+                <button
+                  onClick={() => setShowObservations(true)}
+                  className="btn btn-black"
+                >
+                  Añadir observaciones
                 </button>
-                <span className="quantity-numer" id="quantity">
-                  1
-                </span>
-                <button className="quantity-right" id="increase">
-                  <i className="i-mdi-plus"></i>
-                </button>
-              </span>
-              <span className="total-spend">$ 30.000</span>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setShowObservations(false);
+                      setObservations("");
+                    }}
+                    className="btn btn-secondary"
+                  >
+                    Quitar observaciones
+                  </button>
+                </>
+              )}
             </div>
-
-            <div className="total-delivery">
-              <i className="i-mdi-user user-icon"></i>
-              <span className="delivery-text">
-                Tipo de Cliente: <span className="type-client">Pasajero</span>
-              </span>
-              <span className="delivery-total-spend">Total a pagar</span>
-              <span className="delivery-spend">$ 30.000</span>
-            </div>
-          </div> */}
+            <motion.textarea
+              initial={{ height: 0, opacity: 0 }}
+              animate={{
+                height: showObservations ? "100px" : 0,
+                opacity: showObservations ? 1 : 0,
+              }}
+              transition={{ duration: 0.3 }}
+              style={{
+                padding: showObservations ? "8px" : "0",
+                marginTop: showObservations ? "8px" : "0",
+              }}
+              value={observations}
+              onChange={(e) => setObservations(e.target.value)}
+              placeholder="Ingrese sus observaciones aquí"
+              className="observations-textarea"
+            />
+          </div>
           <hr className="separator-2" />
           <div className="footer-order">
             <span className="text-footer">
@@ -179,7 +176,9 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                 $ {getTotalPrice().toLocaleString()}
               </span>
             </span>
-            <button className="btn btn-primary">Confirmar orden</button>
+            <button onClick={handleCreateOrder} className="btn btn-primary">
+              Confirmar orden
+            </button>
           </div>
         </div>
       </div>
