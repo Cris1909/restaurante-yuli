@@ -1,21 +1,46 @@
 "use client";
 
 import { ProductQuantity } from "@/components";
+import { ClientType, Recargo } from "@/interfaces";
 import { useOrderStore } from "@/store";
 import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
 
-export const BottomSheetOrder = () => {
+interface Props {
+  clientTypes: ClientType[];
+}
+
+export const BottomSheetOrder: React.FC<Props> = ({
+  clientTypes,
+}) => {
   const [isOpen, setisOpen] = useState(false);
 
-  const { products } = useOrderStore();
+  const { products, clientType, getTotalPrice, setClientType } =
+    useOrderStore();
+
+  const calculateRecargo = (recargos: Recargo[] = []) => {
+    if (!clientType) return 0;
+    const recargo = recargos.find(
+      (recargo) => recargo.fkcod_tc_rec === clientType.id
+    );
+    if (!recargo) return 0;
+    return recargo.recargoCliente;
+  };
+
+  const handleSelectClientType = (e: any) => {
+    const clientType = clientTypes.find(
+      (clientType) => clientType.id === +e.target.value
+    );
+    if (!clientType) return;
+    setClientType(clientType);
+  };
 
   return (
     <>
       <div className="order-detail">
         <p className="subtitle">
-          Total a pagar: <b> $30.000 </b>
+          Total a pagar: <b> $ {getTotalPrice().toLocaleString()} </b>
         </p>
         <button
           className="btn btn-primary"
@@ -74,13 +99,20 @@ export const BottomSheetOrder = () => {
                     className="product-image"
                   />
                 </div>
-                <div className="cell full-width">Brocoli Beef</div>
-                <div className="cell">$ {product.img_prod.toLocaleString()}</div>
+                <div className="cell full-width">{product.nom_prod}</div>
+                <div className="cell">
+                  ${" "}
+                  {(product.precio_base + calculateRecargo(product.recargos)).toLocaleString()}
+                </div>
                 <div className="cell">
                   <ProductQuantity productId={product.cod_prod} />
                 </div>
                 <div className="cell">
-                  $ {(product.precio_base * product.quantity).toLocaleString()}
+                  ${" "}
+                  {(
+                    (product.precio_base + calculateRecargo(product.recargos)) *
+                    product.quantity
+                  ).toLocaleString()}
                 </div>
               </div>
             ))}
@@ -91,11 +123,24 @@ export const BottomSheetOrder = () => {
                 <i className="i-mdi-user user-icon"></i>
               </div>
               <div className="cell full-width">
-                Tipo de cliente: <strong>Pasajero</strong>
+                <label htmlFor="client-type">Tipo de cliente: </label>
+                <select
+                  className="select-client"
+                  name="client-type"
+                  id="client-type"
+                  value={clientType?.id}
+                  onChange={handleSelectClientType}
+                >
+                  {clientTypes.map((clientType) => (
+                    <option key={clientType.id} value={clientType.id}>
+                      {clientType.dtipo_cliente}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="cell"></div>
               <div className="cell">Total a pagar</div>
-              <div className="cell">$ {20}</div>
+              <div className="cell">$ {getTotalPrice().toLocaleString()}</div>
             </div>
           </div>
           {/* <div className="order-table">
@@ -142,7 +187,10 @@ export const BottomSheetOrder = () => {
           <hr className="separator-2" />
           <div className="footer-order">
             <span className="text-footer">
-              Total a pagar: <span className="price">$ 30.000</span>
+              Total a pagar:{" "}
+              <span className="price">
+                $ {getTotalPrice().toLocaleString()}
+              </span>
             </span>
             <button className="btn btn-primary">Confirmar orden</button>
           </div>

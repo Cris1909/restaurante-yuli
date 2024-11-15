@@ -1,8 +1,9 @@
-import { ProductOrdered } from "@/interfaces";
+import { ClientType, ProductOrdered } from "@/interfaces";
 import { create } from "zustand";
 
 interface State {
   products: ProductOrdered[];
+  clientType: ClientType | null;
 }
 
 interface Actions {
@@ -14,10 +15,14 @@ interface Actions {
   getProductInOrder: (productId: string) => ProductOrdered | undefined;
 
   clearOrder: () => void;
+  setClientType: (clientType: ClientType) => void;
+
+  getTotalPrice: () => number;
 }
 
 export const useOrderStore = create<State & Actions>()((set, get) => ({
   products: [],
+  clientType: null,
   addProductToOrder: (productOrdered: ProductOrdered) => {
     const { products } = get();
 
@@ -45,7 +50,6 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     set({ products: updatedOrderProducts });
   },
-
   incraseProductQuantity: (productId: string) => {
     const { products } = get();
     const updatedOrderProducts = products.map((product) => {
@@ -60,7 +64,6 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     set({ products: updatedOrderProducts });
   },
-
   decraseProductQuantity: (productId: string) => {
     const { products, removeProduct, getProductInOrder } = get();
 
@@ -84,7 +87,6 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     set({ products: updatedOrderProducts });
   },
-
   removeProduct: (productId: string) => {
     const { products } = get();
     const updatedOrderProducts = products.filter(
@@ -93,13 +95,30 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     set({ products: updatedOrderProducts });
   },
-
   getProductInOrder: (productId: string) => {
     const { products } = get();
     return products.find((product) => product.cod_prod === productId);
   },
-
   clearOrder: () => {
     set({ products: [] });
+  },
+  setClientType: (clientType: ClientType) => {
+    set({ clientType });
+  },
+  getTotalPrice: () => {
+    const { products, clientType } = get();
+    console.log(products);
+
+    const total = products.reduce((acc, product) => {
+      const recargo = product.recargos.find(
+        (recargo) => recargo.fkcod_tc_rec === clientType?.id
+      );
+      return (
+        acc +
+        (product.precio_base + recargo?.recargoCliente! || 0) * product.quantity
+      );
+    }, 0);
+
+    return total;
   },
 }));

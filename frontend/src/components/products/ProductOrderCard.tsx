@@ -13,7 +13,16 @@ interface Props {
 }
 
 export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
-  const { cod_prod, nom_prod, img_prod, dprod, precio_base } = product;
+  const { clientType } = useOrderStore();
+
+  const {
+    cod_prod,
+    nom_prod,
+    img_prod,
+    dprod,
+    precio_base,
+    recargos = [],
+  } = product;
 
   const { addProductToOrder, getProductInOrder } = useOrderStore();
   const productInOrder = getProductInOrder(cod_prod);
@@ -35,6 +44,15 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
     );
   };
 
+  const calculateRecargo = () => {
+    if (!clientType) return 0;
+    const recargo = recargos.find(
+      (recargo) => recargo.fkcod_tc_rec === clientType.id
+    );
+    if (!recargo) return 0;
+    return recargo.recargoCliente;
+  };
+
   const handleAddProduct = () => {
     addProductToOrder({
       cod_prod,
@@ -42,6 +60,7 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
       precio_base,
       quantity: 1,
       img_prod,
+      recargos,
     });
   };
 
@@ -60,7 +79,7 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
         {/* <p className="line-2">{highlightMatches(dprod, inputText)}</p>{" "} */}
         <p className="line-2">{dprod}</p>{" "}
         <div className="price-add-container">
-          <span>${precio_base}</span>
+          <span>$ {precio_base + calculateRecargo()}</span>
           {productInOrder ? (
             <ProductQuantity productId={cod_prod} />
           ) : (

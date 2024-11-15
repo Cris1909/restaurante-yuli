@@ -1,16 +1,27 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
 import { ProductOrderCard } from "@/components";
+import { ClientType, Product, Recargo } from "@/interfaces";
+import { useOrderStore } from "@/store";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { BottomSheetOrder } from "./BottomSheetOrder";
-import { Product } from "@/interfaces";
 
 interface Props {
   products: Product[];
+  clientTypes: ClientType[];
 }
 
-export const TakeOrder: React.FC<Props> = ({ products }) => {
+export const TakeOrder: React.FC<Props> = ({
+  products,
+  clientTypes,
+}) => {
+  const {
+    setClientType,
+    clientType,
+    products: productsOrdered,
+  } = useOrderStore();
+
   const [inputText, setInputText] = useState("");
 
   const handleSearch = (e: any) => {
@@ -19,6 +30,20 @@ export const TakeOrder: React.FC<Props> = ({ products }) => {
 
   const handleClearSearch = () => {
     setInputText("");
+  };
+
+  useEffect(() => {
+    if (!clientTypes.length) return;
+    const clientType = clientTypes[0];
+    setClientType(clientType);
+  }, []);
+
+  const handleSelectClientType = (e: any) => {
+    const clientType = clientTypes.find(
+      (clientType) => clientType.id === +e.target.value
+    );
+    if (!clientType) return;
+    setClientType(clientType);
   };
 
   return (
@@ -57,10 +82,14 @@ export const TakeOrder: React.FC<Props> = ({ products }) => {
               className="select-client"
               name="client-type"
               id="client-type"
+              value={clientType?.id}
+              onChange={handleSelectClientType}
             >
-              <option value="1">Pasajero</option>
-              <option value="2">Taxista</option>
-              <option value="3">Trabajador</option>
+              {clientTypes.map((clientType) => (
+                <option key={clientType.id} value={clientType.id}>
+                  {clientType.dtipo_cliente}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -83,7 +112,8 @@ export const TakeOrder: React.FC<Props> = ({ products }) => {
           </AnimatePresence>
         </section>
       </div>
-      <BottomSheetOrder />
+
+      {productsOrdered.length ? <BottomSheetOrder clientTypes={clientTypes} /> : null}
     </>
   );
 };

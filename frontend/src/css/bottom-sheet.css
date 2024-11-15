@@ -261,7 +261,6 @@
 .grid-table {
   display: grid;
   grid-template-columns: auto 1fr auto auto auto; /* Define 5 columnas, la segunda (1fr) ocupa el espacio disponible */
-  gap: 10px;
   font-size: 18px;
   margin: 20px 0;
 
@@ -270,16 +269,15 @@
   .footer {
     display: contents; /* Permite que las celdas se alineen según la grid */
   }
-
+  
   & .cell {
-    padding: 4px;
+    padding: 4px 12px;
     border-right: 1px solid #ddd;
     display: flex;
     align-items: center;
   }
 
   & .header {
-    background: var(--primary);
     font-weight: bold;
     width: 100%;
     height: 32px;
@@ -289,9 +287,15 @@
     font-weight: bold;
   }
 
+   & .icon {
+    display: grid;
+    place-content: center;
+   }
+
   & .icon img {
     width: 32px;
     height: 32px;
+    margin: auto;
   }
 
   & .product-image {
