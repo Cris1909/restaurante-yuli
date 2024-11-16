@@ -5,6 +5,7 @@ const { Client } = pg;
 
 import { YuliApi } from "@/api";
 import { Product } from "@/interfaces";
+import { Status } from "@/enum";
 
 export const getProductsFromAPI = async () => {
   try {
@@ -26,6 +27,7 @@ export const getProducts = async () => {
 	      p.nom_prod,
         p.dprod,
         p.precio_base,
+        p.fkcods_prod,
         p.img_prod,
           json_agg( -- //* Agrega un array json
 		        json_build_object( -- //* Construye un objeto json
@@ -47,6 +49,36 @@ export const getProducts = async () => {
     }));
     await client.end();
     return products;
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+};
+
+export const deleteProduct = async (cod_prod: number) => {
+  try {
+    const client = new Client();
+    await client.connect();
+    await client.query(
+      `UPDATE tmproductos SET fkcods_prod = 0 WHERE cod_prod = $1`,
+      [cod_prod]
+    );
+    await client.end();
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+};
+
+export const changeProductStatus = async (cod_prod: number, status: Status) => {
+  try {
+    const client = new Client();
+    await client.connect();
+    await client.query(
+      `UPDATE tmproductos SET fkcods_prod = $1 WHERE cod_prod = $2`,
+      [status, cod_prod]
+    );
+    await client.end();
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);

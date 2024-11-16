@@ -20,12 +20,20 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        blue: "#1b76cf",
+        secondary: "#e51510",
+        primary: "#fcc300",
+        success: "#4caf50",
+        gray: "#999999",
+        danger: "#f44336",
+      },
     },
   },
   plugins: [
     nextui(),
     iconsPlugin({
-      collections: getIconCollections(["mdi"]),
+      collections: getIconCollections(["mdi", "ep"]),
     }),
   ],
   darkMode: "class",

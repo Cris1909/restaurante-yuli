@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductQuantity, SelectClientTypes } from "@/components";
-import { ClientType, Recargo } from "@/interfaces";
+import { ClientType, Product, Recargo } from "@/interfaces";
 import { useOrderStore } from "@/store";
 import clsx from "clsx";
 import Image from "next/image";
@@ -12,13 +12,13 @@ import { toast } from "react-toastify";
 
 import "@/css/bottom-sheet.css";
 import { formatMoney } from "@/helpers";
+import { CustomTable } from "@/components/CustomTable";
 
 interface Props {
   clientTypes: ClientType[];
 }
 
 export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
-
   const [isOpen, setisOpen] = useState(false);
   const [showObservations, setShowObservations] = useState(false);
   const [observations, setObservations] = useState("");
@@ -94,63 +94,46 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
             </button>
           </div>
           <hr />
-          <div className="grid-table">
-            {/* Header */}
-            <div className="header">
-              <div className="cell icon">
-                <i className="i-mdi-image-outline header-icon"></i>
-              </div>
-              <div className="cell">Nombre</div>
-              <div className="cell">Precio</div>
-              <div className="cell">Cantidad</div>
-              <div className="cell">Subtotal</div>
-            </div>
 
-            {/* Row */}
-            {products.map((product) => (
-              <div className="row" key={product.cod_prod}>
+          <CustomTable
+            columns={[
+              { accessor: "img_prod", type: "icon" },
+              { header: "Nombre", accessor: "nom_prod", type: "text" },
+              { header: "Precio", accessor: "precio_base", type: "price" },
+              {
+                header: "Cantidad",
+                accessor: "quantity",
+                template: ({ cod_prod }: Product) => (
+                  <ProductQuantity productId={cod_prod} />
+                ),
+              },
+              {
+                header: "Subtotal",
+                accessor: "subtotal",
+                template: (item: any) =>
+                  "$ " +
+                  formatMoney(
+                    (item.precio_base + calculateRecargo(item.recargos)) *
+                      item.quantity
+                  ),
+              },
+            ]}
+            tableClassName="take-order"
+            data={products}
+            footerComponent={
+              <div className="footer">
                 <div className="cell icon">
-                  <Image
-                    width={32}
-                    height={32}
-                    src={product.img_prod}
-                    alt="Brocoli Beef"
-                    className="product-image"
-                  />
+                  <i className="i-mdi-user user-icon"></i>
                 </div>
-                <div className="cell full-width">{product.nom_prod}</div>
-                <div className="cell">
-                  ${" "}
-                  {formatMoney(
-                    product.precio_base + calculateRecargo(product.recargos)
-                  )}
+                <div className="cell full-width">
+                  <SelectClientTypes clientTypes={clientTypes} />
                 </div>
-                <div className="cell">
-                  <ProductQuantity productId={product.cod_prod} />
-                </div>
-                <div className="cell">
-                  ${" "}
-                  {formatMoney(
-                    (product.precio_base + calculateRecargo(product.recargos)) *
-                    product.quantity
-                  )}
-                </div>
+                <div className="cell"></div>
+                <div className="cell">Total a pagar</div>
+                <div className="cell">$ {formatMoney(getTotalPrice())}</div>
               </div>
-            ))}
-
-            {/* Footer */}
-            <div className="footer">
-              <div className="cell icon">
-                <i className="i-mdi-user user-icon"></i>
-              </div>
-              <div className="cell full-width">
-                <SelectClientTypes clientTypes={clientTypes} />
-              </div>
-              <div className="cell"></div>
-              <div className="cell">Total a pagar</div>
-              <div className="cell">$ {formatMoney(getTotalPrice())}</div>
-            </div>
-          </div>
+            }
+          />
           <div className="mt-2">
             <div>
               {!showObservations ? (
@@ -195,9 +178,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
           <div className="footer-order">
             <span className="text-footer">
               Total a pagar:{" "}
-              <span className="price">
-                $ {formatMoney(getTotalPrice())}
-              </span>
+              <span className="price">$ {formatMoney(getTotalPrice())}</span>
             </span>
             <button
               onClick={handleCreateOrder}

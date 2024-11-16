@@ -62,6 +62,11 @@
     & li:hover {
       background-color: var(--light);
     }
+
+    & li.active {
+      color: var(--black);
+      background-color: var(--light);
+    }
   }
 
   & .logout-icon {
@@ -106,6 +111,11 @@
 
       & li {
         background: var(--light);
+      }
+
+      & li.active {
+        color: var(--black);
+        background-color: var(--primary);
       }
 
       & li:hover {

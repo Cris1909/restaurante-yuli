@@ -8,11 +8,11 @@ interface State {
 
 interface Actions {
   addProductToOrder: (product: ProductOrdered) => void;
-  incraseProductQuantity: (productId: string) => void;
-  decraseProductQuantity: (productId: string) => void;
-  removeProduct: (productId: string) => void;
+  incraseProductQuantity: (productId: number) => void;
+  decraseProductQuantity: (productId: number) => void;
+  removeProduct: (productId: number) => void;
 
-  getProductInOrder: (productId: string) => ProductOrdered | undefined;
+  getProductInOrder: (productId: number) => ProductOrdered | undefined;
 
   clearOrder: () => void;
   setClientType: (clientType: ClientType) => void;
@@ -52,7 +52,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     set({ products: updatedOrderProducts });
   },
-  incraseProductQuantity: (productId: string) => {
+  incraseProductQuantity: (productId: number) => {
     const { products } = get();
     const updatedOrderProducts = products.map((product) => {
       if (product.cod_prod === productId) {
@@ -66,7 +66,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     set({ products: updatedOrderProducts });
   },
-  decraseProductQuantity: (productId: string) => {
+  decraseProductQuantity: (productId: number) => {
     const { products, removeProduct, getProductInOrder } = get();
 
     const product = getProductInOrder(productId);
@@ -89,7 +89,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     set({ products: updatedOrderProducts });
   },
-  removeProduct: (productId: string) => {
+  removeProduct: (productId: number) => {
     const { products } = get();
     const updatedOrderProducts = products.filter(
       (product) => product.cod_prod !== productId
@@ -97,7 +97,7 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
 
     set({ products: updatedOrderProducts });
   },
-  getProductInOrder: (productId: string) => {
+  getProductInOrder: (productId: number) => {
     const { products } = get();
     return products.find((product) => product.cod_prod === productId);
   },

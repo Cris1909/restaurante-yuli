@@ -2,6 +2,7 @@
 
 import { useHydration } from "@/hooks";
 import { useSidebarStore } from "@/store";
+import { NextUIProvider } from "@nextui-org/react";
 import clsx from "clsx";
 
 interface Props {
@@ -13,14 +14,12 @@ export const Providers: React.FC<Props> = ({ children }) => {
   const { sidebarExpanded } = useSidebarStore();
 
   return (
-    // <NextUIProvider>
-    //   <NextThemesProvider attribute="class" defaultTheme="dark">
     <div
-      className={clsx("provider-container", { "sb-expanded": sidebarExpanded })}
+      className={clsx("provider-container", {
+        "sb-expanded": sidebarExpanded,
+      })}
     >
-      {children}
+      <NextUIProvider>{children}</NextUIProvider>
     </div>
-    //   </NextThemesProvider>
-    // </NextUIProvider>
   );
 };

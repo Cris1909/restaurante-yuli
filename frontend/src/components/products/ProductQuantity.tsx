@@ -3,7 +3,7 @@
 import { useOrderStore } from "@/store";
 
 interface Props {
-  productId: string;
+  productId: number;
 }
 
 export const ProductQuantity: React.FC<Props> = ({ productId }) => {

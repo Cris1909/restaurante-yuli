@@ -7,7 +7,9 @@ body {
   --black: #2b2b2b;
   --primary: #fcc300;
   --secondary: #e51510;
-  --blue-link: #1b76cf;
+  --blue: #1b76cf;
+  --success: #4caf50;
+  --danger: #f44336;
 
   --round: 8px;
 
@@ -65,6 +67,19 @@ i {
   padding: 0 16px;
 }
 
+.btn.btn-icon {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  & i {
+    color: #fff;
+    padding: 8px;
+  }
+}
+
 .btn:hover {
   opacity: 0.8;
 }
@@ -79,10 +94,36 @@ i {
   color: var(--black);
 }
 
+.btn.btn-blue {
+  background: var(--blue);
+  color: var(--black);
+}
+
 .btn.btn-secondary {
   background: var(--secondary);
   color: white;
 }
+
+.btn.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn.btn-disabled {
+  background: var(--gray);
+  color: white;
+}
+
+.btn.btn-light {
+  background: var(--light);
+  color: var(--black);
+}
+
 
 .breadcrumb {
   display: flex;
@@ -90,7 +131,7 @@ i {
   font-size: 16px;
 
   & .breadcrumb-item:not(:last-child) {
-    color: var(--blue-link);
+    color: var(--blue);
   }
 
   & .breadcrumb-item:not(:last-child):hover {
@@ -322,7 +363,6 @@ i {
 
 .grid-table {
   display: grid;
-  grid-template-columns: auto 1fr auto auto auto; /* Define 5 columnas, la segunda (1fr) ocupa el espacio disponible */
   font-size: 18px;
 
   & .header,
@@ -334,7 +374,7 @@ i {
   & .cell {
     padding: 6px 12px;
     border-right: 1px solid;
-    border-top: 1px solid;
+    border-bottom: 1px solid;
     border-color: #ddd;
     display: flex;
     align-items: center;
@@ -354,7 +394,6 @@ i {
       color: var(--black);
       border-color: var(--black);
       border-top: 1px solid;
-      border-bottom: 1px solid;
     }
   }
 
@@ -379,7 +418,7 @@ i {
     margin: auto;
   }
 
-  & .product-image {
+  & .table-image {
     border-radius: var(--round);
     object-fit: cover;
     margin-right: 10px;
@@ -388,4 +427,8 @@ i {
   & .full-width {
     grid-column: span 1;
   }
+}
+
+.grid-table.take-order {
+  grid-template-columns: auto 1fr repeat(3, auto); /* Define 5 columnas, la segunda (1fr) ocupa el espacio disponible */
 }

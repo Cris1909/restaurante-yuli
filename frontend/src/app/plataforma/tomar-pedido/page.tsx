@@ -1,7 +1,7 @@
 import { getProducts } from "@/actions";
 import { getClientTypes } from "@/actions/client-types.actions";
 import { Metadata } from "next";
-import { TakeOrder } from "./TakeOrder";
+import { TakeOrder } from "./components/TakeOrder";
 
 export const metadata: Metadata = {
   title: "Tomar pedido",
