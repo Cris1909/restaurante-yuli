@@ -27,6 +27,7 @@ const config: Config = {
         success: "#4caf50",
         gray: "#999999",
         danger: "#f44336",
+        light: "#f2f2f2"
       },
     },
   },

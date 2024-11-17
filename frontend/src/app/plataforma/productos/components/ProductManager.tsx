@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
   Tooltip,
 } from "@nextui-org/react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -95,17 +96,12 @@ const ProductManager: React.FC<Props> = ({
         <li className="breadcrumb-item">Gestión de Productos</li>
       </ol>
 
-      {/* <ProductForm
-        product={currentProduct}
-        onSave={handleSaveProduct}
-        clientTypes={clientTypes}
-      /> */}
-      {/* <ProductList
-        products={products}
-        onEdit={handleEditProduct}
-        onDelete={handleDeleteProduct}
-      /> */}
-      <div className="mt-4">
+      <div className="mt-4 flex flex-col gap-3">
+        <div className="grid">
+          <Link href={"/plataforma/productos/crear"}>
+            <button className="btn btn-black">Crear producto</button>
+          </Link>
+        </div>
         <CustomTable
           columns={[
             { accessor: "img_prod", type: "icon" },
@@ -123,10 +119,15 @@ const ProductManager: React.FC<Props> = ({
                       </PopoverTrigger>
                       <PopoverContent>
                         <div className="px-1 py-2">
-                          <div className="text-small font-extrabold">Recargos:</div>
+                          <div className="text-small font-extrabold">
+                            Recargos:
+                          </div>
                           <hr className="text-zinc-200 my-0.5" />
                           {recargos.map(({ recargo_cliente, fkcod_tc_rec }) => (
-                            <div key={fkcod_tc_rec} className="flex gap-2 justify-between">
+                            <div
+                              key={fkcod_tc_rec}
+                              className="flex gap-2 justify-between"
+                            >
                               <div>{clientTypesMap[fkcod_tc_rec]}:</div>
                               <div>
                                 $ {formatMoney(precio_base + recargo_cliente)}

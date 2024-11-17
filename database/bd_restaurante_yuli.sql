@@ -16,6 +16,7 @@ CREATE TABLE tmstatus(
 insert into tmstatus(cods, dstatus) VALUES
 (0, 'ELIMINADO'),
 (1, 'ACTIVO');
+(2, 'DESACTIVADO');
 
 SELECT * FROM tmstatus;
 
