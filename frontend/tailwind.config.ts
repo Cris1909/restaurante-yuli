@@ -34,7 +34,7 @@ const config: Config = {
   plugins: [
     nextui(),
     iconsPlugin({
-      collections: getIconCollections(["mdi", "ep"]),
+      collections: getIconCollections(["mdi", "ep", "ion"]),
     }),
   ],
   darkMode: "class",

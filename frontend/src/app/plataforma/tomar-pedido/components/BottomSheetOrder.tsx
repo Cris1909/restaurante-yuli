@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import { createFacturaWithDetails } from "@/actions/facturas.actions"; // Asegúrate de importar la función correctamente
 import { toast } from "react-toastify";
 
-import "@/css/bottom-sheet.css";
+// import "@/css/platform/bottom-sheet.css";
 import { formatMoney } from "@/helpers";
 import { CustomTable } from "@/components/CustomTable";
 

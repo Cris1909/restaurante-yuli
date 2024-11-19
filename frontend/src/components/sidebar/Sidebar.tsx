@@ -44,11 +44,11 @@ const MENU_ITEMS = [
     name: "Pedidos",
     href: "/plataforma/pedidos",
   },
-  {
-    icon: "i-mdi-cash-register",
-    name: "Facturación",
-    href: "/plataforma/facturacion",
-  },
+  // {
+  //   icon: "i-mdi-cash-register",
+  //   name: "Facturación",
+  //   href: "/plataforma/facturacion",
+  // },
 ];
 
 export const Sidebar = () => {

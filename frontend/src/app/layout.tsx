@@ -4,7 +4,7 @@ import { Poppins } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import "../css/main.css";
+import '@/css/general/main.css'
 
 const inter = Poppins({
   style: "normal",

@@ -1,21 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
-
 body {
-  --light: #f2f2f2;
-  --white: #f9fafb;
-  --gray: #999999;
-  --black: #2b2b2b;
-  --primary: #fcc300;
-  --secondary: #e51510;
-  --blue: #1b76cf;
-  --success: #4caf50;
-  --danger: #f44336;
-
-  --round: 8px;
-
-  --round-2: 16px;
-
-  /* font-family: "Montserrat", sans-serif; */
   font-optical-sizing: auto;
   font-style: normal;
 
@@ -37,93 +20,6 @@ main {
   flex: 1;
   padding: 16px;
 }
-
-i {
-  font-size: 24px;
-}
-
-.title {
-  font-size: 32px;
-  font-weight: bold;
-}
-
-.subtitle {
-  font-size: 24px;
-  font-weight: 500;
-}
-
-.paragraph {
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.btn {
-  text-align: center;
-  height: 32px;
-  border-radius: var(--round);
-  font-weight: 600;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  padding: 0 16px;
-}
-
-.btn.btn-icon {
-  display: flex;
-  width: 32px;
-  height: 32px;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  & i {
-    color: #fff;
-    padding: 8px;
-  }
-}
-
-.btn:hover {
-  opacity: 0.8;
-}
-
-.btn.btn-black {
-  background: var(--black);
-  color: white;
-}
-
-.btn.btn-primary {
-  background: var(--primary);
-  color: var(--black);
-}
-
-.btn.btn-blue {
-  background: var(--blue);
-  color: var(--black);
-}
-
-.btn.btn-secondary {
-  background: var(--secondary);
-  color: white;
-}
-
-.btn.btn-danger {
-  background: var(--danger);
-  color: white;
-}
-
-.btn.btn-success {
-  background: var(--success);
-  color: white;
-}
-
-.btn.btn-disabled {
-  background: var(--gray);
-  color: white;
-}
-
-.btn.btn-light {
-  background: var(--light);
-  color: var(--black);
-}
-
 
 .breadcrumb {
   display: flex;

@@ -8,6 +8,6 @@
   }
 }
 
-@import url(style.css);
-@import url(media.css);
-@import url(sidebar.css);
+@import url(variables.css);
+@import url(styles.css);
+@import url(animations.css);
