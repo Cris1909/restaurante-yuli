@@ -1,4 +1,4 @@
-import { formatMoney } from "@/helpers";
+import { formatMoney, getImage } from "@/helpers";
 import { cn } from "@nextui-org/react";
 import Image from "next/image";
 import React from "react";
@@ -32,7 +32,7 @@ export const CustomTable: React.FC<Props> = ({
           <Image
             width={32}
             height={32}
-            src={item[column.accessor]}
+            src={getImage(item[column.accessor])}
             alt={item.nom_prod}
             className="table-image"
           />
@@ -46,7 +46,7 @@ export const CustomTable: React.FC<Props> = ({
   };
 
   return (
-    <div className={cn("grid-table", tableClassName || '')}>
+    <div className={cn("grid-table", tableClassName || "")}>
       {/* Header */}
       <div className="header">
         {columns.map((column) => (

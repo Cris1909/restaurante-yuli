@@ -1,24 +1,48 @@
 "use client";
 
-import { ClientType, Product, Recargo } from "@/interfaces";
-import {
-  Button,
-  Card,
-  Divider,
-  Input,
-  Popover,
-  Textarea,
-  Tooltip,
-} from "@nextui-org/react";
-import axios from "axios";
+import { createProduct } from "@/actions";
+import { ClientType, Product } from "@/interfaces";
+import { Card, Divider, Input, Textarea, Tooltip } from "@nextui-org/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface ProductFormProps {
   product?: Product;
   clientTypes: ClientType[];
 }
+
+import * as z from "zod";
+
+export const ProductSchema = z.object({
+  nom_prod: z
+    .string()
+    .min(1, "El nombre del producto es obligatorio")
+    .max(100, "El nombre no debe exceder los 100 caracteres"),
+  dprod: z
+    .string()
+    .min(1, "La descripción del producto es obligatoria")
+    .max(200, "La descripción no debe exceder los 200 caracteres"),
+  precio_base: z
+    .number({
+      required_error: "El precio base es obligatorio",
+      invalid_type_error: "El precio base debe ser un número",
+    })
+    .positive("El precio base debe ser mayor a 0"),
+  img_prod: z.string().min(1, "Debes subir una imagen del producto"),
+  recargos: z
+    .array(
+      z.object({
+        fkcod_tc_rec: z.number().int().positive(),
+        recargo_cliente: z
+          .number()
+          .min(0, "El recargo debe ser mayor o igual a 0"),
+      })
+    )
+    .optional(),
+});
 
 const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
   const {
@@ -34,46 +58,78 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
     },
   });
 
+  const router = useRouter();
+
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [recargos, setRecargos] = useState<Recargo[]>(product?.recargos || []);
+  const [recargos, setRecargos] = useState<Record<string, number>>(
+    product?.recargos?.reduce(
+      (acc, recargo) => ({
+        ...acc,
+        [recargo.fkcod_tc_rec]: recargo.recargo_cliente,
+      }),
+      {}
+    ) || {}
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onSubmit: SubmitHandler<Product> = async (data) => {
-    let imageUrl = product?.img_prod as string;
-    if (image) {
-      // Subir imagen a Cloudinary
-      const formData = new FormData();
-      formData.append("file", image);
-      formData.append("upload_preset", "your_upload_preset"); // Reemplaza con tu upload preset de Cloudinary
+    const formattedRecargos = clientTypes
+      .map((clientType) => ({
+        fkcod_tc_rec: clientType.cod_tc,
+        recargo_cliente: recargos[clientType.cod_tc] || 0,
+      }))
+      .filter((e) => e.recargo_cliente > 0);
 
-      const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
-        formData
-      );
+    const productData = { ...data, recargos: formattedRecargos };
 
-      imageUrl = response.data.secure_url;
+    console.log("pasa");
+    if (!image) {
+      console.log("entra");
+      return toast.error("Debes subir una imagen del producto");
     }
 
-    // Aquí puedes manejar el guardado del producto con la URL de la imagen
-  };
+    try {
+      ProductSchema.parse({ ...productData, img_prod: image.name });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach((err) => {
+          toast.error(err.message);
+        });
+        return;
+      }
+    }
 
-  const handleAddRecargo = (recargo: Recargo) => {
-    setRecargos([...recargos, recargo]);
+    const formData = new FormData();
+    formData.append("file", image);
+    setIsLoading(true);
+    try {
+      await createProduct(formData, productData);
+      toast.success("Producto creado correctamente");
+      router.push("/plataforma/productos");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const img = e.target.files?.[0];
     if (img) {
-      const image = Object.assign(img);
-      const url = URL.createObjectURL(image);
+      const url = URL.createObjectURL(img);
       setImagePreview(url);
-      setImage(image);
+      setImage(img);
     }
   };
 
   const handleDeleteImage = () => {
     setImage(null);
     setImagePreview(null);
+  };
+
+  const handleRecargoChange = (cod_tc: number, valor: number) => {
+    setRecargos((prev) => ({ ...prev, [cod_tc]: valor }));
   };
 
   return (
@@ -93,9 +149,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
                 label="Nombre"
                 placeholder="Escribe el nombre del producto..."
                 {...register("nom_prod", { required: true })}
-                // helperText={errors.nom_prod && "Este campo es requerido"}
-                // status={errors.nom_prod ? "error" : "default"}
+                isDisabled={isLoading}
+                isInvalid={!!errors.nom_prod}
+                errorMessage={errors.nom_prod?.message}
+                isRequired
               />
+
               <Textarea
                 fullWidth
                 labelPlacement="outside"
@@ -103,9 +162,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
                 label="Descripción"
                 placeholder="Describe el producto..."
                 {...register("dprod", { required: true })}
-                // helperText={errors.dprod && "Este campo es requerido"}
-                // status={errors.dprod ? "error" : "default"}
+                isDisabled={isLoading}
+                isInvalid={!!errors.dprod}
+                errorMessage={errors.dprod?.message}
+                isRequired
               />
+
               <Input
                 fullWidth
                 size="md"
@@ -113,6 +175,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
                 labelPlacement="outside"
                 label="Precio base"
                 placeholder="0"
+                isDisabled={isLoading}
                 {...register("precio_base", {
                   required: true,
                   valueAsNumber: true,
@@ -122,8 +185,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
                     <span className="text-default-400 text-small">$</span>
                   </div>
                 }
-                // helperText={errors.precio_base && "Este campo es requerido"}
-                // status={errors.precio_base ? "error" : "default"}
+                isInvalid={!!errors.precio_base}
+                errorMessage={errors.precio_base?.message}
+                isRequired
               />
             </div>
           </div>
@@ -141,15 +205,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
                   labelPlacement="outside"
                   size="md"
                   type="number"
-                  label={clientType.dtipo_cliente + ":"}
+                  label={`${clientType.dtipo_cliente}:`}
                   placeholder="0"
+                  value={recargos[clientType.cod_tc] + "" || ""}
                   onChange={(e) =>
-                    handleAddRecargo({
-                      cod_rec: new Date().getTime(),
-                      fkcod_tc_rec: clientType.cod_tc,
-                      recargo_cliente: Number(e.target.value),
-                    })
+                    handleRecargoChange(clientType.cod_tc, +e.target.value)
                   }
+                  isDisabled={isLoading}
                   startContent={
                     <div className="pointer-events-none flex items-center">
                       <span className="text-default-400 text-small">$</span>
@@ -197,7 +259,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
                   className="h-[260px] w-full flex flex-col items-center justify-center aspect-square rounded-lg border-1.5 border-dashed border-neutral-300 cursor-pointer hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
-                    <i className="i-mdi-cloud-upload-outline text-neutral-400  text-6xl mb-2" />
+                    <i className="i-mdi-cloud-upload-outline text-neutral-400 text-6xl mb-2" />
                     <p className="text-sm text-muted-foreground">
                       <span className="font-semibold">Click para subir</span> la
                       imagen
@@ -220,10 +282,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
         </div>
       </div>
       <div className="flex justify-end">
-
-      <button className="btn btn-primary w-full lg:w-[292px]" type="submit">
-        Guardar producto
-      </button>
+        <button className="btn btn-primary w-full lg:w-[292px]" type="submit">
+          {isLoading ? "Guardando..." : "Guardar producto"}
+        </button>
       </div>
     </form>
   );

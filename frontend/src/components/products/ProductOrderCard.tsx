@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
 import { ProductQuantity } from "./ProductQuantity";
-import { formatMoney } from "@/helpers";
+import { formatMoney, getImage } from "@/helpers";
 
 interface Props {
   product: Product;
@@ -65,7 +65,7 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
       exit={{ opacity: 0 }}
       className="card-menu-meals"
     >
-      <Image width={120} height={120} src={img_prod} alt={nom_prod} />
+      <Image width={120} height={120} src={getImage(img_prod)} alt={nom_prod} />
       <div className="content-card">
         {/* Nombre con texto resaltado */}
         <h3>{highlightMatches(nom_prod, inputText)}</h3>{" "}

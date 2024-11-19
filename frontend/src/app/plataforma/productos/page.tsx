@@ -9,11 +9,12 @@ export const metadata: Metadata = {
 };
 
 const Page: React.FC = async () => {
-
   const [products, clientTypes] = await Promise.all([
-    getProducts(),
-    getClientTypes()
-  ])
+    getProducts({
+      includeDeactivated: true,
+    }),
+    getClientTypes(),
+  ]);
   return (
     <div>
       <ProductManager products={products} clientTypes={clientTypes} />

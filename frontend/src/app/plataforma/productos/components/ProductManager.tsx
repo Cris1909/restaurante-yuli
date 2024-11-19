@@ -25,23 +25,6 @@ const ProductManager: React.FC<Props> = ({
   products: initialProducts,
 }) => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
-
-  const handleSaveProduct = (product: Product) => {
-    if (product.cod_prod) {
-      setProducts((prevProducts) =>
-        prevProducts.map((p) => (p.cod_prod === product.cod_prod ? product : p))
-      );
-    } else {
-      product.cod_prod = new Date().getTime();
-      setProducts((prevProducts) => [...prevProducts, product]);
-    }
-    setCurrentProduct(null);
-  };
-
-  const handleEditProduct = (product: Product) => {
-    setCurrentProduct(product);
-  };
 
   const handleDeleteProduct = async (productId: number) => {
     try {
