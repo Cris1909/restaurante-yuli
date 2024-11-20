@@ -83,16 +83,13 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
 
     const productData = { ...data, recargos: formattedRecargos };
 
-    console.log("pasa");
     if (!image) {
-      console.log("entra");
       return toast.error("Debes subir una imagen del producto");
     }
 
     try {
       ProductSchema.parse({ ...productData, img_prod: image.name });
     } catch (error) {
-      console.log(error)
       if (error instanceof z.ZodError) {
         error.errors.forEach((err) => {
           toast.error(err.message);

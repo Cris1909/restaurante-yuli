@@ -34,7 +34,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
     const factura = {
       monto_total: getTotalPrice(),
       obs_fac: observations,
-      tc_fac: clientType?.cod_tc,
+      fktc_fac: clientType?.cod_tc,
     };
 
     const detalle_factura = products.map((product) => ({

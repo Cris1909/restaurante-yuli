@@ -109,7 +109,6 @@ export const useOrderStore = create<State & Actions>()((set, get) => ({
   },
   getTotalPrice: () => {
     const { products, clientType } = get();
-    console.log(products);
 
     const total = products.reduce((acc, product) => {
       const recargo = product.recargos.find(

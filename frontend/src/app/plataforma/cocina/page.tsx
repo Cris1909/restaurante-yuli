@@ -1,8 +1,12 @@
+import { getPedidosPendientes } from "@/actions/facturas.actions";
+import { CocinaOrders } from "./components/CocinaOrders";
 
-export default function NamePage() {
+export default async function NamePage() {
+  const [pedidos] = await Promise.all([getPedidosPendientes()]);
+
   return (
     <div>
-      <h1>Hello Page</h1>
+      <CocinaOrders orders={pedidos} />
     </div>
   );
 }

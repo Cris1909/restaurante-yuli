@@ -67,9 +67,6 @@ export const UserForm: React.FC<Props> = ({ cargos }) => {
     formState: { errors},
   } = useForm<UserFormData>({});
 
-  console.log(getValues())
-
-
   const onSubmit: SubmitHandler<UserFormData> = async (data) => {
     try {
       setIsLoading(true);
