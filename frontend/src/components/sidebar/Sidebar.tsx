@@ -4,6 +4,7 @@ import { useHydration } from "@/hooks";
 import { useSidebarStore } from "@/store";
 import { Tooltip } from "@nextui-org/react";
 import clsx from "clsx";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -53,7 +54,7 @@ const MENU_ITEMS = [
 
 export const Sidebar = () => {
   useHydration(useSidebarStore);
-  const { toggleSidebar , sidebarExpanded} = useSidebarStore();
+  const { toggleSidebar, sidebarExpanded } = useSidebarStore();
 
   const pathname = usePathname();
 
@@ -80,9 +81,13 @@ export const Sidebar = () => {
 
       <ul className="sidebar-menu">
         {MENU_ITEMS.map((item) => (
-          <Tooltip key={item.name} content={item.name} placement="right" hidden={!sidebarExpanded}>
+          <Tooltip
+            key={item.name}
+            content={item.name}
+            placement="right"
+            hidden={!sidebarExpanded}
+          >
             <li
-            
               className={clsx({
                 active: pathname === item.href,
               })}
@@ -95,12 +100,19 @@ export const Sidebar = () => {
           </Tooltip>
         ))}
       </ul>
-      <Tooltip content={"Cerrar sesión"} placement="right" hidden={!sidebarExpanded}>
-
-      <button className="btn btn-black logout-button">
-        <i className="i-mdi-logout logout-icon"></i>
-        <span>Cerrar sesión</span>
-      </button>
+      <Tooltip
+        content={"Cerrar sesión"}
+        placement="right"
+        hidden={!sidebarExpanded}
+      >
+        <button
+          type="submit"
+          onClick={() => signOut()}
+          className="btn btn-black logout-button"
+        >
+          <i className="i-mdi-logout logout-icon"></i>
+          <span>Cerrar sesión</span>
+        </button>
       </Tooltip>
     </nav>
   );

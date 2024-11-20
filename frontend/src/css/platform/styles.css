@@ -25,6 +25,7 @@ main {
   display: flex;
   color: var(--gray);
   font-size: 16px;
+  margin-top: 16px;
 
   & .breadcrumb-item:not(:last-child) {
     color: var(--blue);

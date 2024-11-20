@@ -87,10 +87,6 @@ header {
 /** Inicio */
 #start {
   background-image: url(../../../public/images/title-bg-sm.webp);
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-  position: relative;
 
   & > .p-section {
     padding-top: 48px;
@@ -100,10 +96,6 @@ header {
     align-items: center;
     gap: 24px;
     animation: fadeInUp 1s;
-
-    & > * {
-      z-index: 1;
-    }
 
     & .title-container {
       display: flex;
@@ -179,16 +171,6 @@ header {
       }
     }
   }
-}
-
-#start::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
 }
 
 /** Sobre nosotros */

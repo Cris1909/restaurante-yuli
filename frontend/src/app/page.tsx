@@ -1,8 +1,11 @@
+import { Metadata } from "next";
+import Image from "next/image";
 import { getProducts } from "@/actions";
-import "@/css/external/main.css";
 import { getImage } from "@/helpers";
 import { Recargo } from "@/interfaces";
-import Image from "next/image";
+
+import "@/css/external/main.css";
+import Link from "next/link";
 
 const NAVIGATE = [
   { name: "Inicio", href: "#" },
@@ -50,6 +53,12 @@ const CONTACT_INFO = [
   { icon: "i-mdi-location-outline", text: "Central de transportes, Cúcuta" },
 ];
 
+export const metadata: Metadata = {
+  title: "Restaurante Yuli",
+  description:
+    "Restaurante Yuli, un rincón para disfrutar comida de calidad en la terminal de transportes de Cúcuta",
+};
+
 export default async function Home() {
   const products = await getProducts();
 
@@ -72,11 +81,11 @@ export default async function Home() {
           </ul>
         </nav>
         <button className="btn btn-primary">
-          <a href="#reservation">Iniciar sesión</a>
+          <Link href="/iniciar-sesion">Iniciar sesión</Link>
         </button>
       </header>
       {/* Inicio */}
-      <section id="start">
+      <section className="img-background" id="start">
         <div className="p-section">
           <div className="title-container">
             <h1>
@@ -88,7 +97,9 @@ export default async function Home() {
               transportes de Cúcuta
             </p>
             <div>
-              <button className="btn btn-primary">Explora nuestro menú</button>
+              <button className="btn btn-primary">
+                <Link href="#menu">Explora nuestro menú</Link>
+                </button>
             </div>
           </div>
           <div className="separator-container">
@@ -150,7 +161,7 @@ export default async function Home() {
                 width={300}
                 height={200}
                 src={getImage(p.img_prod)}
-                alt="Bandeja Paisa"
+                alt={p.nom_prod}
               />
               <div className="dish-info">
                 <h3>{p.nom_prod}</h3>
@@ -211,7 +222,7 @@ export default async function Home() {
       <footer className="p-section">
         <div className="footer-container">
           <div className="logo">
-            <img src="/images/yuli-logo.png" alt="Logo de Restaurante Yuli" />
+            <Image width={160} height={160} src="/images/yuli-logo.png" alt="Logo de Restaurante Yuli" />
             <p className="paragraph">
               Somos un restaurante en la central de transporte, que se encuentra
               en funcionamiento desde el año 2023 en la ciudad de Cúcuta, Norte
@@ -244,7 +255,9 @@ export default async function Home() {
       <div className="copyright">
         <div className="p-section">
           <p>Copyright © 2024 - Todos los derechos reservados.</p>
-          <span>Hecho con amor por: Cris Stormblessed</span>
+          <Link href={"https://github.com/Cris1909"} target="_blank">
+            Hecho con amor por: Cris Stormblessed
+          </Link>
         </div>
       </div>
     </>

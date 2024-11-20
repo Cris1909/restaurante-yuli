@@ -62,3 +62,27 @@
     transform: translateX(0);
   }
 }
+
+.animate__fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+.animate__fade-in-up {
+  animation: fadeInUp 0.5s ease;
+}
+
+.animate__fade-in-down {
+  animation: fadeInDown 0.5s ease;
+}
+
+.animate__fade-in-left {
+  animation: fadeInLeft 0.5s ease;
+}
+
+.animate__fade-in-right {
+  animation: fadeInRight 0.5s ease;
+} 
+
+.animate__pulse {
+  animation: pulse 3s infinite;
+}

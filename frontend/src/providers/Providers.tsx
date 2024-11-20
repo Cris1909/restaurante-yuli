@@ -4,6 +4,7 @@ import { useHydration } from "@/hooks";
 import { useSidebarStore } from "@/store";
 import { NextUIProvider } from "@nextui-org/react";
 import clsx from "clsx";
+import { SessionProvider } from "next-auth/react";
 
 interface Props {
   children: React.ReactNode;
@@ -19,7 +20,9 @@ export const Providers: React.FC<Props> = ({ children }) => {
         "sb-expanded": sidebarExpanded,
       })}
     >
-      <NextUIProvider>{children}</NextUIProvider>
+      <SessionProvider>
+        <NextUIProvider>{children}</NextUIProvider>
+      </SessionProvider>
     </div>
   );
 };
