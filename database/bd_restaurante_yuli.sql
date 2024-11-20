@@ -15,7 +15,7 @@ CREATE TABLE tmstatus(
 
 insert into tmstatus(cods, dstatus) VALUES
 (0, 'ELIMINADO'),
-(1, 'ACTIVO');
+(1, 'ACTIVO'),
 (2, 'DESACTIVADO');
 
 SELECT * FROM tmstatus;
@@ -38,20 +38,21 @@ CREATE TABLE tmusuarios(
     ced_user varchar(12) not null primary key,
     nom_user varchar(100) not null,
     email_user varchar(100) not null,
+    password_user varchar(100) not null,
     fkcod_car_user integer not null,
-    foreign key(fkcod_car_user) references tmcargos(cod_car) on update cascade on delete restrict,
     fkcods_user integer not null default 1,
+    foreign key(fkcod_car_user) references tmcargos(cod_car) on update cascade on delete restrict,
     foreign key(fkcods_user) references tmstatus(cods) on update cascade on delete restrict
 );
 
-insert into tmusuarios(ced_user, nom_user, email_user, fkcod_car_user) VALUES
-('88220270', 'Luis Barrera', 'luisbarrera31@hotmail.com', 0),
-('1004997175', 'Merly Barrera', 'merly1004@hotmail.com', 1),
-('123456789', 'Erika Martinez', 'erika123@hotmail.com', 2),
-('6754355', 'Raquel Medina', 'raquel123@hotmail.com', 3),
-('0987655432', 'Keyla Rangel', 'keylamaria@gmail.com', 3),
-('928923', 'Zoreidis Lopez', 'zoreidis123@gmail.com', 4),
-('8877654', 'Mery Perez', 'mery9876@gmail.com', 4);
+insert into tmusuarios(ced_user, nom_user, email_user, password_user, fkcod_car_user) VALUES
+('88220270', 'Luis Barrera', 'luisbarrera31@hotmail.com', 'luisbarrera31', 0),
+('1004997175', 'Merly Barrera', 'merly1004@hotmail.com', 'merly1004', 1),
+('123456789', 'Erika Martinez', 'erika123@hotmail.com', 'erika123', 2),
+('6754355', 'Raquel Medina', 'raquel123@hotmail.com', 'raquel123', 3),
+('0987655432', 'Keyla Rangel', 'keylamaria@gmail.com', 'keylamaria', 3),
+('928923', 'Zoreidis Lopez', 'zoreidis123@gmail.com', 'zoreidis123', 4),
+('8877654', 'Mery Perez', 'mery9876@gmail.com', 'mery9876', 4);
 
 SELECT * FROM tmusuarios;
 
@@ -78,11 +79,11 @@ CREATE TABLE tmproductos(
 );
 
 insert into tmproductos(nom_prod, dprod, precio_base, img_prod) VALUES
-('Lengua Guisada', 'Delicioso plato corriente de lengua guisada, con principio del día, arroz, tajadas de maduro y ensalada', 10000, 'https://imagedelivery.net/LBWXYQ-XnKSYxbZ-NuYGqQ/88f777b3-84d3-4cae-8a51-b690e9c95500/avatarhd'),
-('Carne a la plancha', 'Almuerzo corriente con Carne a la plancha que contiene: Arroz, principio del día, tajadas de maduro y ensalada', 10000, 'https://imagedelivery.net/LBWXYQ-XnKSYxbZ-NuYGqQ/88f777b3-84d3-4cae-8a51-b690e9c95500/avatarhd'),
-('Arroz con pollo', 'Delicioso arroz con pollo con papa criolla frita', 15000, 'https://imagedelivery.net/LBWXYQ-XnKSYxbZ-NuYGqQ/88f777b3-84d3-4cae-8a51-b690e9c95500/avatarhd'),
-('Bandeja Paisa', 'Bandeja paisa con todos sus ingredientes: Frijoles, Arroz, Carne Molida, Chicharron, Aguacate, Huevo frito, Longaniza, Tajadas de maduro y Arepa', 16000, 'https://imagedelivery.net/LBWXYQ-XnKSYxbZ-NuYGqQ/88f777b3-84d3-4cae-8a51-b690e9c95500/avatarhd'),
-('Arroz Mixto', 'Arroz mixto de 5 tipos de carnes: Carne de res, carne de cerdo, chuleta ahumada, pechuga y camarones, verduras, raices chinas y acompañado con papas a la francesa', 16000, 'https://imagedelivery.net/LBWXYQ-XnKSYxbZ-NuYGqQ/88f777b3-84d3-4cae-8a51-b690e9c95500/avatarhd');
+('Lengua Guisada', 'Delicioso plato corriente de lengua guisada, con principio del día, arroz, tajadas de maduro y ensalada', 10000, 'restaurante_yuli/l6k95m0zl9hdfo2vugnl'),
+('Carne a la plancha', 'Almuerzo corriente con Carne a la plancha que contiene: Arroz, principio del día, tajadas de maduro y ensalada', 10000, 'restaurante_yuli/etejlxuklp31ruhkhie4'),
+('Arroz con pollo', 'Delicioso arroz con pollo con papa criolla frita', 15000, 'restaurante_yuli/uoujnyfubttwungbmjaf'),
+('Bandeja Paisa', 'Bandeja paisa con todos sus ingredientes: Frijoles, Arroz, Carne Molida, Chicharron, Aguacate, Huevo frito, Longaniza, Tajadas de maduro y Arepa', 16000, 'restaurante_yuli/damh0hvgfp0b4mseqhwj'),
+('Arroz Mixto', 'Arroz mixto de 5 tipos de carnes: Carne de res, carne de cerdo, chuleta ahumada, pechuga y camarones, verduras, raices chinas y acompañado con papas a la francesa', 16000, 'restaurante_yuli/sk5sfkdprxlmn9w4gueb');
 
 SELECT * FROM tmproductos;
 
