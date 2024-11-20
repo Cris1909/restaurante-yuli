@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import { Client } from "pg";
 
 export const createFacturaWithDetails = async (
@@ -7,6 +8,9 @@ export const createFacturaWithDetails = async (
   detalle_factura: any[]
 ) => {
   try {
+    const session = await auth();
+    if (!session) return null;  
+
     const client = new Client();
     await client.connect();
 
@@ -20,7 +24,7 @@ export const createFacturaWithDetails = async (
       factura.monto_total,
       factura.obs_fac,
       factura.tc_fac,
-      factura.fkced_vendedor,
+      session.user.ced_user,
     ];
     const res = await client.query(insertFacturaQuery, insertFacturaValues);
     const cod_fac = res.rows[0].cod_fac;

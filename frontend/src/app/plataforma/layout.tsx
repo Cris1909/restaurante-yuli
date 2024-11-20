@@ -17,7 +17,7 @@ export default async function PlatformLayout({
 
   return (
     <>
-      <Sidebar />
+      <Sidebar user={session.user} />
       <main>{children}</main>
     </>
   );

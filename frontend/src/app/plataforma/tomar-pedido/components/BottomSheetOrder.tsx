@@ -10,9 +10,10 @@ import { motion } from "framer-motion";
 import { createFacturaWithDetails } from "@/actions/facturas.actions"; // Asegúrate de importar la función correctamente
 import { toast } from "react-toastify";
 
-// import "@/css/platform/bottom-sheet.css";
+import "@/css/platform/bottom-sheet.css";
 import { formatMoney } from "@/helpers";
 import { CustomTable } from "@/components/CustomTable";
+import { useSession } from "next-auth/react";
 
 interface Props {
   clientTypes: ClientType[];
@@ -29,11 +30,11 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
 
   const handleCreateOrder = async () => {
     setIsLoading(true);
+    
     const factura = {
       monto_total: getTotalPrice(),
       obs_fac: observations,
       tc_fac: clientType?.cod_tc,
-      fkced_vendedor: "88220270", // TODO: obtener el ced del vendedor, desde el server
     };
 
     const detalle_factura = products.map((product) => ({

@@ -121,7 +121,7 @@ const ProductManager: React.FC<Props> = ({
                       </PopoverContent>
                     </Popover>
                   ) : (
-                    "No tiene"
+                    ""
                   )}
                 </>
               ),

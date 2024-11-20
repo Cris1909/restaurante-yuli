@@ -1,64 +1,73 @@
 "use client";
 
+import { Cargos } from "@/enum/cargos.enum";
+import { validateCargo } from "@/helpers";
 import { useHydration } from "@/hooks";
 import { useSidebarStore } from "@/store";
-import { Skeleton, Tooltip } from "@nextui-org/react";
+import { Tooltip } from "@nextui-org/react";
 import clsx from "clsx";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { IUser } from "../../../nextauth";
 
 const MENU_ITEMS = [
   {
     icon: "i-mdi-view-dashboard",
     name: "Dashboard",
     href: "/plataforma",
+    roles: [Cargos.ADMIN],
   },
   {
     icon: "i-mdi-users-group",
     name: "Usuarios",
     href: "/plataforma/usuarios",
+    roles: [Cargos.ADMIN],
   },
   {
     icon: "i-ep-dish",
     name: "Productos",
     href: "/plataforma/productos",
+    roles: [Cargos.ADMIN],
   },
   {
     icon: "i-mdi-file-document-plus-outline",
     name: "Tomar pedido",
     href: "/plataforma/tomar-pedido",
+    roles: [Cargos.ADMIN, Cargos.MESERA],
   },
   {
     icon: "i-mdi-file-chart-outline",
     name: "Reportes",
     href: "/plataforma/reportes",
+    roles: [Cargos.ADMIN],
   },
   {
     icon: "i-mdi-oven",
     name: "Cocina",
     href: "/plataforma/cocina",
+    roles: [Cargos.ADMIN, Cargos.COCINERA_JEFE, Cargos.COCINERA],
   },
   {
     icon: "i-mdi-clipboard-text-clock-outline",
     name: "Pedidos",
     href: "/plataforma/pedidos",
+    roles: [Cargos.ADMIN],
   },
-  // {
-  //   icon: "i-mdi-cash-register",
-  //   name: "Facturación",
-  //   href: "/plataforma/facturacion",
-  // },
 ];
 
-export const Sidebar = () => {
+interface Props {
+  user: IUser;
+}
+
+export const Sidebar: React.FC<Props> = ({ user }) => {
   useHydration(useSidebarStore);
   const { toggleSidebar, sidebarExpanded } = useSidebarStore();
 
   const pathname = usePathname();
 
-  const { data } = useSession();
+  const { fkcod_car_user, nom_user, dcar } = user;
 
   return (
     <nav className="sidebar">
@@ -77,21 +86,14 @@ export const Sidebar = () => {
           src="/images/yuli-logo.png"
           alt="Logo Yuli"
         />
-        {data ? (
-          <>
-            <h4 className="subtitle">{data.user.nom_user}</h4>
-            <p className="paragraph">{data.user.dcar}</p>
-          </>
-        ) : (
-          <>
-            <Skeleton className="h-4 mt-3 mb-4 w-4/5 rounded-lg" />
-            <Skeleton className="h-3 w-2/5 mb-1 rounded-lg" />
-          </>
-        )}
+        <h4 className="subtitle">{nom_user}</h4>
+        <p className="paragraph">{dcar}</p>
       </div>
 
       <ul className="sidebar-menu">
-        {MENU_ITEMS.map((item) => (
+        {MENU_ITEMS.filter((item) =>
+          validateCargo(fkcod_car_user!, ...item.roles)
+        ).map((item) => (
           <Tooltip
             key={item.name}
             content={item.name}
