@@ -2,9 +2,9 @@
 
 import { useHydration } from "@/hooks";
 import { useSidebarStore } from "@/store";
-import { Tooltip } from "@nextui-org/react";
+import { Skeleton, Tooltip } from "@nextui-org/react";
 import clsx from "clsx";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -58,6 +58,8 @@ export const Sidebar = () => {
 
   const pathname = usePathname();
 
+  const { data } = useSession();
+
   return (
     <nav className="sidebar">
       <div className="top-menu">
@@ -75,8 +77,17 @@ export const Sidebar = () => {
           src="/images/yuli-logo.png"
           alt="Logo Yuli"
         />
-        <h4 className="subtitle">Luis Barrera</h4>
-        <p className="paragraph">Administrador</p>
+        {data ? (
+          <>
+            <h4 className="subtitle">{data.user.nom_user}</h4>
+            <p className="paragraph">{data.user.dcar}</p>
+          </>
+        ) : (
+          <>
+            <Skeleton className="h-4 mt-3 mb-4 w-4/5 rounded-lg" />
+            <Skeleton className="h-3 w-2/5 mb-1 rounded-lg" />
+          </>
+        )}
       </div>
 
       <ul className="sidebar-menu">

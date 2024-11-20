@@ -6,6 +6,7 @@ interface IUser extends DefaultUser {
   email_user: string;
   password_user: string;
   fkcod_car_user: number;
+  dcar: string;
 }
 
 declare module "next-auth" {
