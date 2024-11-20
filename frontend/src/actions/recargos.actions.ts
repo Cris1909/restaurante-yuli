@@ -20,11 +20,11 @@ export const getRecargos = async () => {
     await client.connect();
     const res = await client.query(`
       SELECT
-        r.cod_rec,
-        r.recargo_cliente,
-        r.fkcod_tc_rec
+        cod_rec,
+        recargo_cliente,
+        fkcod_tc_rec
       FROM
-        tmrecargos AS r;
+        tmrecargos;
     `);
     const recargos: Recargo[] = res.rows;
     await client.end();

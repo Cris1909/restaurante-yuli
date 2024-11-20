@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 import Image from "next/image";
-import { getProducts } from "@/actions";
 import { getImage } from "@/helpers";
 import { Recargo } from "@/interfaces";
 
 import "@/css/external/main.css";
 import Link from "next/link";
+import { getProducts } from "@/actions/products.actions";
 
 const NAVIGATE = [
   { name: "Inicio", href: "#" },

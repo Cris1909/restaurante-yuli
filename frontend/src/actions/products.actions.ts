@@ -113,7 +113,6 @@ export const createProduct = async (
     }[];
   }
 ) => {
-  console.log(data);
   const { nom_prod, dprod, precio_base, recargos } = data;
   fileFormData.append(
     "upload_preset",

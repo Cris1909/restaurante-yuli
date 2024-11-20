@@ -1,6 +1,6 @@
 "use client";
 
-import { changeProductStatus, deleteProduct } from "@/actions";
+import { changeProductStatus, deleteProduct } from "@/actions/products.actions";
 import { CustomTable } from "@/components/CustomTable";
 import { Status } from "@/enum";
 import { formatMoney } from "@/helpers";

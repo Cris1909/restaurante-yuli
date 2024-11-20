@@ -1,7 +1,7 @@
-import { getProducts } from "@/actions";
 import ProductManager from "./components/ProductManager";
 import { Metadata } from "next";
 import { getClientTypes } from "@/actions/client-types.actions";
+import { getProducts } from "@/actions/products.actions";
 
 export const metadata: Metadata = {
   title: "Gestión de Productos",
@@ -15,11 +15,7 @@ const Page: React.FC = async () => {
     }),
     getClientTypes(),
   ]);
-  return (
-    <div>
-      <ProductManager products={products} clientTypes={clientTypes} />
-    </div>
-  );
+  return <ProductManager products={products} clientTypes={clientTypes} />;
 };
 
 export default Page;

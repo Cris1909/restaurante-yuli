@@ -1,6 +1,6 @@
 "use client";
 
-import { createProduct } from "@/actions";
+import { createProduct } from "@/actions/products.actions";
 import { ClientType, Product } from "@/interfaces";
 import { Card, Divider, Input, Textarea, Tooltip } from "@nextui-org/react";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-interface ProductFormProps {
+interface Props {
   product?: Product;
   clientTypes: ClientType[];
 }
@@ -44,7 +44,7 @@ export const ProductSchema = z.object({
     .optional(),
 });
 
-const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
+const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
   const {
     register,
     handleSubmit,
@@ -92,6 +92,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
     try {
       ProductSchema.parse({ ...productData, img_prod: image.name });
     } catch (error) {
+      console.log(error)
       if (error instanceof z.ZodError) {
         error.errors.forEach((err) => {
           toast.error(err.message);
@@ -133,7 +134,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, clientTypes }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid gap-4 animate__fade-in-up">
       <div className="flex flex-col lg:flex-row gap-4">
         <Card className="p-4 flex-1">
           <div className="flex flex-col md:flex-row gap-8">

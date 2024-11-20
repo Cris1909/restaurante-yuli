@@ -8,6 +8,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as z from "zod";
+import { PasswordInput } from "@/components";
 
 export const LoginSchema = z.object({
   email: z
@@ -58,6 +59,8 @@ export const LoginForm = () => {
     }
   };
 
+  console.log(errors);
+
   return (
     <Card className="h-auto lg:mr-[150px] mr-auto p-10 md:rounded-md max-w-[520px] w-full ml-auto animate__fade-in-up">
       <CardHeader className="pb-0">
@@ -84,33 +87,13 @@ export const LoginForm = () => {
             isRequired
             autoComplete="email"
           />
-          <Input
-            fullWidth
-            labelPlacement="outside"
-            size="md"
-            label="Contraseña"
-            placeholder="*********"
-            {...register("password", { required: true })}
+          <PasswordInput
+            isRequired
             isDisabled={isLoading}
             isInvalid={!!errors.password}
             errorMessage={errors.password?.message}
-            isRequired
-            type={isVisible ? "text" : "password"}
+            register={register("password", { required: true })}
             autoComplete="current-password"
-            endContent={
-              <button
-                className="focus:outline-none h-6 w-6"
-                type="button"
-                onClick={toggleVisibility}
-                aria-label="toggle password visibility"
-              >
-                {isVisible ? (
-                  <i className="i-mdi-eye-off text-2xl text-default-400 pointer-events-none" />
-                ) : (
-                  <i className="i-mdi-eye text-2xl text-default-400 pointer-events-none" />
-                )}
-              </button>
-            }
           />
           <Divider />
           <button
