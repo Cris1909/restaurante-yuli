@@ -3,6 +3,7 @@
 import { deleteUser } from "@/actions/users-actions";
 import { CustomTable } from "@/components/CustomTable";
 import { User } from "@/interfaces";
+import { Button } from "@nextui-org/react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -20,21 +21,13 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
       toast.success("Producto eliminado correctamente");
       setUsers((prevUsers) => prevUsers.filter((u) => u.ced_user !== cedUser));
     } catch (error) {
-      toast.error("Error al eliminar el producto");
+      toast.error("Error al eliminar el usuario");
     }
   };
 
   return (
     <div className="main-container">
       <h1 className="title">Gestión de Usuarios</h1>
-
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <a href="/">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item">Gestión de Usuarios</li>
-      </ol>
-
       <div className="mt-4 flex flex-col gap-3">
         <div className="grid">
           <Link href={"/plataforma/usuarios/crear"}>
@@ -53,15 +46,17 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
               template: ({ ced_user }: User) => {
                 return (
                   <div className="flex gap-2">
-                    <button className="btn btn-icon btn-blue">
+                    <Button size="sm" isIconOnly className="bg-blue text-white">
                       <i className="i-mdi-pencil" />
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => handleDeleteUser(ced_user)}
-                      className="btn btn-icon btn-danger"
+                      size="sm"
+                      isIconOnly
+                      className="bg-danger text-white"
                     >
                       <i className="i-mdi-delete" />
-                    </button>
+                    </Button>
                   </div>
                 );
               },

@@ -1,9 +1,10 @@
-import { formatMoney, getImage } from "@/helpers";
-import { Orden } from "@/interfaces";
+import { formatHour, formatMoney, getImage } from "@/helpers";
+import { OrdenPendiente } from "@/interfaces";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
   Card,
+  CardBody,
   CardHeader,
   Checkbox,
   cn,
@@ -12,15 +13,8 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 
-const formatHour = (timeString: string) => {
-  const [hours, minutes] = timeString.split(":").map(Number);
-  const period = hours >= 12 ? "PM" : "AM";
-  const adjustedHours = hours % 12 || 12;
-  return `${adjustedHours}:${minutes.toString().padStart(2, "0")} ${period}`;
-};
-
 interface Props {
-  order: Orden;
+  order: OrdenPendiente;
   handleCompleteOrder: any;
 }
 
@@ -89,7 +83,7 @@ const OrderCard: React.FC<Props> = ({ order, handleCompleteOrder }) => {
         </CardHeader>
 
         {/* Card Content */}
-        <div className="p-4">
+        <CardBody>
           <div className="flex items-center gap-1">
             <i className="i-mdi-user" />
             <strong>{order.dtipo_cliente}</strong>
@@ -123,7 +117,7 @@ const OrderCard: React.FC<Props> = ({ order, handleCompleteOrder }) => {
               </li>
             ))}
           </ul>
-        </div>
+        </CardBody>
       </Card>
     </div>
   );

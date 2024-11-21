@@ -14,6 +14,7 @@ import "@/css/platform/bottom-sheet.css";
 import { formatMoney } from "@/helpers";
 import { CustomTable } from "@/components/CustomTable";
 import { useSession } from "next-auth/react";
+import { Divider } from "@nextui-org/react";
 
 interface Props {
   clientTypes: ClientType[];
@@ -30,7 +31,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
 
   const handleCreateOrder = async () => {
     setIsLoading(true);
-    
+
     const factura = {
       monto_total: getTotalPrice(),
       obs_fac: observations,
@@ -98,12 +99,18 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
 
           <CustomTable
             columns={[
-              { accessor: "img_prod", type: "icon" },
+              { accessor: "img_prod", type: "icon", header: "i-mdi-image" },
               { header: "Nombre", accessor: "nom_prod", type: "text" },
-              { header: "Precio", accessor: "precio_base", type: "price" },
+              {
+                header: "Precio",
+                width: 100,
+                accessor: "precio_base",
+                type: "price",
+              },
               {
                 header: "Cantidad",
                 accessor: "quantity",
+                width: 1,
                 template: ({ cod_prod }: Product) => (
                   <ProductQuantity productId={cod_prod} />
                 ),
@@ -111,6 +118,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
               {
                 header: "Subtotal",
                 accessor: "subtotal",
+                width: 100,
                 template: (item: any) =>
                   "$ " +
                   formatMoney(
@@ -122,16 +130,23 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
             tableClassName="take-order"
             data={products}
             footerComponent={
-              <div className="footer">
-                <div className="cell icon">
-                  <i className="i-mdi-user user-icon"></i>
+              <div>
+                <Divider />
+                <div className="flex gap-6 justify-between items-center">
+                  <div className="flex gap-6 pl-3 items-center">
+                    <div className="bg-zinc-300 w-8 h-8 grid place-content-center rounded-lg">
+                      <i className="i-mdi-user user-icon"></i>
+                    </div>
+                    <SelectClientTypes clientTypes={clientTypes} />
+                  </div>
+
+                  <div className="flex text-small items-center">
+                    <div className="px-3">Total a pagar:</div>
+                    <div className="w-[100px] px-3  font-bold">
+                      $ {formatMoney(getTotalPrice())}
+                    </div>
+                  </div>
                 </div>
-                <div className="cell full-width">
-                  <SelectClientTypes clientTypes={clientTypes} />
-                </div>
-                <div className="cell"></div>
-                <div className="cell">Total a pagar</div>
-                <div className="cell">$ {formatMoney(getTotalPrice())}</div>
               </div>
             }
           />

@@ -12,14 +12,6 @@ const Page: React.FC = async () => {
   return (
     <div className="main-container">
       <h1 className="title">Crear Usuario</h1>
-
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <a href="/">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item">Gestión de Usuarios</li>
-        <li className="breadcrumb-item">Crear</li>
-      </ol>
       <UserForm cargos={cargos} />
     </div>
   );

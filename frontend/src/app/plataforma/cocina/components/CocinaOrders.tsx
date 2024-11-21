@@ -12,7 +12,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 
-import { Orden } from "@/interfaces";
+import { OrdenPendiente } from "@/interfaces";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import OrderCard from "./OrderCard";
@@ -21,17 +21,17 @@ import { updateStatusFactura } from "@/actions/facturas.actions";
 import { Status } from "@/enum";
 
 interface Props {
-  orders: Orden[];
+  orders: OrdenPendiente[];
 }
 
 export const CocinaOrders: React.FC<Props> = ({ orders }) => {
-  const [orderList, setOrderList] = useState<Orden[]>(orders);
+  const [orderList, setOrderList] = useState<OrdenPendiente[]>(orders);
   const orderCodFac = useMemo(
     () => orderList.map((col) => col.cod_fac),
     [orderList]
   );
 
-  const [activeOrder, setActiveOrder] = useState<Orden | null>(null);
+  const [activeOrder, setActiveOrder] = useState<OrdenPendiente | null>(null);
 
   const handleCompleteOrder = async (orderCod: number) => {
     try {
@@ -96,15 +96,10 @@ export const CocinaOrders: React.FC<Props> = ({ orders }) => {
   };
 
   return (
-    <div className="main-container !pr-0">
-      <h1 className="title">Órdenes de cocina</h1>
-
-      <ol className="breadcrumb mb-4">
-        <li className="breadcrumb-item">
-          <a href="/">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item">Órdenes de cocina</li>
-      </ol>
+    <div className="main-container !px-0">
+      <div className="px-4 pd:px-6 lg:px-8 mb-4">
+        <h1 className="title">Órdenes de cocina</h1>
+      </div>
 
       {orderList.length ? (
         <DndContext
@@ -113,8 +108,8 @@ export const CocinaOrders: React.FC<Props> = ({ orders }) => {
           onDragEnd={onDragEnd}
           onDragOver={onDragOver}
         >
-          <div className="flex gap-4 overflow-x-auto no-scrollbar">
-            <div className="flex gap-4 pr-4 pd:pr-6 lg:pr-8 pb-4">
+          <div className="flex gap-4 overflow-x-auto no-scrollbar min-h-screen">
+            <div className="flex gap-4 px-4 pd:px-6 lg:px-8 pb-4">
               <SortableContext items={orderCodFac}>
                 {orderList.map((col) => (
                   <OrderCard

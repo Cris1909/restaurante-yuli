@@ -6,6 +6,7 @@ import { Status } from "@/enum";
 import { formatMoney } from "@/helpers";
 import { ClientType, Product } from "@/interfaces";
 import {
+  Button,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -71,14 +72,6 @@ const ProductManager: React.FC<Props> = ({
   return (
     <div className="main-container">
       <h1 className="title">Gestión de Productos</h1>
-
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <a href="/">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item">Gestión de Productos</li>
-      </ol>
-
       <div className="mt-4 flex flex-col gap-3">
         <div className="grid">
           <Link href={"/plataforma/productos/crear"}>
@@ -87,7 +80,7 @@ const ProductManager: React.FC<Props> = ({
         </div>
         <CustomTable
           columns={[
-            { accessor: "img_prod", type: "icon" },
+            { accessor: "img_prod", type: "icon", header: "i-mdi-image" },
             { header: "Nombre", accessor: "nom_prod", type: "text" },
             { header: "Precio", accessor: "precio_base", type: "price" },
             {
@@ -98,7 +91,9 @@ const ProductManager: React.FC<Props> = ({
                   {recargos.length ? (
                     <Popover color="default">
                       <PopoverTrigger>
-                        <button className="btn btn-light">Abrir</button>
+                        <Button size="sm" className="bg-light">
+                          Mostrar
+                        </Button>
                       </PopoverTrigger>
                       <PopoverContent>
                         <div className="px-1 py-2">

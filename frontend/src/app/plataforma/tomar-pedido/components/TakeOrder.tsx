@@ -39,14 +39,6 @@ export const TakeOrder: React.FC<Props> = ({ products, clientTypes }) => {
     <>
       <div className="main-container">
         <h1 className="title">Tomar pedido</h1>
-
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <a href="/">Dashboard</a>
-          </li>
-          <li className="breadcrumb-item">Tomar Pedido</li>
-        </ol>
-
         <div className="order-bar-container">
           <div className="search-bar">
             <input

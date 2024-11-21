@@ -10,7 +10,7 @@ export const createFacturaWithDetails = async (
 ) => {
   try {
     const session = await auth();
-    if (!session) return null;  
+    if (!session) return null;
 
     const client = new Client();
     await client.connect();
@@ -26,7 +26,7 @@ export const createFacturaWithDetails = async (
       factura.obs_fac,
       factura.fktc_fac,
       session.user.ced_user,
-      Status.PENDIENTE
+      Status.PENDIENTE,
     ];
     const res = await client.query(insertFacturaQuery, insertFacturaValues);
     const cod_fac = res.rows[0].cod_fac;
@@ -66,19 +66,15 @@ export const getPedidosPendientes = async () => {
     const query = `
       SELECT
 	      f.cod_fac,
-	      f.monto_total,
 	      f.fecha_fac,
 	      f.hora_fac,
 	      f.obs_fac,
-	      f.fkcods_fac,
         f.fktc_fac,
 	      tc.dtipo_cliente,
 	      json_agg(json_build_object(
 	        'cod_prod', p.cod_prod,
 	        'img_prod', p.img_prod,
 	        'nom_prod', p.nom_prod,
-	        'precio_base', fd.precio_base,
-	        'recargo_clie', fd.recargo_clie,
 	        'cantidad_platos',fd.cantidad_platos
 	      )) AS productos
       FROM
@@ -101,7 +97,7 @@ export const getPedidosPendientes = async () => {
     console.log(error);
     throw new Error(error.message);
   }
-}
+};
 
 export const updateStatusFactura = async (cod_fac: number, status: Status) => {
   try {
@@ -125,4 +121,95 @@ export const updateStatusFactura = async (cod_fac: number, status: Status) => {
     console.log(error);
     throw new Error(error.message);
   }
-}
+};
+
+export const getPedidosPaginated = async ({
+  page,
+  limit,
+  fktc_fac,
+  sortDirection = "asc",
+  startDate,
+  endDate,
+}: {
+  page: number;
+  limit: number;
+  fktc_fac?: string;
+  sortDirection: "asc" | "desc";
+  startDate?: string;
+  endDate?: string;
+}) => {
+  try {
+    const client = new Client();
+    await client.connect();
+
+    // Calculating offset for pagination
+    const offset = (page - 1) * limit;
+
+    // Base query for counting total records
+    let countQuery = `
+      SELECT COUNT(*) AS total
+      FROM tdfactura AS f
+      WHERE 1 = 1
+    `;
+
+    // Base query for fetching paginated records
+    let query = `
+      SELECT
+        f.cod_fac,
+        f.monto_total,
+        f.fecha_fac,
+        f.hora_fac,
+        f.fktc_fac,
+        f.fkcods_fac,
+        tc.dtipo_cliente,
+        s.dstatus
+      FROM
+        tdfactura AS f
+        LEFT JOIN tmtipo_clientes AS tc ON f.fktc_fac = tc.cod_tc
+        LEFT JOIN tmstatus AS s ON f.fkcods_fac = s.cods
+      WHERE 1 = 1
+    `;
+
+    // Filters
+    const params: any[] = [];
+    if (fktc_fac) {
+      params.push(fktc_fac);
+      countQuery += ` AND f.fktc_fac = $${params.length}`;
+      query += ` AND f.fktc_fac = $${params.length}`;
+    }
+
+    if (startDate) {
+      params.push(startDate);
+      countQuery += ` AND f.fecha_fac >= $${params.length}`;
+      query += ` AND f.fecha_fac >= $${params.length}`;
+    }
+
+    if (endDate) {
+      params.push(endDate);
+      countQuery += ` AND f.fecha_fac <= $${params.length}`;
+      query += ` AND f.fecha_fac <= $${params.length}`;
+    }
+
+    // Execute count query
+    const countRes = await client.query(countQuery, params);
+    const totalRecords = parseInt(countRes.rows[0].total, 10);
+    const totalPages = Math.ceil(totalRecords / limit);
+
+    // Sorting and pagination
+    query += ` ORDER BY f.fecha_fac ${sortDirection}`;
+    params.push(limit, offset);
+    query += ` LIMIT $${params.length - 1} OFFSET $${params.length}`;
+
+    // Execute paginated query
+    const res = await client.query(query, params);
+
+    await client.end();
+    return {
+      totalPages,
+      data: res.rows,
+    };
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+};

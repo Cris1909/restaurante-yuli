@@ -329,3 +329,7 @@ main {
 .grid-table.take-order {
   grid-template-columns: auto 1fr repeat(3, auto); /* Define 5 columnas, la segunda (1fr) ocupa el espacio disponible */
 }
+
+.grid-table.pedidos-table{
+  grid-template-columns: repeat(6, auto); /* Define 5 columnas, la segunda (1fr) ocupa el espacio disponible */
+}
