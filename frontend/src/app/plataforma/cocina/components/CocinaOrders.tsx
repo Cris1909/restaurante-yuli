@@ -134,10 +134,13 @@ export const CocinaOrders: React.FC<Props> = ({ orders }) => {
           )}
         </DndContext>
       ) : (
-        <div>
-          <p className="text-foreground-700 text-1xl">
-            No hay órdenes pendientes
-          </p>
+        <div className="px-4 pd:px-6 lg:px-8 grid mt-32 place-content-center">
+          <div className="text-center text-zinc-400">
+            <i className="i-ep-dish text-center text-9xl" />
+            <h2 className="text-center text-xl font-bold">
+              No hay órdenes pendientes
+            </h2>
+          </div>
         </div>
       )}
     </div>
