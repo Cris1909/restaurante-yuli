@@ -16,7 +16,9 @@ CREATE TABLE tmstatus(
 insert into tmstatus(cods, dstatus) VALUES
 (0, 'ELIMINADO'),
 (1, 'ACTIVO'),
-(2, 'DESACTIVADO');
+(2, 'DESACTIVADO'),
+(3, 'PENDIENTE'),
+(4, 'ENTREGADO');
 
 SELECT * FROM tmstatus;
 
@@ -112,11 +114,12 @@ CREATE TABLE tdfactura (
     fecha_fac date not null default CURRENT_DATE,
     hora_fac time not null default CURRENT_TIME,
     obs_fac varchar(500) not null,
-    tc_fac integer not null,
+    fktc_fac integer not null,
     fkced_vendedor varchar(12) not null,
-    fkcods_factura integer not null default 1,
+    fkcods_fac integer not null default 1,
+    foreign key(fktc_fac) references tmtipo_clientes(cod_tc) on update cascade on delete restrict,
     foreign key(fkced_vendedor) references tmusuarios(ced_user) on update cascade on delete restrict,
-    foreign key(fkcods_factura) references tmstatus(cods) on update cascade on delete restrict 
+    foreign key(fkcods_fac) references tmstatus(cods) on update cascade on delete restrict 
 );
 
 SELECT * FROM tdfactura;
