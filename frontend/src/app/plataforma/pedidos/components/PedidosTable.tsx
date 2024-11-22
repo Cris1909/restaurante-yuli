@@ -3,11 +3,25 @@
 import { useRouter } from "next/navigation";
 import { CustomTable } from "@/components/CustomTable";
 import React, { useState } from "react";
-import { formatHour } from "@/helpers";
-import { Divider, Pagination, Select, SelectItem } from "@nextui-org/react";
+import { capitalazeText, formatHour } from "@/helpers";
+import {
+  Button,
+  Chip,
+  Divider,
+  Pagination,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { DateRangePicker } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 import { ClientType } from "@/interfaces";
+import { Status } from "@/enum";
+
+const orderStatusColors: any = {
+  [Status.PENDIENTE]: "bg-warning-light text-warning-dark",
+  [Status.ENTREGADO]: "bg-success-light text-success-dark",
+  [Status.CANCELADO]: "bg-danger-light text-danger-dark",
+};
 
 interface Pedido {
   cod_fac: number;
@@ -98,49 +112,44 @@ export const PedidosTable: React.FC<Props> = ({
           />
 
           <div className="flex flex-row gap-2">
+            <Select
+              size="md"
+              className="md:w-48"
+              startContent={<i className="i-mdi-user" />}
+              label="Filtar por tipo de cliente"
+              selectedKeys={new Set([filters.fktc_fac || "all"])}
+              onSelectionChange={(values) =>
+                handleFilterChange("fktc_fac", values.currentKey || "")
+              }
+            >
+              {clientTypes.map((tc) => (
+                <SelectItem key={tc.cod_tc} value={tc.cod_tc}>
+                  {tc.dtipo_cliente}
+                </SelectItem>
+              ))}
+            </Select>
 
-          <Select
-            size="md"
-            className="md:w-48"
-            startContent={<i className="i-mdi-user" />}
-            label="Filtar por tipo de cliente"
-            selectedKeys={new Set([filters.fktc_fac || "all"])}
-            onSelectionChange={(values) =>
-              handleFilterChange("fktc_fac", values.currentKey || "")
-            }
-          >
-            {clientTypes.map((tc) => (
-              <SelectItem key={tc.cod_tc} value={tc.cod_tc}>
-                {tc.dtipo_cliente}
+            <Select
+              label="Ordenar por fecha"
+              selectedKeys={new Set([filters.sortDirection || ""])}
+              onSelectionChange={(values) =>
+                handleFilterChange("sortDirection", values.currentKey || "")
+              }
+              className="md:w-48"
+            >
+              <SelectItem key={"asc"} value="asc">
+                Ascendente
               </SelectItem>
-            ))}
-          </Select>
-
-          <Select
-            label="Ordenar por fecha"
-            selectedKeys={new Set([filters.sortDirection || ""])}
-            onSelectionChange={(values) =>
-              handleFilterChange("sortDirection", values.currentKey || "")
-            }
-            className="md:w-48"
-          >
-            <SelectItem key={"asc"} value="asc">
-              Ascendente
-            </SelectItem>
-            <SelectItem key={"desc"} value="desc">
-              Descendente
-            </SelectItem>
-          </Select>
+              <SelectItem key={"desc"} value="desc">
+                Descendente
+              </SelectItem>
+            </Select>
           </div>
-
         </div>
         <Divider className="md:hidden" />
-        <button
-          onClick={() => handleApplyFilters()}
-          className="btn btn-black"
-        >
+        <Button onClick={() => handleApplyFilters()} className="btn btn-black">
           Aplicar Filtros
-        </button>
+        </Button>
       </div>
 
       {/* Tabla */}
@@ -162,7 +171,16 @@ export const PedidosTable: React.FC<Props> = ({
             template: (item) => `${formatHour(item.hora_fac)}`,
           },
           { header: "Cliente", accessor: "dtipo_cliente", type: "text" },
-          { header: "Estado", accessor: "dstatus", type: "text" },
+          {
+            header: "Estado",
+            accessor: "dstatus",
+            type: "text",
+            template: (item: Pedido) => (
+              <Chip className={orderStatusColors[item.fkcods_fac]}>
+                {capitalazeText(item.dstatus)}
+              </Chip>
+            ),
+          },
         ]}
         data={pedidos}
         tableClassName="pedidos-table"
@@ -176,7 +194,7 @@ export const PedidosTable: React.FC<Props> = ({
           page={currentPage}
           onChange={handlePageChange}
           classNames={{
-            cursor: "bg-dark"
+            cursor: "bg-dark",
           }}
         />
       </div>

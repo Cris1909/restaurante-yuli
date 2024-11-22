@@ -30,8 +30,9 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
       <h1 className="title">Gestión de Usuarios</h1>
       <div className="mt-4 flex flex-col gap-3">
         <div className="grid">
+          
           <Link href={"/plataforma/usuarios/crear"}>
-            <button className="btn btn-black">Crear usuario</button>
+            <Button className="btn btn-black">Crear usuario</Button>
           </Link>
         </div>
         <CustomTable

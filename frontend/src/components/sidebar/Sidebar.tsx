@@ -4,7 +4,7 @@ import { Cargos } from "@/enum/cargos.enum";
 import { validateCargo } from "@/helpers";
 import { useHydration } from "@/hooks";
 import { useSidebarStore } from "@/store";
-import { Tooltip } from "@nextui-org/react";
+import { Button, Tooltip } from "@nextui-org/react";
 import clsx from "clsx";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
@@ -118,14 +118,15 @@ export const Sidebar: React.FC<Props> = ({ user }) => {
         placement="right"
         hidden={!sidebarExpanded}
       >
-        <button
+        <Button
           type="submit"
           onClick={() => signOut()}
-          className="btn btn-black logout-button"
+          isIconOnly={sidebarExpanded}
+          className={"bg-dark text-white logout-button"}
         >
           <i className="i-mdi-logout logout-icon"></i>
           <span>Cerrar sesión</span>
-        </button>
+        </Button>
       </Tooltip>
     </nav>
   );

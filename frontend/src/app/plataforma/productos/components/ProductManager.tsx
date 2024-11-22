@@ -75,7 +75,7 @@ const ProductManager: React.FC<Props> = ({
       <div className="mt-4 flex flex-col gap-3">
         <div className="grid">
           <Link href={"/plataforma/productos/crear"}>
-            <button className="btn btn-black">Crear producto</button>
+            <Button className="btn btn-black">Crear producto</Button>
           </Link>
         </div>
         <CustomTable

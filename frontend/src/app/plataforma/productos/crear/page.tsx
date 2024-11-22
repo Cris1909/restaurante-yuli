@@ -12,14 +12,6 @@ const Page: React.FC = async () => {
   return (
     <div className="main-container">
       <h1 className="title">Crear producto</h1>
-
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <a href="/">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item">Gestión de Productos</li>
-        <li className="breadcrumb-item">Crear</li>
-      </ol>
       <ProductForm clientTypes={clientTypes} />
     </div>
   );
