@@ -88,7 +88,7 @@ export const CustomTable: React.FC<Props> = ({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={items}>
+        <TableBody emptyContent={emptyMessage} items={items}>
           {(item) => (
             <TableRow>
               {(columnKey) => (
@@ -100,35 +100,4 @@ export const CustomTable: React.FC<Props> = ({
       </Table>
     </>
   );
-
-  // return (
-  //   <div className={cn("grid-table", tableClassName || "")}>
-  //     {/* Header */}
-  //     <div className="header">
-  //       {columns.map((column) => (
-  //         <div key={column.accessor} className={`cell ${column.type}`}>
-  //           {column.type === "icon" ? (
-  //             <i className="i-mdi-image-outline header-icon"></i>
-  //           ) : (
-  //             column.header
-  //           )}
-  //         </div>
-  //       ))}
-  //     </div>
-
-  //     {/* Rows */}
-  //     {data.length > 0 ? (
-  //       data.map((item, index) => (
-  //         <div className="row" key={index}>
-  //           {columns.map((column) => renderRow(item, column))}
-  //         </div>
-  //       ))
-  //     ) : (
-  //       <div className="empty-message">{emptyMessage}</div>
-  //     )}
-
-  //     {/* Footer */}
-  //
-  //   </div>
-  // );
 };

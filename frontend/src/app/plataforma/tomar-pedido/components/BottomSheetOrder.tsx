@@ -14,7 +14,7 @@ import "@/css/platform/bottom-sheet.css";
 import { formatMoney } from "@/helpers";
 import { CustomTable } from "@/components/CustomTable";
 import { useSession } from "next-auth/react";
-import { Divider } from "@nextui-org/react";
+import { Button, Divider } from "@nextui-org/react";
 
 interface Props {
   clientTypes: ClientType[];
@@ -152,23 +152,25 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
           <div className="mt-2">
             <div>
               {!showObservations ? (
-                <button
+                <Button
+                  size="sm"
                   onClick={() => setShowObservations(true)}
                   className="btn btn-black"
                 >
                   Añadir observaciones
-                </button>
+                </Button>
               ) : (
                 <>
-                  <button
+                  <Button
+                    size="sm"
                     onClick={() => {
                       setShowObservations(false);
                       setObservations("");
                     }}
-                    className="btn btn-secondary"
+                    className="btn btn-danger"
                   >
                     Quitar observaciones
-                  </button>
+                  </Button>
                 </>
               )}
             </div>
@@ -195,13 +197,13 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
               Total a pagar:{" "}
               <span className="price">$ {formatMoney(getTotalPrice())}</span>
             </span>
-            <button
+            <Button
               onClick={handleCreateOrder}
               className="btn btn-primary"
               disabled={isLoading}
             >
               {isLoading ? "Creando pedido..." : "Confirmar orden"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import { ProductQuantity } from "./ProductQuantity";
 import { formatMoney, getImage } from "@/helpers";
-import { Image } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 
 interface Props {
   product: Product;
@@ -77,13 +77,12 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
           {productInOrder ? (
             <ProductQuantity productId={cod_prod} />
           ) : (
-            <button
+            <Button
               className="btn btn-primary"
-              id=""
               onClick={handleAddProduct}
             >
               Agregar
-            </button>
+            </Button>
           )}
         </div>
       </div>
