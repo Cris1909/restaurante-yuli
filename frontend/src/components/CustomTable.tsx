@@ -46,7 +46,7 @@ export const CustomTable: React.FC<Props> = ({
             height={32}
             src={getImage(item[column.accessor])}
             alt={item.nom_prod}
-            className="rounded-md"
+            className="rounded-md object-cover object-center w-8 h-8"
           />
         ) : column.type === "price" ? (
           `$ ${formatMoney(item[column.accessor])}`

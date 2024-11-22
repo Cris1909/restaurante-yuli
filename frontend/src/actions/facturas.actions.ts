@@ -2,6 +2,7 @@
 
 import { Status } from "@/enum";
 import { auth } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 import { Client } from "pg";
 
 export const createFacturaWithDetails = async (
@@ -51,6 +52,10 @@ export const createFacturaWithDetails = async (
     await Promise.all(insertDetallePromises);
 
     await client.end();
+
+    revalidatePath("/plataforma/pedidos");
+    revalidatePath("/plataforma/cocina");
+
     return cod_fac;
   } catch (error: any) {
     console.log(error);
@@ -115,8 +120,11 @@ export const updateStatusFactura = async (cod_fac: number, status: Status) => {
     if (res.rowCount === 0) {
       throw new Error("No se pudo actualizar el estado de la factura");
     }
-
+    
     await client.end();
+    
+    revalidatePath("/plataforma/pedidos");
+    revalidatePath("/plataforma/cocina");
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
@@ -127,7 +135,7 @@ export const getPedidosPaginated = async ({
   page,
   limit,
   fktc_fac,
-  sortDirection = "asc",
+  sortDirection = "desc",
   startDate,
   endDate,
 }: {

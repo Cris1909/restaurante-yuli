@@ -26,7 +26,7 @@ export default async function NamePage({ searchParams }: Props) {
     page = 1,
     limit = 10,
     fktc_fac,
-    sortDirection = "asc",
+    sortDirection = "desc",
     startDate,
     endDate,
   } = searchParams;

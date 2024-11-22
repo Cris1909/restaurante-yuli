@@ -1,23 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { StatusChip } from "@/components";
 import { CustomTable } from "@/components/CustomTable";
-import React, { useState } from "react";
+import { Status } from "@/enum";
 import { capitalazeText, formatHour } from "@/helpers";
+import { ClientType } from "@/interfaces";
+import { parseDate } from "@internationalized/date";
 import {
   Button,
-  Chip,
+  DateRangePicker,
   Divider,
   Pagination,
   Select,
-  SelectItem,
-  Tooltip,
+  SelectItem
 } from "@nextui-org/react";
-import { DateRangePicker } from "@nextui-org/react";
-import { parseDate } from "@internationalized/date";
-import { ClientType } from "@/interfaces";
-import { Status } from "@/enum";
-import { StatusChip } from "@/components";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 const orderStatusColors: any = {
   [Status.PENDIENTE]: "bg-warning-light text-warning-dark",
@@ -68,7 +66,7 @@ export const PedidosTable: React.FC<Props> = ({
 
   const [filters, setFilters] = useState({
     fktc_fac: fktc_fac || "",
-    sortDirection: sortDirection || "asc",
+    sortDirection: sortDirection || "desc",
     startDate: startDate || "",
     endDate: endDate || "",
   });
