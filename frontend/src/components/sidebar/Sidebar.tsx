@@ -13,7 +13,6 @@ import { usePathname } from "next/navigation";
 import { IUser } from "../../../nextauth";
 import { MENU_ITEMS } from "@/constants";
 
-
 interface Props {
   user: IUser;
 }
@@ -59,7 +58,7 @@ export const Sidebar: React.FC<Props> = ({ user }) => {
           >
             <li
               className={clsx({
-                active: pathname === item.href,
+                active: pathname.startsWith(item.href),
               })}
             >
               <Link href={item.href}>

@@ -4,7 +4,7 @@ export const MENU_ITEMS = [
   {
     icon: "i-mdi-view-dashboard",
     name: "Dashboard",
-    href: "/plataforma",
+    href: "/plataforma/dashboard",
     roles: [Cargos.ADMIN],
   },
   {

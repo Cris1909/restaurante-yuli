@@ -1,4 +1,6 @@
 export * from './CustomTable';
+export * from './NavBar';
+export * from './PedidosTable';
 export * from './StatusChip';
 export * from './client-types/SelectClientTypes';
 export * from './forms/PasswordInput';

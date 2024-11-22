@@ -6,16 +6,22 @@
 }
 
 .sidebar {
+
+  /* display: none; */
+  transition: all 0.3s ease;
+
+  left: -260px;
   width: 260px;
+
   min-height: 100dvh;
   padding: 16px;
   background-color: var(--white);
-  display: flex;
   position: fixed;
   flex-direction: column;
   box-shadow: 8px 0 16px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   z-index: 2;
+
 
   & .top-menu {
     display: flex;
@@ -81,6 +87,7 @@
 .provider-container.sb-expanded {
   & .sidebar {
     width: 72px;
+    left: -72px;
 
     & > .top-menu {
       justify-content: center;
@@ -145,11 +152,11 @@
   }
 
   & main {
-    margin-left: 72px;
+    margin-left: 0px;
   }
 }
 
 main {
-  margin-left: 260px;
+  margin-left: 0px;
   transition: all 0.3s ease;
 }

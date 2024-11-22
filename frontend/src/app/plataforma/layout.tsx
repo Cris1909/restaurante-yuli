@@ -3,6 +3,7 @@ import { Sidebar } from "@/components";
 import "../../css/platform/main.css";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { NavBar } from "@/components";
 
 export default async function PlatformLayout({
   children,
@@ -16,9 +17,10 @@ export default async function PlatformLayout({
   }
 
   return (
-    <>
+    <div className="relative">
       <Sidebar user={session.user} />
+      <NavBar />
       <main>{children}</main>
-    </>
+    </div>
   );
 }

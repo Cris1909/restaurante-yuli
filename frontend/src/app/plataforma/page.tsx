@@ -1,26 +1,24 @@
-import { MENU_ITEMS } from "@/constants";
-import { Card, CardBody, cn, Divider } from "@nextui-org/react";
-import Link from "next/link";
+import { Cargos } from "@/enum/cargos.enum";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
-  return (
-    <div className="main-container">
-      <h1 className="title">Bienvenido a Restaurante Yuli</h1>
-      <Divider className="my-4" />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {MENU_ITEMS.map(({ href, icon, name }) => (
-          <Card key={href} as={Link} href={href} className="bg-dark text-white">
-            <CardBody className="text-center">
-              <div>
-                <i className={cn(icon, "text-6xl")} />
-              </div>
-              <h3 className="text-lg">{name}</h3>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
+export default async function RouterPage() {
+  const session = await auth();
 
-      <Divider className="my-4" />
-    </div>
-  );
+  if (!session) {
+    redirect("/");
+  }
+
+  const { user } = session;
+
+  if ([Cargos.ADMIN, Cargos.SUPER_ADMIN].includes(user.fkcod_car_user)) {
+    redirect("/plataforma/dashboard");
+  }
+  if ([Cargos.COCINERA, Cargos.COCINERA_JEFE].includes(user.fkcod_car_user)) {
+    redirect("/plataforma/cocina");
+  }
+  if([Cargos.MESERA].includes(user.fkcod_car_user)) {
+    redirect("/plataforma/mesas");
+  }
+  return null;
 }
