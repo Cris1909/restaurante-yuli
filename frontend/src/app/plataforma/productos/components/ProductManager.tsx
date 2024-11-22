@@ -127,9 +127,6 @@ const ProductManager: React.FC<Props> = ({
               template: ({ fkcods_prod, cod_prod }: Product) => {
                 return (
                   <div className="flex gap-2">
-                    {/* <button className="btn btn-icon btn-blue">
-                      <i className="i-mdi-pencil" />
-                    </button> */}
                     {fkcods_prod === Status.ACTIVO ? (
                       <Tooltip
                         content="Desactivar"
@@ -173,7 +170,6 @@ const ProductManager: React.FC<Props> = ({
               },
             },
           ]}
-          tableClassName="take-order"
           data={products}
         />
       </div>

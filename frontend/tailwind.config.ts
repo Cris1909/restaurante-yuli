@@ -35,6 +35,8 @@ const config: Config = {
         "warning-dark": "#62410F",
         "danger-light": "#FFD5E0",
         "danger-dark": "#600826",
+        "info-light": "#D6E4FF",
+        "info-dark": "#0A2C50",
       },
     },
   },

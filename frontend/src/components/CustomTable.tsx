@@ -23,7 +23,6 @@ interface Column {
 interface Props {
   columns: Column[];
   data: any[];
-  tableClassName: string;
   footerComponent?: React.ReactNode;
   emptyMessage?: string;
 }
@@ -31,7 +30,6 @@ interface Props {
 export const CustomTable: React.FC<Props> = ({
   columns,
   data,
-  tableClassName,
   footerComponent,
   emptyMessage = "No hay datos disponibles",
 }) => {
@@ -48,7 +46,7 @@ export const CustomTable: React.FC<Props> = ({
             height={32}
             src={getImage(item[column.accessor])}
             alt={item.nom_prod}
-            radius="sm"
+            className="rounded-md"
           />
         ) : column.type === "price" ? (
           `$ ${formatMoney(item[column.accessor])}`
@@ -65,7 +63,7 @@ export const CustomTable: React.FC<Props> = ({
 
   return (
     <>
-      <Table bottomContent={footerComponent}>
+      <Table bottomContent={footerComponent} aria-label="Custom table">
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn

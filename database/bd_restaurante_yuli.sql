@@ -18,7 +18,9 @@ insert into tmstatus(cods, dstatus) VALUES
 (1, 'ACTIVO'),
 (2, 'DESACTIVADO'),
 (3, 'PENDIENTE'),
-(4, 'ENTREGADO');
+(4, 'ENTREGADO')
+(5, 'PAGADO')
+(6, 'CANCELADO');
 
 SELECT * FROM tmstatus;
 

@@ -4,7 +4,8 @@ export enum Status {
   DESACTIVADO = 2,
   PENDIENTE = 3,
   ENTREGADO = 4,
-  CANCELADO = 5,
+  PAGADO = 5,
+  CANCELADO = 6,
 }
 
 export const StatusLabels = {
@@ -13,5 +14,6 @@ export const StatusLabels = {
   [Status.DESACTIVADO]: "Desactivado",
   [Status.PENDIENTE]: "Pendiente",
   [Status.ENTREGADO]: "Entregado",
+  [Status.PAGADO]: "Pagado",
   [Status.CANCELADO]: "Cancelado",
 };

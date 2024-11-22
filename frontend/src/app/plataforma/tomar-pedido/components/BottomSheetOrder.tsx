@@ -127,7 +127,6 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                   ),
               },
             ]}
-            tableClassName="take-order"
             data={products}
             footerComponent={
               <div>

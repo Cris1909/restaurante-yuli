@@ -8,3 +8,18 @@ export interface Pedido {
   dtipo_cliente: string;
   dstatus: string;
 }
+
+interface Product {
+  cod_prod: number;
+  img_prod: string;
+  nom_prod: string;
+  cantidad_platos: number;
+  precio_base: number;
+  recargo_clie: number;
+}
+
+export interface SinglePedido extends Pedido {
+  obs_fac: string;
+  nom_user: string;
+  productos: Product[];
+}

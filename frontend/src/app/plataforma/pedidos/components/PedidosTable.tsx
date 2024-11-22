@@ -11,6 +11,7 @@ import {
   Pagination,
   Select,
   SelectItem,
+  Tooltip,
 } from "@nextui-org/react";
 import { DateRangePicker } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
@@ -19,7 +20,8 @@ import { Status } from "@/enum";
 
 const orderStatusColors: any = {
   [Status.PENDIENTE]: "bg-warning-light text-warning-dark",
-  [Status.ENTREGADO]: "bg-success-light text-success-dark",
+  [Status.ENTREGADO]: "bg-info-light text-info-dark",
+  [Status.PAGADO]: "bg-success-light text-success-dark",
   [Status.CANCELADO]: "bg-danger-light text-danger-dark",
 };
 
@@ -170,7 +172,7 @@ export const PedidosTable: React.FC<Props> = ({
             type: "text",
             template: (item) => `${formatHour(item.hora_fac)}`,
           },
-          { header: "Cliente", accessor: "dtipo_cliente", type: "text" },
+          { header: "Tipo cliente", accessor: "dtipo_cliente", type: "text" },
           {
             header: "Estado",
             accessor: "dstatus",
@@ -181,9 +183,22 @@ export const PedidosTable: React.FC<Props> = ({
               </Chip>
             ),
           },
+          {
+            header: "Acciones",
+            accessor: "",
+            template: (item: Pedido) => (
+              <Button
+                className="bg-blue text-white"
+                isIconOnly
+                size="sm"
+                onClick={() => router.push(`/plataforma/pedidos/${item.cod_fac}`)}
+              >
+                <i className="i-mdi-arrow-top-right" />
+              </Button>
+            ),
+          },
         ]}
         data={pedidos}
-        tableClassName="pedidos-table"
       />
       {/* Paginación */}
       <div className="mt-2">
