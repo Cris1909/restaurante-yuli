@@ -1,7 +1,6 @@
 import { formatMoney, getImage } from "@/helpers";
 import {
   cn,
-  Image,
   Table,
   TableBody,
   TableCell,
@@ -9,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
+import Image from "next/image";
 import React, { Key, useMemo } from "react";
 
 interface Column {

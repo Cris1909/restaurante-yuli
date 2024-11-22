@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import React from "react";
 import { ProductQuantity } from "./ProductQuantity";
 import { formatMoney, getImage } from "@/helpers";
-import { Button, Image } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Image from "next/image";
 
 interface Props {
   product: Product;
