@@ -8,6 +8,7 @@ import { Status } from "@/enum";
 import { Product } from "@/interfaces";
 import axios from "axios";
 import { uploadFile } from "./files.actions";
+import { revalidatePath } from "next/cache";
 
 export const getProductsFromAPI = async () => {
   try {
@@ -79,7 +80,9 @@ export const deleteProduct = async (cod_prod: number) => {
       `UPDATE tmproductos SET fkcods_prod = 0 WHERE cod_prod = $1`,
       [cod_prod]
     );
+    
     await client.end();
+    revalidatePath("/plataforma/tomar-pedido");
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
@@ -95,6 +98,9 @@ export const changeProductStatus = async (cod_prod: number, status: Status) => {
       [status, cod_prod]
     );
     await client.end();
+
+    revalidatePath("/plataforma/tomar-pedido");
+
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
@@ -154,6 +160,8 @@ export const createProduct = async (
     await Promise.all(insertRecargosPromises);
 
     await client.end();
+
+    revalidatePath("/plataforma/tomar-pedido");
   } catch (error: any) {
     console.log(error.response);
   }
