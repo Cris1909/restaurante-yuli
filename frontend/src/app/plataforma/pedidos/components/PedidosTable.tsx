@@ -17,6 +17,7 @@ import { DateRangePicker } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 import { ClientType } from "@/interfaces";
 import { Status } from "@/enum";
+import { StatusChip } from "@/components";
 
 const orderStatusColors: any = {
   [Status.PENDIENTE]: "bg-warning-light text-warning-dark",
@@ -30,8 +31,8 @@ interface Pedido {
   monto_total: number;
   fecha_fac: string;
   hora_fac: string;
-  fktc_fac: string;
-  fkcods_fac: string;
+  fktc_fac: number;
+  fkcods_fac: number;
   dtipo_cliente: string;
   dstatus: string;
 }
@@ -178,9 +179,8 @@ export const PedidosTable: React.FC<Props> = ({
             accessor: "dstatus",
             type: "text",
             template: (item: Pedido) => (
-              <Chip className={orderStatusColors[item.fkcods_fac]}>
-                {capitalazeText(item.dstatus)}
-              </Chip>
+              <StatusChip status={item.fkcods_fac}>{capitalazeText(item.dstatus)}</StatusChip>
+
             ),
           },
           {

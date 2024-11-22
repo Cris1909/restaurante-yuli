@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { updateStatusFactura } from "@/actions/facturas.actions";
-import { CustomTable } from "@/components";
+import { CustomTable, StatusChip } from "@/components";
+import { orderStatus } from "@/constants";
 import { Status } from "@/enum";
 import { capitalazeText, formatHour, formatMoney } from "@/helpers";
 import { SinglePedido } from "@/interfaces";
@@ -14,24 +16,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@nextui-org/react";
-import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
-
-const orderStatusColors: any = {
-  [Status.PENDIENTE]: "bg-warning-light text-warning-dark",
-  [Status.ENTREGADO]: "bg-info-light text-info-dark",
-  [Status.PAGADO]: "bg-success-light text-success-dark",
-  [Status.CANCELADO]: "bg-danger-light text-danger-dark",
-};
-
-const odrderIcons: any = {
-  [Status.PENDIENTE]: "i-mdi-clock-outline",
-  [Status.ENTREGADO]: "i-ep-dish",
-  [Status.PAGADO]: "i-mdi-check-circle-outline",
-  [Status.CANCELADO]: "i-mdi-cancel-circle-outline",
-}
 
 interface Props {
   pedido: SinglePedido;
@@ -76,9 +63,7 @@ export const SinglePedidoComponent: React.FC<Props> = ({ pedido }) => {
         accessor: "dstatus",
         type: "text",
         template: (item: any) => (
-          <Chip className={orderStatusColors[item.fkcods_fac]}>
-            {capitalazeText(item.dstatus)}
-          </Chip>
+          <StatusChip status={item.fkcods_fac}>{capitalazeText(item.dstatus)}</StatusChip>
         ),
       },
       {
@@ -105,8 +90,10 @@ export const SinglePedidoComponent: React.FC<Props> = ({ pedido }) => {
                   {pedido.fkcods_fac !== Status.ENTREGADO ? (
                     <Button
                       size="sm"
-                      className={orderStatusColors[Status.ENTREGADO]}
-                      onClick={() => handleChangeStatus(pedido.cod_fac, Status.ENTREGADO)}
+                      className={orderStatus[Status.ENTREGADO].fullColor}
+                      onClick={() =>
+                        handleChangeStatus(pedido.cod_fac, Status.ENTREGADO)
+                      }
                     >
                       <i className="i-ep-dish" />
                       Marcar como entregado
@@ -114,16 +101,20 @@ export const SinglePedidoComponent: React.FC<Props> = ({ pedido }) => {
                   ) : null}
                   <Button
                     size="sm"
-                    className={orderStatusColors[Status.PAGADO]}
-                    onClick={() => handleChangeStatus(pedido.cod_fac, Status.PAGADO)}
+                    className={orderStatus[Status.PAGADO].fullColor}
+                    onClick={() =>
+                      handleChangeStatus(pedido.cod_fac, Status.PAGADO)
+                    }
                   >
                     <i className="i-mdi-check-circle-outline" />
                     Marcar como pagado
                   </Button>
                   <Button
                     size="sm"
-                    className={orderStatusColors[Status.CANCELADO]}
-                    onClick={() => handleChangeStatus(pedido.cod_fac, Status.CANCELADO)}
+                    className={orderStatus[Status.CANCELADO].fullColor}
+                    onClick={() =>
+                      handleChangeStatus(pedido.cod_fac, Status.CANCELADO)
+                    }
                   >
                     <i className="i-mdi-cancel-circle-outline" />
                     Marcar como cancelado
@@ -137,7 +128,7 @@ export const SinglePedidoComponent: React.FC<Props> = ({ pedido }) => {
     }
 
     return columns;
-  }, [pedido]);
+  }, [pedido.cod_fac, pedido.fkcods_fac]);
 
   return (
     <>
@@ -148,17 +139,12 @@ export const SinglePedidoComponent: React.FC<Props> = ({ pedido }) => {
           <div
             className={cn(
               "p-1 rounded-full grid place-content-center",
-              orderStatusColors[pedido.fkcods_fac]
+              orderStatus[pedido.fkcods_fac].fullColor
             )}
           >
-            <i className={odrderIcons[pedido.fkcods_fac]} />
+            <i className={orderStatus[pedido.fkcods_fac].icon} />
           </div>
-          <span
-            className={cn(
-              orderStatusColors[pedido.fkcods_fac],
-              "bg-transparent"
-            )}
-          >
+          <span className={cn(orderStatus[pedido.fkcods_fac].dark)}>
             {capitalazeText(pedido.dstatus)}
           </span>
         </div>
