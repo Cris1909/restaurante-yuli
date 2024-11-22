@@ -55,6 +55,7 @@ export const createFacturaWithDetails = async (
 
     revalidatePath("/plataforma/pedidos");
     revalidatePath("/plataforma/cocina");
+    revalidatePath("/plataforma/caja");
 
     return cod_fac;
   } catch (error: any) {
@@ -120,11 +121,12 @@ export const updateStatusFactura = async (cod_fac: number, status: Status) => {
     if (res.rowCount === 0) {
       throw new Error("No se pudo actualizar el estado de la factura");
     }
-    
+
     await client.end();
-    
+
     revalidatePath("/plataforma/pedidos");
     revalidatePath("/plataforma/cocina");
+    revalidatePath("/plataforma/caja");
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
@@ -267,4 +269,35 @@ export const getSinglePedido = async (cod_fac: number) => {
     console.error(error);
     throw new Error(error.message);
   }
-}
+};
+
+export const getPedidosCaja = async () => {
+  try {
+    const client = new Client();
+    await client.connect();
+
+    const query = `
+      SELECT
+        f.cod_fac,
+        f.monto_total,
+        f.fecha_fac,
+        f.hora_fac,
+        f.fktc_fac,
+        f.fkcods_fac,
+        tc.dtipo_cliente,
+        s.dstatus
+      FROM
+        tdfactura AS f
+        LEFT JOIN tmtipo_clientes AS tc ON f.fktc_fac = tc.cod_tc
+        LEFT JOIN tmstatus AS s ON f.fkcods_fac = s.cods
+      WHERE
+        f.fkcods_fac IN (${Status.PENDIENTE}, ${Status.ENTREGADO});
+    `;
+    const res = await client.query(query);
+    await client.end();
+    return res.rows;
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+};

@@ -72,8 +72,8 @@
 /*? lg */
 @media (min-width: 1024px) {
   .title {
-    font-size: 48px;
-    line-height: 48px;
+    font-size: 32px;
+    line-height: 32px;
   }
 
   .p-section {

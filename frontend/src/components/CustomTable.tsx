@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import React, { Key, useMemo } from "react";
 
-interface Column {
+export interface Column {
   header?: string;
   accessor: string;
   template?: (item: any) => React.ReactNode;

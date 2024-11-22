@@ -1,9 +1,6 @@
 "use client";
 
-import { StatusChip } from "@/components";
-import { CustomTable } from "@/components/CustomTable";
-import { Status } from "@/enum";
-import { capitalazeText, formatHour } from "@/helpers";
+import { PedidosTable } from "@/components/PedidosTable";
 import { ClientType } from "@/interfaces";
 import { parseDate } from "@internationalized/date";
 import {
@@ -12,17 +9,10 @@ import {
   Divider,
   Pagination,
   Select,
-  SelectItem
+  SelectItem,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-
-const orderStatusColors: any = {
-  [Status.PENDIENTE]: "bg-warning-light text-warning-dark",
-  [Status.ENTREGADO]: "bg-info-light text-info-dark",
-  [Status.PAGADO]: "bg-success-light text-success-dark",
-  [Status.CANCELADO]: "bg-danger-light text-danger-dark",
-};
 
 interface Pedido {
   cod_fac: number;
@@ -49,7 +39,7 @@ interface Props {
   };
 }
 
-export const PedidosTable: React.FC<Props> = ({
+export const PedidosManager: React.FC<Props> = ({
   pedidos,
   totalPages,
   clientTypes,
@@ -154,50 +144,7 @@ export const PedidosTable: React.FC<Props> = ({
       </div>
 
       {/* Tabla */}
-      <CustomTable
-        columns={[
-          { header: "Código", accessor: "cod_fac", type: "text" },
-          { header: "Monto Total", accessor: "monto_total", type: "price" },
-          {
-            header: "Fecha",
-            accessor: "fecha_fac",
-            type: "text",
-            template: (item: Pedido) =>
-              `${new Date(item.fecha_fac).toLocaleDateString("es-CO")}`,
-          },
-          {
-            header: "Hora",
-            accessor: "hora_fac",
-            type: "text",
-            template: (item) => `${formatHour(item.hora_fac)}`,
-          },
-          { header: "Tipo cliente", accessor: "dtipo_cliente", type: "text" },
-          {
-            header: "Estado",
-            accessor: "dstatus",
-            type: "text",
-            template: (item: Pedido) => (
-              <StatusChip status={item.fkcods_fac}>{capitalazeText(item.dstatus)}</StatusChip>
-
-            ),
-          },
-          {
-            header: "Acciones",
-            accessor: "",
-            template: (item: Pedido) => (
-              <Button
-                className="bg-blue text-white"
-                isIconOnly
-                size="sm"
-                onClick={() => router.push(`/plataforma/pedidos/${item.cod_fac}`)}
-              >
-                <i className="i-mdi-arrow-top-right" />
-              </Button>
-            ),
-          },
-        ]}
-        data={pedidos}
-      />
+      <PedidosTable pedidos={pedidos} />
       {/* Paginación */}
       <div className="mt-2">
         <Pagination

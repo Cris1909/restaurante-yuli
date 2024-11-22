@@ -55,6 +55,12 @@ const MENU_ITEMS = [
     href: "/plataforma/pedidos",
     roles: [Cargos.ADMIN],
   },
+  {
+    icon: "i-mdi-cash-register",
+    name: "Caja",
+    href: "/plataforma/caja",
+    roles: [Cargos.ADMIN],
+  },
 ];
 
 interface Props {

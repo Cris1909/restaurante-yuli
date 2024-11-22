@@ -1,9 +1,7 @@
+import { getClientTypes } from "@/actions/client-types.actions";
 import { getPedidosPaginated } from "@/actions/facturas.actions";
 import { Metadata } from "next";
-import { useRouter } from "next/navigation";
-import { PedidosTable } from "./components/PedidosTable";
-import { getClientTypes } from "@/actions/client-types.actions";
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import { PedidosManager } from "./components/PedidosManager";
 
 export const metadata: Metadata = {
   title: "Pedidos",
@@ -46,7 +44,7 @@ export default async function NamePage({ searchParams }: Props) {
   return (
     <div className="main-container">
       <h1 className="title mb-4">Listado de pedidos</h1>
-      <PedidosTable
+      <PedidosManager
         pedidos={data}
         totalPages={totalPages}
         clientTypes={[

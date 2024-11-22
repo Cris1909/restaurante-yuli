@@ -63,7 +63,6 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
               },
             },
           ]}
-          tableClassName="take-order"
           data={users}
         />
       </div>
