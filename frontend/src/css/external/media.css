@@ -62,7 +62,6 @@
   }
 
   & .copyright {
-  
     & > div {
       flex-direction: row;
     }
@@ -135,11 +134,17 @@
     & .footer-info {
       flex: 2;
       gap: 32px;
-      
 
       & > * {
         flex: 1;
       }
     }
+  }
+}
+
+/*? xl */
+@media (min-width: 1280px) {
+  .dish-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }

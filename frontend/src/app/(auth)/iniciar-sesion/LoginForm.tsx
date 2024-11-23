@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
 
 import { loginEmail, loginUser } from "@/actions/auth-action";
 import { useRouter } from "next/navigation";
@@ -96,13 +96,13 @@ export const LoginForm = () => {
             autoComplete="current-password"
           />
           <Divider />
-          <button
+          <Button
             type="submit"
             className="btn btn-primary"
             disabled={isLoading}
           >
             {isLoading ? "Cargando..." : "Iniciar sesión"}
-          </button>
+          </Button>
         </form>
       </CardBody>
     </Card>

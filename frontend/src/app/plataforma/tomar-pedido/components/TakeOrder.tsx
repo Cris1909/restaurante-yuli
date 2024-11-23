@@ -36,11 +36,11 @@ export const TakeOrder: React.FC<Props> = ({ products, clientTypes }) => {
   }, []);
 
   return (
-    <>
+    <div className="relative">
       <div className="main-container">
         <h1 className="title">Tomar pedido</h1>
-        <div className="order-bar-container">
-          <div className="search-bar">
+        <div className="mt-4 flex flex-col gap-2 lg:flex-row lg:justify-between lg:items-center">
+          <div className="search-bar lg:w-[400px]">
             <input
               type="text"
               placeholder="Busca un producto..."
@@ -57,7 +57,10 @@ export const TakeOrder: React.FC<Props> = ({ products, clientTypes }) => {
               </span>
             )}
           </div>
-          <SelectClientTypes clientTypes={clientTypes} />
+          <div className="flex gap-1">
+            <i className="i-mdi-user" />
+            <SelectClientTypes clientTypes={clientTypes} />
+          </div>
         </div>
 
         <section className="order-menu-container">
@@ -82,6 +85,6 @@ export const TakeOrder: React.FC<Props> = ({ products, clientTypes }) => {
       {productsOrdered.length ? (
         <BottomSheetOrder clientTypes={clientTypes} />
       ) : null}
-    </>
+    </div>
   );
 };

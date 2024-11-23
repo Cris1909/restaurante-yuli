@@ -3,7 +3,6 @@
 
 import { updateStatusFactura } from "@/actions/facturas.actions";
 import { CustomTable, StatusChip } from "@/components";
-import { orderStatus } from "@/constants";
 import { Status } from "@/enum";
 import { capitalazeText, formatHour, formatMoney } from "@/helpers";
 import { SinglePedido } from "@/interfaces";
@@ -19,6 +18,41 @@ import {
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
+
+const orderStatus: Record<
+  number,
+  {
+    fullColor: string;
+    dark: string;
+    light: string;
+    icon: string;
+  }
+> = {
+  [Status.PENDIENTE]: {
+    fullColor: "bg-warning-light text-warning-dark",
+    dark: "text-warning-dark",
+    light: "bg-warning-light",
+    icon: "i-mdi-clock-outline",
+  },
+  [Status.ENTREGADO]: {
+    fullColor: "bg-info-light text-info-dark",
+    dark: "text-info-dark",
+    light: "bg-info-light",
+    icon: "i-ep-dish",
+  },
+  [Status.PAGADO]: {
+    fullColor: "bg-success-light text-success-dark",
+    dark: "text-success-dark",
+    light: "bg-success-light",
+    icon: "i-mdi-check-circle-outline",
+  },
+  [Status.CANCELADO]: {
+    fullColor: "bg-danger-light text-danger-dark",
+    dark: "text-danger-dark",
+    light: "bg-danger-light",
+    icon: "i-mdi-cancel-circle-outline",
+  },
+};
 
 interface Props {
   pedido: SinglePedido;

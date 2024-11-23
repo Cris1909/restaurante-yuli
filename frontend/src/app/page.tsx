@@ -6,6 +6,7 @@ import { Recargo } from "@/interfaces";
 import "@/css/external/main.css";
 import Link from "next/link";
 import { getProducts } from "@/actions/products.actions";
+import { Button, Card, CardBody } from "@nextui-org/react";
 
 const NAVIGATE = [
   { name: "Inicio", href: "#" },
@@ -70,7 +71,12 @@ export default async function Home() {
     <>
       {/* Header y menú */}
       <header className="p-section">
-        <img src="/images/yuli-logo.png" alt="Logo de yuli" />
+        <Image
+          width={64}
+          height={64}
+          src="/images/yuli-logo.png"
+          alt="Logo de yuli"
+        />
         <nav>
           <ul>
             {NAVIGATE.map((n) => (
@@ -80,9 +86,9 @@ export default async function Home() {
             ))}
           </ul>
         </nav>
-        <button className="btn btn-primary">
+        <Button className="btn btn-primary">
           <Link href="/iniciar-sesion">Iniciar sesión</Link>
-        </button>
+        </Button>
       </header>
       {/* Inicio */}
       <section className="img-background" id="start">
@@ -97,9 +103,9 @@ export default async function Home() {
               transportes de Cúcuta
             </p>
             <div>
-              <button className="btn btn-primary">
+              <Button className="btn btn-primary">
                 <Link href="#menu">Explora nuestro menú</Link>
-                </button>
+              </Button>
             </div>
           </div>
           <div className="separator-container">
@@ -107,22 +113,6 @@ export default async function Home() {
             <i className="i-ion-restaurant-outline"></i>
             <i className="i-fluent-food-grains-20-regular"></i>
           </div>
-          {/* <div>
-            <div className="dish-container">
-              <div>
-                <div className="dish-name">
-                  <h4>Bandeja Paisa</h4>
-                  <span>$ 18.000</span>
-                </div>
-                <div className="img-container">
-                  <img src="/images/bandeja-paisa.webp" alt="" />
-                  <div className="day-dish">
-                    <div>Plato del día</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
       </section>
       {/* Sobre nosotros */}
@@ -130,7 +120,12 @@ export default async function Home() {
         <h2 className="title">Sobre nosotros</h2>
         <div>
           <div className="img-container">
-            <img src="/images/yuli-logo.png" alt="Logo de yuli" />
+            <Image
+              width={64}
+              height={64}
+              src="/images/yuli-logo.png"
+              alt="Logo de yuli"
+            />
             <p>
               Restaurante Yuli es un lugar donde podrás disfrutar de una
               deliciosa comida casera y platos especiales del día.
@@ -156,24 +151,24 @@ export default async function Home() {
         <h2 className="title">Nuestro menú</h2>
         <div className="dish-grid mt-8">
           {products.map((p) => (
-            <div key={p.cod_prod} className="dish-card">
+            <Card key={p.cod_prod} className="dish-card">
               <Image
                 width={300}
-                height={200}
+                height={1000}
                 src={getImage(p.img_prod)}
                 alt={p.nom_prod}
               />
-              <div className="dish-info">
+              <CardBody className="dish-info">
                 <h3>{p.nom_prod}</h3>
-                <p>{p.dprod}</p>
+                <p className="line-clamp-2">{p.dprod}</p>
                 <span>
                   ${" "}
                   {(
                     p.precio_base + getPasajeroRecargo(p.recargos)
                   ).toLocaleString()}
                 </span>
-              </div>
-            </div>
+              </CardBody>
+            </Card>
           ))}
         </div>
       </section>
@@ -211,9 +206,9 @@ export default async function Home() {
               required
             ></textarea>
 
-            <button className="btn btn-black" type="submit">
+            <Button className="btn btn-black" type="submit">
               Enviar
-            </button>
+            </Button>
           </form>
         </div>
       </section>
@@ -222,7 +217,12 @@ export default async function Home() {
       <footer className="p-section">
         <div className="footer-container">
           <div className="logo">
-            <Image width={160} height={160} src="/images/yuli-logo.png" alt="Logo de Restaurante Yuli" />
+            <Image
+              width={160}
+              height={160}
+              src="/images/yuli-logo.png"
+              alt="Logo de Restaurante Yuli"
+            />
             <p className="paragraph">
               Somos un restaurante en la central de transporte, que se encuentra
               en funcionamiento desde el año 2023 en la ciudad de Cúcuta, Norte

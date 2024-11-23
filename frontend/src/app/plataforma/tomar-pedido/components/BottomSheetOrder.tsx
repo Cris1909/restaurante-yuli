@@ -1,27 +1,27 @@
 "use client";
 
-import { ProductQuantity, SelectClientTypes } from "@/components";
-import { ClientType, Product, Recargo } from "@/interfaces";
-import { useOrderStore } from "@/store";
-import clsx from "clsx";
-import Image from "next/image";
-import { useState } from "react";
-import { motion } from "framer-motion";
 import { createFacturaWithDetails } from "@/actions/facturas.actions"; // Asegúrate de importar la función correctamente
+import { ProductQuantity, SelectClientTypes } from "@/components";
+import { ClientType, Product } from "@/interfaces";
+import { useOrderStore } from "@/store";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
-import "@/css/platform/bottom-sheet.css";
-import { formatMoney } from "@/helpers";
 import { CustomTable } from "@/components/CustomTable";
-import { useSession } from "next-auth/react";
+import { formatMoney } from "@/helpers";
 import { Button, Divider } from "@nextui-org/react";
+
+import { BottomSheet } from "react-spring-bottom-sheet";
+import 'react-spring-bottom-sheet/dist/style.css';
 
 interface Props {
   clientTypes: ClientType[];
 }
 
 export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
-  const [isOpen, setisOpen] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
   const [showObservations, setShowObservations] = useState(false);
   const [observations, setObservations] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -66,36 +66,33 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
         <button
           className="btn btn-primary"
           id="open-bottom-sheet"
-          onClick={() => setisOpen(true)}
+          onClick={() => setIsOpen(true)}
         >
           Ver orden
         </button>
       </div>
-
-      <div
-        className={clsx("bottom-sheet-backdrop", { open: isOpen })}
-        id="bottom-sheet-backdrop"
-        onClick={() => setisOpen(false)}
-      ></div>
-
-      <div
-        className={clsx("bottom-sheet", {
-          open: isOpen,
-        })}
-        id="bottom-sheet"
+      <BottomSheet
+        open={isOpen}
+        onDismiss={() => setIsOpen(false)}
+        style={{
+          position: "absolute",
+          zIndex: 999,
+        }}
+        snapPoints={({ minHeight }) => minHeight}
       >
-        <div className="bottom-sheet-content">
-          <div className="bottom-sheet-head">
+        <div className="px-4 pt-2 md:px-8 lg:px-16">
+          <div className="flex items-center justify-between">
             <h2 className="title">Resumen del pedido</h2>
             <button
-              className="close-btn"
+              className=""
               id="close-bottom-sheet"
-              onClick={() => setisOpen(false)}
+              onClick={() => setIsOpen(false)}
             >
               <i className="i-mdi-close"></i>
             </button>
           </div>
-          <hr />
+
+          <Divider className="mt-2 mb-4" />
 
           <CustomTable
             columns={[
@@ -130,8 +127,8 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
             data={products}
             footerComponent={
               <div>
-                <Divider />
-                <div className="flex gap-6 justify-between items-center">
+                <Divider className="mb-2" />
+                <div className="flex gap-6 justify-between items-center text-small">
                   <div className="flex gap-6 pl-3 items-center">
                     <div className="bg-zinc-300 w-8 h-8 grid place-content-center rounded-lg">
                       <i className="i-mdi-user user-icon"></i>
@@ -191,11 +188,11 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
               className="observations-textarea"
             />
           </div>
-          <hr className="separator-2" />
-          <div className="footer-order">
-            <span className="text-footer">
+          <Divider className="mb-2" />
+          <div className="flex justify-between mb-4">
+            <span className="subtitle">
               Total a pagar:{" "}
-              <span className="price">$ {formatMoney(getTotalPrice())}</span>
+              <span className="font-bold">$ {formatMoney(getTotalPrice())}</span>
             </span>
             <Button
               onClick={handleCreateOrder}
@@ -206,7 +203,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
             </Button>
           </div>
         </div>
-      </div>
+      </BottomSheet>
     </>
   );
 };
