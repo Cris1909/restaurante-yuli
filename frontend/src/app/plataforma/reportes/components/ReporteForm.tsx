@@ -26,29 +26,29 @@ import { toast } from "react-toastify";
 import * as z from "zod";
 
 const ReportSchema = z.object({
-  fecha_gd: z.date(),
-  compras_gd: z.number().min(0, "Debe ser mayor o igual a 0"),
-  varios_gd: z.number().min(0, "Debe ser mayor o igual a 0"),
-  salarios_gd: z.number().min(0, "Debe ser mayor o igual a 0"),
-  arriendo_gd: z.number().min(0, "Debe ser mayor o igual a 0"),
-  gas_gd: z.number().min(0, "Debe ser mayor o igual a 0"),
-  servicios_gd: z.number().min(0, "Debe ser mayor o igual a 0"),
-  vehiculo_gd: z.number().min(0, "Debe ser mayor o igual a 0"),
-  banco_gd: z.number().min(0, "Debe ser mayor o igual a 0"),
-  ventas_gd: z.number().optional(),
+  fecha_rd: z.date(),
+  compras_rd: z.number().min(0, "Debe ser mayor o igual a 0"),
+  varios_rd: z.number().min(0, "Debe ser mayor o igual a 0"),
+  salarios_rd: z.number().min(0, "Debe ser mayor o igual a 0"),
+  arriendo_rd: z.number().min(0, "Debe ser mayor o igual a 0"),
+  gas_rd: z.number().min(0, "Debe ser mayor o igual a 0"),
+  servicios_rd: z.number().min(0, "Debe ser mayor o igual a 0"),
+  vehiculo_rd: z.number().min(0, "Debe ser mayor o igual a 0"),
+  banco_rd: z.number().min(0, "Debe ser mayor o igual a 0"),
+  ventas_rd: z.number().optional(),
   autogenerarVentas: z.boolean(),
 });
 
 interface ReportFormData {
-  compras_gd: number;
-  varios_gd: number;
-  salarios_gd: number;
-  arriendo_gd: number;
-  gas_gd: number;
-  servicios_gd: number;
-  vehiculo_gd: number;
-  banco_gd: number;
-  ventas_gd?: number;
+  compras_rd: number;
+  varios_rd: number;
+  salarios_rd: number;
+  arriendo_rd: number;
+  gas_rd: number;
+  servicios_rd: number;
+  vehiculo_rd: number;
+  banco_rd: number;
+  ventas_rd?: number;
 }
 
 interface InputProps {
@@ -57,17 +57,17 @@ interface InputProps {
 }
 
 const GASTOS_OPERATIVOS: InputProps[] = [
-  { label: "Salarios", name: "salarios_gd" },
-  { label: "Arriendo", name: "arriendo_gd" },
-  { label: "Gas", name: "gas_gd" },
-  { label: "Servicios", name: "servicios_gd" },
-  { label: "Vehículo", name: "vehiculo_gd" },
-  { label: "Banco", name: "banco_gd" },
+  { label: "Salarios", name: "salarios_rd" },
+  { label: "Arriendo", name: "arriendo_rd" },
+  { label: "Gas", name: "gas_rd" },
+  { label: "Servicios", name: "servicios_rd" },
+  { label: "Vehículo", name: "vehiculo_rd" },
+  { label: "Banco", name: "banco_rd" },
 ];
 
 const GASTOS_INVERSION: InputProps[] = [
-  { label: "Compras", name: "compras_gd" },
-  { label: "Varios", name: "varios_gd" },
+  { label: "Compras", name: "compras_rd" },
+  { label: "Varios", name: "varios_rd" },
 ];
 
 interface Props {
@@ -100,17 +100,17 @@ export const ReporteForm: React.FC<Props> = ({
     formState: { errors, isValid },
   } = useForm<ReportFormData>({
     defaultValues: {
-      salarios_gd: gastosFijos.salarios || 0,
-      arriendo_gd: gastosFijos.arriendo || 0,
-      gas_gd: gastosFijos.gas || 0,
-      servicios_gd: gastosFijos.servicios || 0,
-      vehiculo_gd: gastosFijos.vehiculo || 0,
-      banco_gd: gastosFijos.banco || 0,
+      salarios_rd: gastosFijos.salarios || 0,
+      arriendo_rd: gastosFijos.arriendo || 0,
+      gas_rd: gastosFijos.gas || 0,
+      servicios_rd: gastosFijos.servicios || 0,
+      vehiculo_rd: gastosFijos.vehiculo || 0,
+      banco_rd: gastosFijos.banco || 0,
     },
   });
 
   const onSubmit: SubmitHandler<ReportFormData> = async (data) => {
-    const fecha_gd = date?.toDate("UTC");
+    const fecha_rd = date?.toDate("UTC");
 
     try {
       setIsLoading(true);
@@ -118,7 +118,7 @@ export const ReporteForm: React.FC<Props> = ({
       const newReporte = {
         autogenerarVentas,
         ...data,
-        fecha_gd,
+        fecha_rd,
       };
 
       try {
@@ -134,7 +134,7 @@ export const ReporteForm: React.FC<Props> = ({
 
       await createReporteDiario({
         ...newReporte,
-        fecha_gd: date.toString(),
+        fecha_rd: date.toString(),
       });
       toast.success("Reporte creado correctamente");
       reset();
@@ -261,12 +261,12 @@ export const ReporteForm: React.FC<Props> = ({
                 label="Ventas"
                 type="number"
                 placeholder="Ingrese las ventas"
-                {...register("ventas_gd", {
+                {...register("ventas_rd", {
                   required: true,
                   valueAsNumber: true,
                 })}
-                isInvalid={!!errors.ventas_gd}
-                errorMessage={errors.ventas_gd?.message}
+                isInvalid={!!errors.ventas_rd}
+                errorMessage={errors.ventas_rd?.message}
                 isRequired
               />
             )}

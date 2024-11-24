@@ -40,13 +40,13 @@ export const createReporteDiario = async (data: any) => {
     const resReporte = await client.query(
       `
       SELECT 
-        cod_gd
+        cod_rd
       FROM 
         tmreporte_diario
       WHERE 
-        fecha_gd = $1
+        fecha_rd = $1
       `,
-      [data.fecha_gd]
+      [data.fecha_rd]
     );
 
     if (resReporte.rows.length > 0) {
@@ -54,8 +54,8 @@ export const createReporteDiario = async (data: any) => {
       throw new Error("Ya existe un reporte diario para esta fecha");
     }
 
-    //* Calcular ventas_gd
-    let ventas_gd = data.autogenerarVentas ? 0 : data.ventas_gd;
+    //* Calcular ventas_rd
+    let ventas_rd = data.autogenerarVentas ? 0 : data.ventas_rd;
 
     if (data.autogenerarVentas) {
       const res = await client.query(
@@ -68,11 +68,11 @@ export const createReporteDiario = async (data: any) => {
           fkcods_fac = ${Status.PAGADO} AND
           fecha_fac = $1
         `,
-        [data.fecha_gd]
+        [data.fecha_rd]
       );
-      ventas_gd = res.rows[0].ventas;
+      ventas_rd = res.rows[0].ventas;
 
-      if (!ventas_gd) {
+      if (!ventas_rd) {
         throw new Error("No hay ventas registradas para esta fecha");
       }
     }
@@ -82,16 +82,16 @@ export const createReporteDiario = async (data: any) => {
       `
       INSERT INTO 
         tmreporte_diario(
-          fecha_gd,
-          salarios_gd,
-          arriendo_gd,
-          gas_gd,
-          servicios_gd,
-          vehiculo_gd,
-          banco_gd,
-          compras_gd,
-          varios_gd,
-          ventas_gd
+          fecha_rd,
+          salarios_rd,
+          arriendo_rd,
+          gas_rd,
+          servicios_rd,
+          vehiculo_rd,
+          banco_rd,
+          compras_rd,
+          varios_rd,
+          ventas_rd
         )
       VALUES (
         $1,
@@ -107,16 +107,16 @@ export const createReporteDiario = async (data: any) => {
       )
       `,
       [
-        data.fecha_gd,
-        data.salarios_gd,
-        data.arriendo_gd,
-        data.gas_gd,
-        data.servicios_gd,
-        data.vehiculo_gd,
-        data.banco_gd,
-        data.compras_gd,
-        data.varios_gd,
-        ventas_gd,
+        data.fecha_rd,
+        data.salarios_rd,
+        data.arriendo_rd,
+        data.gas_rd,
+        data.servicios_rd,
+        data.vehiculo_rd,
+        data.banco_rd,
+        data.compras_rd,
+        data.varios_rd,
+        ventas_rd,
       ]
     );
 
@@ -137,15 +137,14 @@ export const getReportesDateRanges = async () => {
     await client.connect();
     const res = await client.query(`
       SELECT 
-        fecha_gd
+        fecha_rd
       FROM 
         tmreporte_diario
       ORDER BY
-        fecha_gd ASC
+        fecha_rd ASC
     `);
 
-    const reportesDates = res.rows
-      .map((row) => new Date(row.fecha_gd))
+    const reportesDates = res.rows.map((row) => new Date(row.fecha_rd));
 
     if (reportesDates.length === 0) {
       await client.end();
@@ -195,7 +194,8 @@ export const createGastosFijos = async (data: any) => {
   try {
     const client = new Client();
     await client.connect();
-    const res = await client.query(`
+    const res = await client.query(
+      `
       INSERT INTO 
         tmgastos_fijos(
           salarios,
@@ -232,4 +232,39 @@ export const createGastosFijos = async (data: any) => {
     console.log(error);
     throw new Error(error.message);
   }
-}
+};
+
+export const getReportes = async (startDate: string, endDate: string) => {
+  try {
+    const client = new Client();
+    await client.connect();
+
+    // Base query for fetching paginated records
+    const query = `
+      SELECT
+        cod_rd,
+        fecha_rd,
+        salarios_rd,
+        arriendo_rd,
+        gas_rd,
+        servicios_rd,
+        vehiculo_rd,
+        banco_rd,
+        compras_rd,
+        varios_rd,
+        ventas_rd
+      FROM
+        tmreporte_diario
+      WHERE
+        fecha_rd >= $1 AND
+        fecha_rd <= $2 
+    `;
+    const res = await client.query(query, [startDate, endDate]);
+
+    await client.end();
+    return res.rows;
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+};

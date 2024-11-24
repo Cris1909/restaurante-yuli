@@ -1,13 +1,17 @@
+import { getReportes } from "@/actions/reportes-action";
 import { Button } from "@nextui-org/react";
 import { Metadata } from "next";
 import Link from "next/link";
+import { ReportesManager } from "./components/ReportesManager";
 
 export const metadata: Metadata = {
   title: "Reportes",
   description: "Reportes de la plataforma",
 };
 
-export default function ReportesPage() {
+export default async function ReportesPage() {
+  const reportes = await getReportes("2024-11-20", "2024-11-30");
+
   return (
     <div className="main-container">
       <h1 className="title">Reportes</h1>
@@ -26,6 +30,9 @@ export default function ReportesPage() {
         >
           Crear reporte
         </Button>
+    <ReportesManager
+    reportes={reportes}
+    />
       </div>
     </div>
   );
