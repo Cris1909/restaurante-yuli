@@ -146,18 +146,20 @@ export const PedidosManager: React.FC<Props> = ({
       {/* Tabla */}
       <PedidosTable pedidos={pedidos} />
       {/* Paginación */}
-      <div className="mt-2">
-        <Pagination
-          isCompact
-          showControls
-          total={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          classNames={{
-            cursor: "bg-dark",
-          }}
-        />
-      </div>
+      {pedidos.length ? (
+        <div className="mt-2">
+          <Pagination
+            isCompact
+            showControls
+            total={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            classNames={{
+              cursor: "bg-dark",
+            }}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

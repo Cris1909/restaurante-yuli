@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { formatMoney, getImage } from "@/helpers";
 import {
   cn,
@@ -59,7 +60,7 @@ export const CustomTable: React.FC<Props> = ({
 
   const items = useMemo(() => {
     return data.map((d, id) => ({ ...d, id }));
-  }, [data]);
+  }, [data, columns]);
 
   return (
     <>

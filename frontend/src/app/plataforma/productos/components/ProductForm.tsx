@@ -15,8 +15,8 @@ interface Props {
 }
 
 import * as z from "zod";
-
-export const ProductSchema = z.object({
+ 
+const ProductSchema = z.object({
   nom_prod: z
     .string()
     .min(1, "El nombre del producto es obligatorio")
@@ -35,7 +35,7 @@ export const ProductSchema = z.object({
   recargos: z
     .array(
       z.object({
-        fkcod_tc_rec: z.number().int().positive(),
+        fkcod_tc_rec: z.number().int(),
         recargo_cliente: z
           .number()
           .min(0, "El recargo debe ser mayor o igual a 0"),
@@ -90,6 +90,7 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
     try {
       ProductSchema.parse({ ...productData, img_prod: image.name });
     } catch (error) {
+      console.log(error)
       if (error instanceof z.ZodError) {
         error.errors.forEach((err) => {
           toast.error(err.message);

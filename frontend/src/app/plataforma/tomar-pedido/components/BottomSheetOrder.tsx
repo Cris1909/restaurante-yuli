@@ -13,14 +13,13 @@ import { formatMoney } from "@/helpers";
 import { Button, Divider } from "@nextui-org/react";
 
 import { BottomSheet } from "react-spring-bottom-sheet";
-import 'react-spring-bottom-sheet/dist/style.css';
+import "react-spring-bottom-sheet/dist/style.css";
 
 interface Props {
   clientTypes: ClientType[];
 }
 
 export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
-
   const [isOpen, setIsOpen] = useState(false);
   const [showObservations, setShowObservations] = useState(false);
   const [observations, setObservations] = useState("");
@@ -102,7 +101,11 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                 header: "Precio",
                 width: 100,
                 accessor: "precio_base",
-                type: "price",
+                template: (item: any) =>
+                  "$ " +
+                  formatMoney(
+                    item.precio_base + calculateRecargo(item.recargos)
+                  ),
               },
               {
                 header: "Cantidad",
@@ -192,7 +195,9 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
           <div className="flex justify-between mb-4">
             <span className="subtitle">
               Total a pagar:{" "}
-              <span className="font-bold">$ {formatMoney(getTotalPrice())}</span>
+              <span className="font-bold">
+                $ {formatMoney(getTotalPrice())}
+              </span>
             </span>
             <Button
               onClick={handleCreateOrder}

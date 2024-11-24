@@ -21,7 +21,7 @@ export const Providers: React.FC<Props> = ({ children }) => {
       })}
     >
       <SessionProvider>
-        <NextUIProvider>{children}</NextUIProvider>
+        <NextUIProvider locale="es-CO"> {children}</NextUIProvider>
       </SessionProvider>
     </div>
   );

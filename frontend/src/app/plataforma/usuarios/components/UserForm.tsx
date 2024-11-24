@@ -36,11 +36,10 @@ export const UserSchema = z.object({
     .string()
     .min(1, "La contraseña es obligatoria")
     .max(100, "La contraseña no debe exceder los 100 caracteres"),
-  fkcod_car_user: z
-    .number({
-      required_error: "El código de cargo es obligatorio",
-      invalid_type_error: "El código de cargo debe ser un número",
-    })
+  fkcod_car_user: z.number({
+    required_error: "El código de cargo es obligatorio",
+    invalid_type_error: "El código de cargo debe ser un número",
+  }),
 });
 
 interface UserFormData {
@@ -64,13 +63,25 @@ export const UserForm: React.FC<Props> = ({ cargos }) => {
     handleSubmit,
     reset,
     getValues,
-    formState: { errors},
+    formState: { errors },
   } = useForm<UserFormData>({});
 
   const onSubmit: SubmitHandler<UserFormData> = async (data) => {
     try {
       setIsLoading(true);
-      await createUser({...data, fkcod_car_user: +data.fkcod_car_user});
+
+      try {
+        UserSchema.parse({ ...data, fkcod_car_user: +data.fkcod_car_user });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          error.errors.forEach((err) => {
+            toast.error(err.message);
+          });
+          return;
+        }
+      }
+
+      await createUser({ ...data, fkcod_car_user: +data.fkcod_car_user });
       setIsLoading(false);
       toast.success("Usuario creado correctamente");
       router.push("/plataforma/usuarios");
