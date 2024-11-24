@@ -84,20 +84,21 @@ export const ReporteForm: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [autogenerarVentas, setAutogenerarVentas] = useState(true);
   const [date, setDate] = useState<any>(null);
-  
+
   useEffect(() => {
-   const fechasInvalidas = reportesCreados.flat();
-   if(fechasInvalidas.includes(today(getLocalTimeZone()).toString())){
-    return;
-   }
-   setDate(today(getLocalTimeZone()))
-  }, [reportesCreados])
+    const fechasInvalidas = reportesCreados.flat();
+    if (fechasInvalidas.includes(today(getLocalTimeZone()).toString())) {
+      return;
+    }
+    setDate(today(getLocalTimeZone()));
+  }, [reportesCreados]);
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
+
   } = useForm<ReportFormData>({
     defaultValues: {
       salarios_gd: gastosFijos.salarios || 0,
@@ -167,9 +168,9 @@ export const ReporteForm: React.FC<Props> = ({
       className="mt-6 flex flex-col lg:flex-row gap-4"
     >
       <section className="flex-1 grid md:grid-cols-2 gap-4">
+        {/* Gastos de Inversión */}
         <Card className="self-start animate__fade-in-up">
           <CardBody className="p-4 flex flex-col gap-4">
-            {/* Gastos de Inversión */}
             <section className="flex flex-col gap-2">
               <div>
                 <h2 className="text-xl font-extrabold mb-2">
@@ -193,9 +194,9 @@ export const ReporteForm: React.FC<Props> = ({
             </section>
           </CardBody>
         </Card>
+        {/* Gastos Operativos */}
         <Card className="self-start animate__fade-in-up">
           <CardBody className="p-4 flex flex-col gap-4">
-            {/* Gastos Operativos */}
             <section className="flex flex-col gap-2">
               <div>
                 <h2 className="text-xl font-extrabold mb-2">
@@ -268,7 +269,7 @@ export const ReporteForm: React.FC<Props> = ({
                 label="Ventas"
                 type="number"
                 placeholder="Ingrese las ventas"
-                {...register("ventas_gd")}
+                {...register("ventas_gd", {required: true})}
                 isInvalid={!!errors.ventas_gd}
                 errorMessage={errors.ventas_gd?.message}
                 isRequired
@@ -281,7 +282,7 @@ export const ReporteForm: React.FC<Props> = ({
             <Button
               className="btn btn-primary"
               type="submit"
-              isDisabled={isLoading}
+              isDisabled={isLoading || !isValid || !date}
             >
               {isLoading ? "Cargando..." : "Crear Reporte"}
             </Button>
