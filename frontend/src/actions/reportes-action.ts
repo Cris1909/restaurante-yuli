@@ -71,6 +71,10 @@ export const createReporteDiario = async (data: any) => {
         [data.fecha_gd]
       );
       ventas_gd = res.rows[0].ventas;
+
+      if (!ventas_gd) {
+        throw new Error("No hay ventas registradas para esta fecha");
+      }
     }
 
     //* Creación del reporte diario
@@ -222,6 +226,7 @@ export const createGastosFijos = async (data: any) => {
     await client.end();
     revalidatePath("/plataforma/reportes");
     revalidatePath("/plataforma/reportes/crear");
+    revalidatePath("/plataforma/reportes/gastos-fijos");
     return { success: true };
   } catch (error: any) {
     console.log(error);

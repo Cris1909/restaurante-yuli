@@ -1,7 +1,11 @@
 "use client";
 
-import { createGastosFijos, createReporteDiario } from "@/actions/reportes-action";
+import {
+  createGastosFijos,
+  createReporteDiario,
+} from "@/actions/reportes-action";
 import { Button, Card, CardBody, Divider, Input } from "@nextui-org/react";
+import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -65,21 +69,12 @@ export const GastosFijosForm: React.FC<Props> = ({ gastosFijos }) => {
     },
   });
 
-  const parseToNumber = (fields: any) => {
-    Object.keys(fields).forEach((key) => {
-      fields[key] = fields[key] ? +fields[key] : 0;
-    });
-    return fields;
-  };
-
   const onSubmit: SubmitHandler<GastosFijosFormData> = async (data) => {
     try {
-      const newGastosFijos = parseToNumber(data);
-
       setIsLoading(true);
 
       try {
-        GastosFijosSchema.parse(newGastosFijos);
+        GastosFijosSchema.parse(data);
       } catch (error) {
         if (error instanceof z.ZodError) {
           error.errors.forEach((err) => {
@@ -88,13 +83,10 @@ export const GastosFijosForm: React.FC<Props> = ({ gastosFijos }) => {
           return;
         }
       }
-      await createGastosFijos(newGastosFijos);
+      await createGastosFijos(data);
       toast.success("Gastos fijos cambiados correctamente");
       reset();
       router.push("/plataforma/reportes");
-      router.push("/plataforma/reportes/crear");
-      router.push("/plataforma/reportes/gastos-fijos");
-
     } catch (error: any) {
       toast.error(error.message || "Ocurrió un error");
     } finally {
@@ -120,7 +112,7 @@ export const GastosFijosForm: React.FC<Props> = ({ gastosFijos }) => {
                   label={label}
                   type="number"
                   placeholder={`Ingrese el monto`}
-                  {...register(name, { required: true })}
+                  {...register(name, { required: true, valueAsNumber: true })}
                   isInvalid={!!errors[name]}
                   errorMessage={errors[name]?.message}
                   isRequired

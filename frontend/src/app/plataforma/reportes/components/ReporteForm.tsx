@@ -98,7 +98,6 @@ export const ReporteForm: React.FC<Props> = ({
     handleSubmit,
     reset,
     formState: { errors, isValid },
-
   } = useForm<ReportFormData>({
     defaultValues: {
       salarios_gd: gastosFijos.salarios || 0,
@@ -110,13 +109,6 @@ export const ReporteForm: React.FC<Props> = ({
     },
   });
 
-  const parseToNumber = (fields: any) => {
-    Object.keys(fields).forEach((key) => {
-      fields[key] = fields[key] ? +fields[key] : 0;
-    });
-    return fields;
-  };
-
   const onSubmit: SubmitHandler<ReportFormData> = async (data) => {
     const fecha_gd = date?.toDate("UTC");
 
@@ -125,7 +117,7 @@ export const ReporteForm: React.FC<Props> = ({
 
       const newReporte = {
         autogenerarVentas,
-        ...parseToNumber(data),
+        ...data,
         fecha_gd,
       };
 
@@ -185,7 +177,7 @@ export const ReporteForm: React.FC<Props> = ({
                   label={label}
                   type="number"
                   placeholder={`Ingrese el monto`}
-                  {...register(name, { required: true })}
+                  {...register(name, { required: true, valueAsNumber: true })}
                   isInvalid={!!errors[name]}
                   errorMessage={errors[name]?.message}
                   isRequired
@@ -211,7 +203,7 @@ export const ReporteForm: React.FC<Props> = ({
                   label={label}
                   type="number"
                   placeholder={`Ingrese el monto`}
-                  {...register(name, { required: true })}
+                  {...register(name, { required: true, valueAsNumber: true })}
                   isInvalid={!!errors[name]}
                   errorMessage={errors[name]?.message}
                   isRequired
@@ -269,7 +261,10 @@ export const ReporteForm: React.FC<Props> = ({
                 label="Ventas"
                 type="number"
                 placeholder="Ingrese las ventas"
-                {...register("ventas_gd", {required: true})}
+                {...register("ventas_gd", {
+                  required: true,
+                  valueAsNumber: true,
+                })}
                 isInvalid={!!errors.ventas_gd}
                 errorMessage={errors.ventas_gd?.message}
                 isRequired

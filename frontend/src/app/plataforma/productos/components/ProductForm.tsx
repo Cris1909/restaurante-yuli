@@ -2,7 +2,14 @@
 
 import { createProduct } from "@/actions/products.actions";
 import { ClientType, Product } from "@/interfaces";
-import { Card, Divider, Input, Textarea, Tooltip } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Divider,
+  Input,
+  Textarea,
+  Tooltip,
+} from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,7 +22,7 @@ interface Props {
 }
 
 import * as z from "zod";
- 
+
 const ProductSchema = z.object({
   nom_prod: z
     .string()
@@ -48,7 +55,7 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<Product>({
     defaultValues: {
       nom_prod: product?.nom_prod || "",
@@ -90,7 +97,7 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
     try {
       ProductSchema.parse({ ...productData, img_prod: image.name });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       if (error instanceof z.ZodError) {
         error.errors.forEach((err) => {
           toast.error(err.message);
@@ -132,7 +139,10 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid gap-4 animate__fade-in-up">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mt-6 grid gap-4 animate__fade-in-up"
+    >
       <div className="flex flex-col lg:flex-row gap-4">
         <Card className="p-4 flex-1">
           <div className="flex flex-col md:flex-row gap-8">
@@ -281,9 +291,14 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
         </div>
       </div>
       <div className="flex justify-end">
-        <button className="btn btn-primary w-full lg:w-[292px]" type="submit">
-          {isLoading ? "Guardando..." : "Guardar producto"}
-        </button>
+        <Button
+          isLoading={isLoading}
+          isDisabled={isLoading || !isValid}
+          className="btn btn-primary w-full lg:w-[292px]"
+          type="submit"
+        >
+          {isLoading ? "Guardando producto..." : "Guardar producto"}
+        </Button>
       </div>
     </form>
   );

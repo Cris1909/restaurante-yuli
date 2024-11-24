@@ -63,7 +63,7 @@ export const UserForm: React.FC<Props> = ({ cargos }) => {
     handleSubmit,
     reset,
     getValues,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<UserFormData>({});
 
   const onSubmit: SubmitHandler<UserFormData> = async (data) => {
@@ -172,9 +172,13 @@ export const UserForm: React.FC<Props> = ({ cargos }) => {
               </Select>
             </div>
             <Divider />
-            <button className="btn btn-primary" disabled={isLoading}>
-              {isLoading ? "Cargando..." : "Crear Usuario"}
-            </button>
+            <Button
+              isLoading={isLoading}
+              isDisabled={isLoading || !isValid}
+              className="btn btn-primary"
+            >
+              {isLoading ? "Creando usuario..." : "Crear Usuario"}
+            </Button>
           </form>
         </CardBody>
       </Card>
