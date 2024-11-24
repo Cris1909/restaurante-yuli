@@ -18,8 +18,8 @@ insert into tmstatus(cods, dstatus) VALUES
 (1, 'ACTIVO'),
 (2, 'DESACTIVADO'),
 (3, 'PENDIENTE'),
-(4, 'ENTREGADO')
-(5, 'PAGADO')
+(4, 'ENTREGADO'),
+(5, 'PAGADO'),
 (6, 'CANCELADO');
 
 SELECT * FROM tmstatus;
@@ -140,3 +140,37 @@ CREATE TABLE tddfactura(
 );
 
 SELECT * FROM tddfactura;
+
+CREATE TABLE tmgastos_fijos(
+    cod_gf SERIAL not null primary key,
+    salarios DOUBLE PRECISION not null,
+    arriendo DOUBLE PRECISION not null,
+    gas DOUBLE PRECISION not null,
+    servicios DOUBLE PRECISION not null,
+    vehiculo DOUBLE PRECISION not null,
+    banco DOUBLE PRECISION not null
+);
+
+INSERT INTO tmgastos_fijos(salarios, arriendo, gas, servicios, vehiculo, banco) VALUES
+(290000, 41500, 34000, 30000, 35000, 10000);
+
+SELECT * FROM tmgastos_fijos;
+
+CREATE TABLE tmreporte_diario(
+    cod_gd SERIAL not null primary key,
+    fecha_gd date not null default CURRENT_DATE,
+    -- Gastos de inversión
+    compras_gd DOUBLE PRECISION not null default 0,
+    varios_gd DOUBLE PRECISION not null default 0,
+    -- Gastos operativos
+    salarios_gd DOUBLE PRECISION not null,
+    arriendo_gd DOUBLE PRECISION not null,
+    gas_gd DOUBLE PRECISION not null,
+    servicios_gd DOUBLE PRECISION not null,
+    vehiculo_gd DOUBLE PRECISION not null,
+    banco_gd DOUBLE PRECISION not null,
+    -- Ventas
+    ventas_gd DOUBLE PRECISION not null,
+    fkcods_gd integer not null default 1,
+    foreign key(fkcods_gd) references tmstatus(cods) on update cascade on delete restrict
+);
