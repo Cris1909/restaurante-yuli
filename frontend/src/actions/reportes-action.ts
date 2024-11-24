@@ -186,3 +186,45 @@ export const getReportesDateRanges = async () => {
     return [];
   }
 };
+
+export const createGastosFijos = async (data: any) => {
+  try {
+    const client = new Client();
+    await client.connect();
+    const res = await client.query(`
+      INSERT INTO 
+        tmgastos_fijos(
+          salarios,
+          arriendo,
+          gas,
+          servicios,
+          vehiculo,
+          banco
+        )
+      VALUES (
+        $1,
+        $2,
+        $3,
+        $4,
+        $5,
+        $6
+      )
+      `,
+      [
+        data.salarios,
+        data.arriendo,
+        data.gas,
+        data.servicios,
+        data.vehiculo,
+        data.banco,
+      ]
+    );
+    await client.end();
+    revalidatePath("/plataforma/reportes");
+    revalidatePath("/plataforma/reportes/crear");
+    return { success: true };
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+}

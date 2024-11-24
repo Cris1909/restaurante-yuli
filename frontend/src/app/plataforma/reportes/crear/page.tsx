@@ -1,6 +1,9 @@
 import { Metadata } from "next";
 import { ReporteForm } from "../components/ReporteForm";
-import { getGastosFijos, getReportesDateRanges } from "@/actions/reportes-action";
+import {
+  getGastosFijos,
+  getReportesDateRanges,
+} from "@/actions/reportes-action";
 
 export const metadata: Metadata = {
   title: "Crear Reporte",
@@ -8,7 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function CrearReportePage() {
-  // Obtiene los datos de gastos fijos desde tu backend o base de datos
   const [gastosFijos, reportesCreados] = await Promise.all([
     getGastosFijos(),
     getReportesDateRanges(),
@@ -17,8 +19,10 @@ export default async function CrearReportePage() {
   return (
     <div className="main-container">
       <h1 className="title">Crear Reporte Diario</h1>
-      {/* Pasamos los datos como props al formulario */}
-      <ReporteForm gastosFijos={gastosFijos} reportesCreados={reportesCreados} />
+      <ReporteForm
+        gastosFijos={gastosFijos}
+        reportesCreados={reportesCreados}
+      />
     </div>
   );
 }

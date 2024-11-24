@@ -165,7 +165,7 @@ export const ReporteForm: React.FC<Props> = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mt-6 flex flex-col lg:flex-row gap-4"
+      className="mt-4 flex flex-col lg:flex-row gap-4"
     >
       <section className="flex-1 grid md:grid-cols-2 gap-4">
         {/* Gastos de Inversión */}
@@ -282,6 +282,7 @@ export const ReporteForm: React.FC<Props> = ({
             <Button
               className="btn btn-primary"
               type="submit"
+              isLoading={isLoading}
               isDisabled={isLoading || !isValid || !date}
             >
               {isLoading ? "Cargando..." : "Crear Reporte"}

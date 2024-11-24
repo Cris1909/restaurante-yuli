@@ -12,7 +12,13 @@ export default function ReportesPage() {
     <div className="main-container">
       <h1 className="title">Reportes</h1>
       <div className="mt-4">
-        <Button className="btn btn-primary">Editar gastos fijos</Button>
+        <Button
+          as={Link}
+          href="/plataforma/reportes/gastos-fijos"
+          className="btn btn-primary"
+        >
+          Editar gastos fijos
+        </Button>
         <Button
           as={Link}
           href="/plataforma/reportes/crear"
