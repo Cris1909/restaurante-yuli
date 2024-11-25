@@ -108,7 +108,7 @@ const ProductManager: React.FC<Props> = ({
                             >
                               <div>{clientTypesMap[fkcod_tc_rec]}:</div>
                               <div>
-                                $ {formatMoney(precio_base + recargo_cliente)}
+                                {formatMoney(precio_base + recargo_cliente)}
                               </div>
                             </div>
                           ))}

@@ -7,6 +7,7 @@ import {
   TableCell,
   TableColumn,
   TableHeader,
+  TableProps,
   TableRow,
 } from "@nextui-org/react";
 import Image from "next/image";
@@ -21,7 +22,7 @@ export interface Column {
   width?: number;
 }
 
-interface Props {
+interface Props extends TableProps {
   columns: Column[];
   data: any[];
   footerComponent?: React.ReactNode;
@@ -33,6 +34,7 @@ export const CustomTable: React.FC<Props> = ({
   data,
   footerComponent,
   emptyMessage = "No hay datos disponibles",
+  ...props
 }) => {
   const renderRow = (item: any, columnKey: Key) => {
     const column = columns.find((c) => c.accessor === columnKey);
@@ -50,7 +52,9 @@ export const CustomTable: React.FC<Props> = ({
             className="rounded-md object-cover object-center w-8 h-8"
           />
         ) : column.type === "price" ? (
-          `$ ${formatMoney(item[column.accessor])}`
+          <div className="text-end">
+            {formatMoney(item[column.accessor])}
+          </div>
         ) : (
           item[column.accessor]
         )}
@@ -63,42 +67,38 @@ export const CustomTable: React.FC<Props> = ({
   }, [data, columns]);
 
   return (
-    <>
-      <Table bottomContent={footerComponent} aria-label="Custom table">
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn
-              align={column.align}
-              className="bg-dark text-white"
-              width={
-                column.width
-                  ? column.width
-                  : column.type === "icon"
-                  ? 56
-                  : undefined
-              }
-              key={column.accessor}
-            >
-              {column.type === "icon" ? (
-                <div className="grid place-content-center">
-                  <i className={cn("", column.header)} />
-                </div>
-              ) : (
-                column.header
-              )}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody emptyContent={emptyMessage} items={items}>
-          {(item) => (
-            <TableRow>
-              {(columnKey) => (
-                <TableCell>{renderRow(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </>
+    <Table bottomContent={footerComponent} aria-label="Custom table" {...props}>
+      <TableHeader columns={columns}>
+        {(column) => (
+          <TableColumn
+            align={column.align}
+            className="bg-dark text-white"
+            width={
+              column.width
+                ? column.width
+                : column.type === "icon"
+                ? 56
+                : undefined
+            }
+            key={column.accessor}
+          >
+            {column.type === "icon" ? (
+              <div className="grid place-content-center">
+                <i className={cn("", column.header)} />
+              </div>
+            ) : (
+              column.header
+            )}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody emptyContent={emptyMessage} items={items}>
+        {(item) => (
+          <TableRow>
+            {(columnKey) => <TableCell>{renderRow(item, columnKey)}</TableCell>}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 };

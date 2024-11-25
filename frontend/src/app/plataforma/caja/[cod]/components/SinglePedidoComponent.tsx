@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
 
- 
 const orderStatus: Record<
   number,
   {
@@ -201,16 +200,14 @@ export const SinglePedidoComponent: React.FC<Props> = ({ pedido }) => {
               accessor: "precio_base",
               width: 100,
               template: ({ precio_base, recargo_clie }) =>
-                `$ ${formatMoney(precio_base + recargo_clie)}`,
+                formatMoney(precio_base + recargo_clie),
             },
             {
               header: "Subtotal",
               accessor: "subtotal",
               width: 100,
               template: ({ precio_base, recargo_clie, cantidad_platos }) =>
-                `$ ${formatMoney(
-                  (precio_base + recargo_clie) * cantidad_platos
-                )}`,
+                formatMoney((precio_base + recargo_clie) * cantidad_platos),
             },
           ]}
           data={pedido.productos}
@@ -224,7 +221,7 @@ export const SinglePedidoComponent: React.FC<Props> = ({ pedido }) => {
 
                 <div className="flex text-small items-center">
                   <div className="w-[100px] px-3  font-bold">
-                    $ {formatMoney(pedido.monto_total)}
+                    {formatMoney(pedido.monto_total)}
                   </div>
                 </div>
               </div>

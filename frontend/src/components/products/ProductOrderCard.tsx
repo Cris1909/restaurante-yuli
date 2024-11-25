@@ -74,7 +74,7 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
         {/* <p className="line-2">{highlightMatches(dprod, inputText)}</p>{" "} */}
         <p className="line-2">{dprod}</p>{" "}
         <div className="price-add-container">
-          <span>$ {productPrice}</span>
+          <span>{productPrice}</span>
           {productInOrder ? (
             <ProductQuantity productId={cod_prod} />
           ) : (

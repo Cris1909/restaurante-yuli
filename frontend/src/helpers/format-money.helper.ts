@@ -1,3 +1,3 @@
 export const formatMoney = (amount: number) => {
-  return amount.toLocaleString('es-ES');
+  return '$ ' + amount.toLocaleString('es-ES');
 }

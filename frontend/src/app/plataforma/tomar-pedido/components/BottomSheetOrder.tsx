@@ -60,7 +60,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
     <>
       <div className="order-detail">
         <p className="subtitle">
-          Total a pagar: <b> $ {formatMoney(getTotalPrice())} </b>
+          Total a pagar: <b> {formatMoney(getTotalPrice())} </b>
         </p>
         <button
           className="btn btn-primary"
@@ -102,7 +102,6 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                 width: 100,
                 accessor: "precio_base",
                 template: (item: any) =>
-                  "$ " +
                   formatMoney(
                     item.precio_base + calculateRecargo(item.recargos)
                   ),
@@ -120,7 +119,6 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                 accessor: "subtotal",
                 width: 100,
                 template: (item: any) =>
-                  "$ " +
                   formatMoney(
                     (item.precio_base + calculateRecargo(item.recargos)) *
                       item.quantity
@@ -142,7 +140,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                   <div className="flex text-small items-center">
                     <div className="px-3">Total a pagar:</div>
                     <div className="w-[100px] px-3  font-bold">
-                      $ {formatMoney(getTotalPrice())}
+                      {formatMoney(getTotalPrice())}
                     </div>
                   </div>
                 </div>
@@ -195,9 +193,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
           <div className="flex justify-between mb-4">
             <span className="subtitle">
               Total a pagar:{" "}
-              <span className="font-bold">
-                $ {formatMoney(getTotalPrice())}
-              </span>
+              <span className="font-bold">{formatMoney(getTotalPrice())}</span>
             </span>
             <Button
               onClick={handleCreateOrder}
