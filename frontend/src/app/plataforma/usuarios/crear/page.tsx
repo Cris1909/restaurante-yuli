@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 const Page: React.FC = async () => {
   const [cargos] = await Promise.all([getCargos()]);
+  if(!cargos) return null;
   return (
     <div className="main-container">
       <h1 className="title">Crear Usuario</h1>

@@ -30,7 +30,6 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
       <h1 className="title">Gestión de Usuarios</h1>
       <div className="mt-4 flex flex-col gap-3">
         <div className="grid">
-          
           <Link href={"/plataforma/usuarios/crear"}>
             <Button className="btn btn-black">Crear usuario</Button>
           </Link>
@@ -48,7 +47,13 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
               template: ({ ced_user }: User) => {
                 return (
                   <div className="flex gap-2">
-                    <Button size="sm" isIconOnly className="bg-blue text-white">
+                    <Button
+                      as={Link}
+                      href={`/plataforma/usuarios/editar/${ced_user}`}
+                      size="sm"
+                      isIconOnly
+                      className="bg-blue text-white"
+                    >
                       <i className="i-mdi-pencil" />
                     </Button>
                     <Button

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 const Page: React.FC = async () => {
   const [users] = await Promise.all([getUsers()]);
+  if (!users) return null;
   return <UserManager users={users} />;
 };
 

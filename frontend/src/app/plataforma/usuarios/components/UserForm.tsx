@@ -1,15 +1,14 @@
 "use client";
 
-import { createUser } from "@/actions/users-actions";
+import { createUser, updateUser } from "@/actions/users-actions";
 import { PasswordInput } from "@/components";
 import { Cargo } from "@/interfaces";
 import {
+  Button,
   Card,
+  CardBody,
   Divider,
   Input,
-  Button,
-  CardBody,
-  CardHeader,
   Select,
   SelectItem,
 } from "@nextui-org/react";
@@ -52,9 +51,10 @@ interface UserFormData {
 
 interface Props {
   cargos: Cargo[];
+  initialValues?: Partial<UserFormData>;
 }
 
-export const UserForm: React.FC<Props> = ({ cargos }) => {
+export const UserForm: React.FC<Props> = ({ cargos, initialValues }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -62,9 +62,10 @@ export const UserForm: React.FC<Props> = ({ cargos }) => {
     register,
     handleSubmit,
     reset,
-    getValues,
     formState: { errors, isValid },
-  } = useForm<UserFormData>({});
+  } = useForm<UserFormData>({
+    defaultValues: initialValues,
+  });
 
   const onSubmit: SubmitHandler<UserFormData> = async (data) => {
     try {
@@ -74,25 +75,35 @@ export const UserForm: React.FC<Props> = ({ cargos }) => {
         UserSchema.parse({ ...data, fkcod_car_user: +data.fkcod_car_user });
       } catch (error) {
         if (error instanceof z.ZodError) {
-          error.errors.forEach((err) => {
-            toast.error(err.message);
-          });
+          error.errors.forEach((err) => toast.error(err.message));
           return;
         }
       }
+      console.log({
+        ...data,
+        fkcod_car_user: +data.fkcod_car_user,
+      })
+      if (initialValues?.ced_user) {
+        // Editar usuario
+        await updateUser(initialValues.ced_user, {
+          ...data,
+          fkcod_car_user: +data.fkcod_car_user,
+        });
+        toast.success("Usuario editado correctamente");
+      } else {
+        // Crear usuario
+        await createUser({ ...data, fkcod_car_user: +data.fkcod_car_user });
+        toast.success("Usuario creado correctamente");
+      }
 
-      await createUser({ ...data, fkcod_car_user: +data.fkcod_car_user });
       setIsLoading(false);
-      toast.success("Usuario creado correctamente");
       router.push("/plataforma/usuarios");
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        error.errors.forEach((err) => {
-          toast.error(err.message);
-        });
-      } else {
-        toast.error("Error al crear el usuario");
-      }
+      toast.error(
+        initialValues?.ced_user
+          ? "Error al editar el usuario"
+          : "Error al crear el usuario"
+      );
       setIsLoading(false);
     }
   };
@@ -113,7 +124,7 @@ export const UserForm: React.FC<Props> = ({ cargos }) => {
               label="Cédula"
               placeholder="Ingrese la cédula"
               {...register("ced_user", { required: true })}
-              isDisabled={isLoading}
+              isDisabled={!!initialValues?.ced_user || isLoading}
               isInvalid={!!errors.ced_user}
               errorMessage={errors.ced_user?.message}
               isRequired
@@ -145,39 +156,43 @@ export const UserForm: React.FC<Props> = ({ cargos }) => {
               isRequired
             />
             <PasswordInput
-              register={register("password_user", { required: true })}
+              register={register("password_user", { required: !initialValues })}
               isDisabled={isLoading}
               isInvalid={!!errors.password_user}
               errorMessage={errors.password_user?.message}
-              isRequired
+              isRequired={!initialValues}
             />
-            <div>
-              <Select
-                fullWidth
-                size="md"
-                label="Código de Cargo"
-                labelPlacement="outside"
-                placeholder="Seleccione un cargo"
-                {...register("fkcod_car_user", { required: true })}
-                disabled={isLoading}
-                isInvalid={!!errors.fkcod_car_user}
-                errorMessage={errors.fkcod_car_user?.message}
-                isRequired
-              >
-                {cargos.map((cargo) => (
-                  <SelectItem key={cargo.cod_car} value={cargo.cod_car}>
-                    {cargo.dcar}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
+            <Select
+              fullWidth
+              size="md"
+              label="Código de Cargo"
+              labelPlacement="outside"
+              placeholder="Seleccione un cargo"
+              {...register("fkcod_car_user", { required: true })}
+              disabled={isLoading}
+              isInvalid={!!errors.fkcod_car_user}
+              errorMessage={errors.fkcod_car_user?.message}
+              isRequired
+            >
+              {cargos.map((cargo) => (
+                <SelectItem key={cargo.cod_car} value={cargo.cod_car}>
+                  {cargo.dcar}
+                </SelectItem>
+              ))}
+            </Select>
             <Divider />
             <Button
               isLoading={isLoading}
               isDisabled={isLoading || !isValid}
               className="btn btn-primary"
             >
-              {isLoading ? "Creando usuario..." : "Crear Usuario"}
+              {isLoading
+                ? initialValues?.ced_user
+                  ? "Editando usuario..."
+                  : "Creando usuario..."
+                : initialValues?.ced_user
+                ? "Editar Usuario"
+                : "Crear Usuario"}
             </Button>
           </form>
         </CardBody>
