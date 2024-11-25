@@ -3,22 +3,11 @@
 import pg from "pg";
 const { Client } = pg;
 
-import { YuliApi } from "@/api";
 import { Status } from "@/enum";
 import { Product } from "@/interfaces";
-import axios from "axios";
-import { uploadFile } from "./files.actions";
 import { revalidatePath } from "next/cache";
-
-export const getProductsFromAPI = async () => {
-  try {
-    const response = await YuliApi.get<Product[]>(`/productos/listar`);
-    return response.data.map((p) => ({ ...p, recargos: p.recargos || [] }));
-  } catch (error: any) {
-    console.log(error);
-    throw new Error(error.message);
-  }
-};
+import { uploadFile } from "./files.actions";
+import { auth } from "@/lib/auth";
 
 export const getProducts = async ({
   includeDeactivated = false,
@@ -73,6 +62,8 @@ export const getProducts = async ({
 };
 
 export const deleteProduct = async (cod_prod: number) => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();
@@ -80,7 +71,7 @@ export const deleteProduct = async (cod_prod: number) => {
       `UPDATE tmproductos SET fkcods_prod = 0 WHERE cod_prod = $1`,
       [cod_prod]
     );
-    
+
     await client.end();
     revalidatePath("/plataforma/tomar-pedido");
   } catch (error: any) {
@@ -90,6 +81,8 @@ export const deleteProduct = async (cod_prod: number) => {
 };
 
 export const changeProductStatus = async (cod_prod: number, status: Status) => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();
@@ -100,7 +93,6 @@ export const changeProductStatus = async (cod_prod: number, status: Status) => {
     await client.end();
 
     revalidatePath("/plataforma/tomar-pedido");
-
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
@@ -119,6 +111,8 @@ export const createProduct = async (
     }[];
   }
 ) => {
+  const session = await auth();
+  if (!session) return null;
   const { nom_prod, dprod, precio_base, recargos } = data;
   fileFormData.append(
     "upload_preset",

@@ -9,6 +9,8 @@ export const createFacturaWithDetails = async (
   factura: any,
   detalle_factura: any[]
 ) => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const session = await auth();
     if (!session) return null;
@@ -65,6 +67,8 @@ export const createFacturaWithDetails = async (
 };
 
 export const getPedidosPendientes = async () => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();
@@ -106,6 +110,8 @@ export const getPedidosPendientes = async () => {
 };
 
 export const updateStatusFactura = async (cod_fac: number, status: Status) => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();
@@ -148,6 +154,8 @@ export const getPedidosPaginated = async ({
   startDate?: string;
   endDate?: string;
 }) => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();
@@ -225,6 +233,8 @@ export const getPedidosPaginated = async ({
 };
 
 export const getSinglePedido = async (cod_fac: number) => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();
@@ -272,6 +282,8 @@ export const getSinglePedido = async (cod_fac: number) => {
 };
 
 export const getPedidosCaja = async () => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();

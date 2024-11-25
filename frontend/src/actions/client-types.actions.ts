@@ -1,20 +1,12 @@
 "use server";
 
-import { YuliApi } from "@/api";
 import { ClientType } from "@/interfaces";
+import { auth } from "@/lib/auth";
 import { Client } from "pg";
 
-export const getClientTypesAPI = async () => {
-  try {
-    const response = await YuliApi.get<[]>(`/tipo-clientes/listar`);
-    return response.data;
-  } catch (error: any) {
-    console.log(error)
-    throw new Error(error.message);
-  }
-};
-
 export const getClientTypes = async () => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();

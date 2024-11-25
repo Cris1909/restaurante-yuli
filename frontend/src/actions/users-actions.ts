@@ -1,8 +1,11 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import { Client } from "pg";
 
 export const getUsers = async () => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();
@@ -31,6 +34,8 @@ export const getUsers = async () => {
 };
 
 export const deleteUser = async (ced_emple: string) => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();
@@ -52,6 +57,8 @@ export const createUser = async (data: {
   password_user: string;
   fkcod_car_user: number;
 }) => {
+  const session = await auth();
+  if (!session) return null;
   const { ced_user, nom_user, email_user, password_user, fkcod_car_user } =
     data;
 

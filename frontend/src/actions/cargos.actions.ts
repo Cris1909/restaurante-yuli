@@ -1,7 +1,10 @@
 import { Cargo } from "@/interfaces";
+import { auth } from "@/lib/auth";
 import { Client } from "pg";
 
 export const getCargos = async () => {
+  const session = await auth();
+  if (!session) return null;
   try {
     const client = new Client();
     await client.connect();

@@ -1,4 +1,5 @@
 import { CloudinaryApi } from "@/api/cloudinary.api";
+import { auth } from "@/lib/auth";
 import axios from "axios";
 
 type ImageResponse = {
