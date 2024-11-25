@@ -8,12 +8,11 @@ import { capitalazeText, formatHour, formatMoney } from "@/helpers";
 import { SinglePedido } from "@/interfaces";
 import {
   Button,
-  Chip,
   cn,
   Divider,
   Popover,
   PopoverContent,
-  PopoverTrigger,
+  PopoverTrigger
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";

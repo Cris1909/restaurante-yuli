@@ -19,7 +19,7 @@ export default async function NamePage() {
       <h1 className="title mb-4">
         Caja y facturación
       </h1>
-      <PedidosTable pedidos={pedidos} showStatusActions />
+      <PedidosTable pedidos={pedidos} showStatusActions itemHref="/plataforma/caja" />
     </div>
   );
 }

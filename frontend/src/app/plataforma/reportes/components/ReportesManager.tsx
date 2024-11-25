@@ -2,6 +2,7 @@
 
 import { CustomTable } from "@/components";
 import { formatMoney } from "@/helpers";
+import { useSearchParams } from "@/hooks";
 import { parseDate } from "@internationalized/date";
 import {
   Button,
@@ -16,7 +17,7 @@ import {
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 interface Reportes {
   cod_rd: number;
@@ -69,7 +70,6 @@ export const ReporteDiario: React.FC<ReporteRange> = ({
   startDate,
   isTotalReport = false,
 }) => {
-
   const totals: Reportes = useMemo(() => {
     return dailyReports.reduce(
       (totals: any, row: any) => {
@@ -264,25 +264,11 @@ interface Props {
 }
 
 export const ReportesManager = ({ groupedData, startDate, endDate }: Props) => {
-  const router = useRouter();
-
-  const [filters, setFilters] = useState({
+  
+  const { filters, handleFilterChange, handleApplyFilters } = useSearchParams({
     startDate: startDate || "",
     endDate: endDate || "",
   });
-
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleApplyFilters = () => {
-    const queries = new URLSearchParams();
-    Object.entries(filters).forEach(([key, value]) => {
-      if (!value) return;
-      queries.set(key, value);
-    });
-    router.push("?" + queries.toString());
-  };
 
   return (
     <div className="mt-4">
@@ -332,7 +318,7 @@ export const ReportesManager = ({ groupedData, startDate, endDate }: Props) => {
 
           <ReporteDiario
             dailyReports={[groupedData.finances]}
-            endDate={new Date(endDate!).toString()} 
+            endDate={new Date(endDate!).toString()}
             startDate={new Date(startDate!).toString()}
             isTotalReport
           />

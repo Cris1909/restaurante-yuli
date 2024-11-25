@@ -1,13 +1,13 @@
 "use client";
 
 import { PedidosTable } from "@/components/PedidosTable";
+import { useSearchParams } from "@/hooks";
 import { ClientType } from "@/interfaces";
 import { parseDate } from "@internationalized/date";
 import {
   Button,
   DateRangePicker,
   Divider,
-  Pagination,
   Select,
   SelectItem,
 } from "@nextui-org/react";
@@ -52,33 +52,18 @@ export const PedidosManager: React.FC<Props> = ({
     endDate,
   },
 }) => {
-  const router = useRouter();
 
-  const [filters, setFilters] = useState({
+  const {
+    filters,
+    handleFilterChange,
+    handlePageChange,
+    handleApplyFiltersWithPage
+  }  = useSearchParams({
     fktc_fac: fktc_fac || "",
     sortDirection: sortDirection || "desc",
     startDate: startDate || "",
     endDate: endDate || "",
-  });
-
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handlePageChange = (newPage: number) => {
-    handleApplyFilters(newPage);
-  };
-
-  const handleApplyFilters = (page: number = 1) => {
-    const queries = new URLSearchParams();
-    queries.set("page", page + "");
-    Object.entries(filters).forEach(([key, value]) => {
-      if (!value) return;
-      if (key === "fktc_fac" && value === "all") return;
-      queries.set(key, value);
-    });
-    router.push("?" + queries.toString());
-  };
+  })
 
   return (
     <div>
@@ -138,28 +123,22 @@ export const PedidosManager: React.FC<Props> = ({
           </div>
         </div>
         <Divider className="md:hidden" />
-        <Button onClick={() => handleApplyFilters()} className="btn btn-black">
+        <Button onClick={() => handleApplyFiltersWithPage()} className="btn btn-black">
           Aplicar Filtros
         </Button>
       </div>
 
       {/* Tabla */}
-      <PedidosTable pedidos={pedidos} />
-      {/* Paginación */}
-      {pedidos.length ? (
-        <div className="mt-2">
-          <Pagination
-            isCompact
-            showControls
-            total={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            classNames={{
-              cursor: "bg-dark",
-            }}
-          />
-        </div>
-      ) : null}
+      <PedidosTable
+        itemHref="/plataforma/pedidos"
+        pedidos={pedidos}
+        hasPagination
+        paginationProps={{
+          currentPage,
+          totalPages,
+          handlePageChange,
+        }}
+      />
     </div>
   );
 };

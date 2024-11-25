@@ -1,7 +1,6 @@
 import { getSinglePedido } from "@/actions/facturas.actions";
-import { CustomTable } from "@/components";
+import { SinglePedidoComponent } from "@/components";
 import { SinglePedido } from "@/interfaces";
-import { SinglePedidoComponent } from "./components/SinglePedidoComponent";
 
 interface Props {
   params: {

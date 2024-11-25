@@ -36,6 +36,7 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
           </Link>
         </div>
         <CustomTable
+          emptyMessage="No hay usuarios registrados"
           columns={[
             { header: "Cedula", accessor: "ced_user", type: "text" },
             { header: "Nombre", accessor: "nom_user", type: "text" },

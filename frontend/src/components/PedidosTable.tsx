@@ -55,11 +55,21 @@ const orderStatus: Record<
 interface Props {
   pedidos: Pedido[];
   showStatusActions?: boolean;
+  itemHref: string;
+  hasPagination?: boolean;
+  paginationProps?: {
+    currentPage: number;
+    totalPages: number;
+    handlePageChange: (page: number) => void;
+  }
 }
 
 export const PedidosTable: React.FC<Props> = ({
   pedidos,
   showStatusActions = false,
+  itemHref,
+  hasPagination = false,
+  paginationProps
 }) => {
   const router = useRouter();
 
@@ -151,11 +161,11 @@ export const PedidosTable: React.FC<Props> = ({
                 </PopoverContent>
               </Popover>
             ) : null}
-                <Button
+            <Button
               className="bg-blue text-white"
               isIconOnly
               size="sm"
-              onClick={() => router.push(`/plataforma/pedidos/${item.cod_fac}`)}
+              onClick={() => router.push(`${itemHref}/${item.cod_fac}`)}
             >
               <i className="i-mdi-arrow-top-right" />
             </Button>
@@ -167,5 +177,13 @@ export const PedidosTable: React.FC<Props> = ({
     return cols;
   }, [pedidos]);
 
-  return <CustomTable columns={items} data={pedidos} />;
+  return (
+    <CustomTable
+      emptyMessage="No hay pedidos registrados"
+      columns={items}
+      data={pedidos}
+      hasPagination={hasPagination}
+      paginationProps={paginationProps}
+    />
+  );
 };

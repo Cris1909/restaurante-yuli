@@ -79,6 +79,7 @@ const ProductManager: React.FC<Props> = ({
           </Link>
         </div>
         <CustomTable
+          emptyMessage="No hay productos registrados"
           columns={[
             { accessor: "img_prod", type: "icon", header: "i-mdi-image" },
             { header: "Nombre", accessor: "nom_prod", type: "text" },
