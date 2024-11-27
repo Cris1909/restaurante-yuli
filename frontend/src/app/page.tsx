@@ -7,6 +7,7 @@ import "@/css/external/main.css";
 import Link from "next/link";
 import { getProducts } from "@/actions/products.actions";
 import { Button, Card, CardBody } from "@nextui-org/react";
+import { ContactForm } from "@/components";
 
 const NAVIGATE = [
   { name: "Inicio", href: "#" },
@@ -186,31 +187,7 @@ export default async function Home() {
             </div>
           ))}
         </div>
-        <div className="contact-form">
-          <form action="#" method="post">
-            <label htmlFor="name">Nombre</label>
-            <input type="text" id="name" placeholder="Pepito Perez" required />
-
-            <label htmlFor="email">Correo electrónico</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="example@email.com"
-              required
-            />
-
-            <label htmlFor="message">Mensaje</label>
-            <textarea
-              id="message"
-              placeholder="Escriba aquí su mensaje..."
-              required
-            ></textarea>
-
-            <Button className="btn btn-black" type="submit">
-              Enviar
-            </Button>
-          </form>
-        </div>
+        <ContactForm />
       </section>
 
       {/* Footer */}
@@ -254,10 +231,7 @@ export default async function Home() {
       </footer>
       <div className="copyright">
         <div className="p-section">
-          <p>Copyright © 2024 - Todos los derechos reservados.</p>
-          <Link href={"https://github.com/Cris1909"} target="_blank">
-            Hecho con amor por: Cris Stormblessed
-          </Link>
+          Copyright © 2024 - Todos los derechos reservados
         </div>
       </div>
     </>

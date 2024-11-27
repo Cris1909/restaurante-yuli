@@ -1,3 +1,4 @@
+export * from './ContactForm';
 export * from './CustomTable';
 export * from './NavBar';
 export * from './PedidosTable';
