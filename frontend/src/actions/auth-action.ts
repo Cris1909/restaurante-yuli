@@ -1,6 +1,8 @@
 "use server";
 
-import { signIn, signOut } from "@/lib/auth";
+import { modulesRedirectHelper } from "@/helpers";
+import { auth, signIn, signOut } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { Client } from "pg";
 
 export const loginUser = async (data: any) => {
@@ -56,3 +58,21 @@ export const logout = async () => {
     };
   }
 };
+
+export const moduleRedirect = async () => {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/");
+  }
+
+  const { user } = session;
+
+  const redirectPath = modulesRedirectHelper(user.fkcod_car_user);
+
+  if (redirectPath) {
+    redirect(redirectPath);
+  }
+
+  return null;
+}

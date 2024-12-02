@@ -1,14 +1,22 @@
 "use client";
 
-import { Button, Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Input,
+} from "@nextui-org/react";
 
-import { loginEmail, loginUser } from "@/actions/auth-action";
+import { loginUser, moduleRedirect } from "@/actions/auth-action";
+import { PasswordInput } from "@/components";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as z from "zod";
-import { PasswordInput } from "@/components";
 
 export const LoginSchema = z.object({
   email: z
@@ -33,8 +41,6 @@ export const LoginForm = () => {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const router = useRouter();
-
   const {
     register,
     handleSubmit,
@@ -51,15 +57,13 @@ export const LoginForm = () => {
         reset();
         return toast.error("Credenciales incorrectas");
       }
-      router.push("/plataforma");
       toast.success("Inicio de sesión exitoso");
+      await moduleRedirect();
     } catch (err: any) {
       toast.error(err.message);
       setIsLoading(false);
     }
   };
-
-  console.log(errors);
 
   return (
     <Card className="h-auto lg:mr-[150px] mr-auto p-10 md:rounded-md max-w-[520px] w-full ml-auto animate__fade-in-up">
