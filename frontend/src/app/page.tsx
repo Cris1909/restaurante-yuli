@@ -121,12 +121,12 @@ export default async function Home() {
         <h2 className="title">Sobre nosotros</h2>
         <div>
           <div className="img-container">
-            <Image
-              width={64}
-              height={64}
-              src="/images/yuli-logo.png"
-              alt="Logo de yuli"
-            />
+          <Image
+           width={160}
+           height={160}
+          src="/images/yuli-logo.png"
+          alt="Logo de yuli"
+        />
             <p>
               Restaurante Yuli es un lugar donde podrás disfrutar de una
               deliciosa comida casera y platos especiales del día.

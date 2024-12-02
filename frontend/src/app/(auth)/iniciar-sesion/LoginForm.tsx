@@ -11,8 +11,6 @@ import {
 
 import { loginUser, moduleRedirect } from "@/actions/auth-action";
 import { PasswordInput } from "@/components";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -36,10 +34,6 @@ interface LoginData {
 
 export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const [isVisible, setIsVisible] = useState(false);
-
-  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const {
     register,
