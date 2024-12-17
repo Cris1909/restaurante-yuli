@@ -9,9 +9,13 @@ export const metadata: Metadata = {
 
 export default async function TomarPedidoPage() {
   const [products, clientTypes] = await Promise.all([
-    getProducts(),
+    getProducts({
+      includeAdditionals: true,
+    }),
     getClientTypes(),
   ]);
+
+  if (!products || !clientTypes) return null;
 
   return <TakeOrder products={products} clientTypes={clientTypes} />;
 }

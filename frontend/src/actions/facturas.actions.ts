@@ -105,7 +105,7 @@ export const getPedidosPendientes = async () => {
       GROUP BY
 	      f.cod_fac, tc.dtipo_cliente
       ORDER BY
-        f.fecha_fac ASC;
+        f.fecha_fac;
     `;
     const res = await client.query(query);
 

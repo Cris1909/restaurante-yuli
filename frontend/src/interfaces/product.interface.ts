@@ -6,9 +6,9 @@ export interface Product {
   img_prod: string;
   dprod: string;
   precio_base: number;
+  es_adicional: boolean;
   recargos: Recargo[];
   fkcods_prod: number;
-
 }
 
 export interface ProductOrdered {

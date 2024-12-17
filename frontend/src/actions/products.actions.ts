@@ -11,15 +11,19 @@ import { auth } from "@/lib/auth";
 
 export const getProducts = async ({
   includeDeactivated = false,
+  includeAdditionals = false,
 }: {
   includeDeactivated?: boolean;
+  includeAdditionals?: boolean;
 } = {}) => {
   try {
     const client = new Client();
     await client.connect();
 
     // Construye dinámicamente la cláusula WHERE
-    const whereClause = includeDeactivated
+    let whereClause = includeAdditionals ? "" : "p.es_adicional = false AND ";
+
+    whereClause += includeDeactivated
       ? "p.fkcods_prod IN (1, 2)" // Mostrar activos (1) y desactivados (2)
       : "p.fkcods_prod = 1"; // Mostrar solo activos (1)
 
@@ -31,6 +35,7 @@ export const getProducts = async ({
         p.precio_base,
         p.fkcods_prod,
         p.img_prod,
+        p.es_adicional,
         json_agg(
           json_build_object(
             'cod_rec', r.cod_rec, 
@@ -45,7 +50,9 @@ export const getProducts = async ({
       WHERE
         p.fkcods_prod != 0 AND ${whereClause}
       GROUP BY
-        p.cod_prod;  
+        p.cod_prod
+      ORDER BY
+        p.es_adicional;  
     `);
 
     const products: Product[] = res.rows.map((p: any) => ({
@@ -109,11 +116,12 @@ export const createProduct = async (
       recargo_cliente: number;
       fkcod_tc_rec: number;
     }[];
+    es_adicional: boolean;
   }
 ) => {
   const session = await auth();
   if (!session) return null;
-  const { nom_prod, dprod, precio_base, recargos } = data;
+  const { nom_prod, dprod, precio_base, recargos, es_adicional } = data;
   fileFormData.append(
     "upload_preset",
     process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
@@ -127,11 +135,17 @@ export const createProduct = async (
 
     // Insertar el producto
     const insertProduct = `
-      INSERT INTO tmproductos (nom_prod, dprod, precio_base, img_prod)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO tmproductos (nom_prod, dprod, precio_base, img_prod, es_adicional)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING cod_prod;
     `;
-    const insertProductValues = [nom_prod, dprod, precio_base, public_id];
+    const insertProductValues = [
+      nom_prod,
+      dprod,
+      precio_base,
+      public_id,
+      es_adicional,
+    ];
 
     const productRes = await client.query(insertProduct, insertProductValues);
     const cod_prod = productRes.rows[0].cod_prod;

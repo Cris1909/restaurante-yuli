@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 const Page: React.FC = async () => {
   const [clientTypes] = await Promise.all([getClientTypes()]);
+  if (!clientTypes) return null;
   return (
     <div className="main-container">
       <h1 className="title">Crear producto</h1>

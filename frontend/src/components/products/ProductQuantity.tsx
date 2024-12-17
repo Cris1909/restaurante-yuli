@@ -16,6 +16,7 @@ export const ProductQuantity: React.FC<Props> = ({ productId }) => {
   return (
     <span className="quantity-selector">
       <button
+        type="button"
         className="quantity-left"
         id="decrease"
         onClick={() => decraseProductQuantity(productId)}
@@ -26,6 +27,7 @@ export const ProductQuantity: React.FC<Props> = ({ productId }) => {
         {productInOrder.quantity}
       </span>
       <button
+        type="button"
         className="quantity-right"
         id="increase"
         onClick={() => incraseProductQuantity(productId)}

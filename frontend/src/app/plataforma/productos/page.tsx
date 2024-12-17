@@ -12,9 +12,13 @@ const Page: React.FC = async () => {
   const [products, clientTypes] = await Promise.all([
     getProducts({
       includeDeactivated: true,
+      includeAdditionals: true,
     }),
     getClientTypes(),
   ]);
+
+  if (!products || !clientTypes) return null;
+
   return <ProductManager products={products} clientTypes={clientTypes} />;
 };
 

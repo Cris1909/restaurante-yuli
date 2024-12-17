@@ -7,6 +7,7 @@ import {
   Card,
   Divider,
   Input,
+  Switch,
   Textarea,
   Tooltip,
 } from "@nextui-org/react";
@@ -80,6 +81,10 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [isAdditional, setIsAdditional] = useState<boolean>(
+    product?.es_adicional || false
+  );
+
   const onSubmit: SubmitHandler<Product> = async (data) => {
     const formattedRecargos = clientTypes
       .map((clientType) => ({
@@ -110,7 +115,10 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
     formData.append("file", image);
     setIsLoading(true);
     try {
-      await createProduct(formData, productData);
+      await createProduct(formData, {
+        ...productData,
+        es_adicional: isAdditional,
+      });
       toast.success("Producto creado correctamente");
       router.push("/plataforma/productos");
     } catch (error: any) {
@@ -229,6 +237,31 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
                 />
               </div>
             ))}
+            <Divider />
+            <div className="flex justify-between items-center">
+              <Switch
+                size="sm"
+                isSelected={isAdditional}
+                onValueChange={setIsAdditional}
+              >
+                Es adicional
+              </Switch>
+
+              <Tooltip
+                content={
+                  <div>
+                    <p className="text-xs w-[200px] p-2">
+                      Si activas esta opción, el producto se mostrará como un
+                      producto adicional en el menú. Ejemplo: Portacomida de
+                      icopor.
+                    </p>
+                  </div>
+                }
+                placement="top"
+              >
+                <i className="i-mdi-info-circle-outline text-gray" />
+              </Tooltip>
+            </div>
           </Card>
           <Card className="p-4 gap-4">
             <div>

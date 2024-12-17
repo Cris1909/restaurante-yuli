@@ -83,10 +83,17 @@ const ProductManager: React.FC<Props> = ({
           columns={[
             { accessor: "img_prod", type: "icon", header: "i-mdi-image" },
             { header: "Nombre", accessor: "nom_prod", type: "text" },
-            { header: "Precio", accessor: "precio_base", type: "price" },
+            {
+              header: "Precio",
+              accessor: "precio_base",
+              type: "price",
+              align: "center",
+              width: 100,
+            },
             {
               header: "Recargos",
               accessor: "recargos",
+              width: 100,
               template: ({ recargos, precio_base }: Product) => (
                 <>
                   {recargos.length ? (
@@ -125,9 +132,18 @@ const ProductManager: React.FC<Props> = ({
             {
               header: "Acción",
               accessor: "options",
+              width: 100,
               template: ({ fkcods_prod, cod_prod }: Product) => {
                 return (
                   <div className="flex gap-2">
+                    <button
+                      // onClick={() =>
+                      //   handleChangeStatus(cod_prod, Status.DESACTIVADO)
+                      // }
+                      className="btn btn-icon btn-blue"
+                    >
+                      <i className="i-mdi-pencil" />
+                    </button>
                     {fkcods_prod === Status.ACTIVO ? (
                       <Tooltip
                         content="Desactivar"

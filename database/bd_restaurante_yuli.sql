@@ -78,16 +78,18 @@ CREATE TABLE tmproductos(
     dprod varchar(200) not null,
     precio_base DOUBLE PRECISION not null,
     img_prod varchar not null,
+    es_adicional boolean not null default false;
     fkcods_prod integer not null default 1,
     foreign key(fkcods_prod) references tmstatus(cods) on update cascade on delete restrict 
 );
 
-insert into tmproductos(nom_prod, dprod, precio_base, img_prod) VALUES
-('Lengua Guisada', 'Delicioso plato corriente de lengua guisada, con principio del día, arroz, tajadas de maduro y ensalada', 10000, 'restaurante_yuli/l6k95m0zl9hdfo2vugnl'),
-('Carne a la plancha', 'Almuerzo corriente con Carne a la plancha que contiene: Arroz, principio del día, tajadas de maduro y ensalada', 10000, 'restaurante_yuli/etejlxuklp31ruhkhie4'),
-('Arroz con pollo', 'Delicioso arroz con pollo con papa criolla frita', 15000, 'restaurante_yuli/uoujnyfubttwungbmjaf'),
-('Bandeja Paisa', 'Bandeja paisa con todos sus ingredientes: Frijoles, Arroz, Carne Molida, Chicharron, Aguacate, Huevo frito, Longaniza, Tajadas de maduro y Arepa', 16000, 'restaurante_yuli/damh0hvgfp0b4mseqhwj'),
-('Arroz Mixto', 'Arroz mixto de 5 tipos de carnes: Carne de res, carne de cerdo, chuleta ahumada, pechuga y camarones, verduras, raices chinas y acompañado con papas a la francesa', 16000, 'restaurante_yuli/sk5sfkdprxlmn9w4gueb');
+insert into tmproductos(nom_prod, dprod, precio_base, img_prod, es_adicional) VALUES
+('Lengua Guisada', 'Delicioso plato corriente de lengua guisada, con principio del día, arroz, tajadas de maduro y ensalada', 10000, 'restaurante_yuli/l6k95m0zl9hdfo2vugnl', false),
+('Carne a la plancha', 'Almuerzo corriente con Carne a la plancha que contiene: Arroz, principio del día, tajadas de maduro y ensalada', 10000, 'restaurante_yuli/etejlxuklp31ruhkhie4', false),
+('Arroz con pollo', 'Delicioso arroz con pollo con papa criolla frita', 15000, 'restaurante_yuli/uoujnyfubttwungbmjaf', false),
+('Bandeja Paisa', 'Bandeja paisa con todos sus ingredientes: Frijoles, Arroz, Carne Molida, Chicharron, Aguacate, Huevo frito, Longaniza, Tajadas de maduro y Arepa', 16000, 'restaurante_yuli/damh0hvgfp0b4mseqhwj', false),
+('Arroz Mixto', 'Arroz mixto de 5 tipos de carnes: Carne de res, carne de cerdo, chuleta ahumada, pechuga y camarones, verduras, raices chinas y acompañado con papas a la francesa', 16000, 'restaurante_yuli/sk5sfkdprxlmn9w4gueb', false);
+('Portacomida', 'Para guardar la comida para llevar, tiene un costo adicional.', 1000, 'restaurante_yuli/srq7jxo3ahplrlpryf5z', true);
 
 SELECT * FROM tmproductos;
 
