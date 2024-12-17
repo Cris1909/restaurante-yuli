@@ -116,6 +116,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
             <h2 className="title">Resumen del pedido</h2>
             <button
               className=""
+              type="button"
               id="close-bottom-sheet"
               onClick={() => setIsOpen(false)}
             >
