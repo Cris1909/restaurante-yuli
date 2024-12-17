@@ -51,12 +51,12 @@ CREATE TABLE tmusuarios(
 
 insert into tmusuarios(ced_user, nom_user, email_user, password_user, fkcod_car_user) VALUES
 ('88220270', 'Luis Barrera', 'luisbarrera31@hotmail.com', 'luisbarrera31', 0),
-('1004997175', 'Merly Barrera', 'merly1004@hotmail.com', 'merly1004', 1),
-('123456789', 'Erika Martinez', 'erika123@hotmail.com', 'erika123', 2),
-('6754355', 'Raquel Medina', 'raquel123@hotmail.com', 'raquel123', 3),
-('0987655432', 'Keyla Rangel', 'keylamaria@gmail.com', 'keylamaria', 3),
-('928923', 'Zoreidis Lopez', 'zoreidis123@gmail.com', 'zoreidis123', 4),
-('8877654', 'Mery Perez', 'mery9876@gmail.com', 'mery9876', 4);
+-- ('1004997175', 'Merly Barrera', 'merly1004@hotmail.com', 'merly1004', 1),
+-- ('123456789', 'Erika Martinez', 'erika123@hotmail.com', 'erika123', 2),
+-- ('6754355', 'Raquel Medina', 'raquel123@hotmail.com', 'raquel123', 3),
+-- ('0987655432', 'Keyla Rangel', 'keylamaria@gmail.com', 'keylamaria', 3),
+-- ('928923', 'Zoreidis Lopez', 'zoreidis123@gmail.com', 'zoreidis123', 4),
+-- ('8877654', 'Mery Perez', 'mery9876@gmail.com', 'mery9876', 4);
 
 SELECT * FROM tmusuarios;
 

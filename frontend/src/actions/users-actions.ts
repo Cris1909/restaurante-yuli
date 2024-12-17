@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import { Client } from "pg";
 import bcrypt from "bcrypt";
+import { revalidatePath } from "next/cache";
 
 export const getUsers = async () => {
   const session = await auth();
@@ -116,7 +117,16 @@ export const getUserByCed = async (ced: string) => {
     const client = new Client();
     await client.connect();
 
-    const query = `SELECT * FROM tmusuarios WHERE ced_user = $1`;
+    const query = `
+      SELECT 
+        u.ced_user,
+        u.nom_user,
+        u.email_user,
+        u.fkcod_car_user
+      FROM 
+        tmusuarios AS u
+      WHERE ced_user = $1
+    `;
     const values = [ced];
 
     const res = await client.query(query, values);
@@ -134,7 +144,7 @@ export const getUserByCed = async (ced: string) => {
 };
 
 export const updateUser = async (
-  ced: string,
+  ced_user: string,
   data: {
     nom_user?: string;
     email_user?: string;
@@ -145,7 +155,9 @@ export const updateUser = async (
   const session = await auth();
   if (!session) return null;
 
-  const { nom_user, email_user, password_user, fkcod_car_user } = data;
+  const nom_user = data.nom_user || null;
+  const email_user = data.email_user || null;
+  const fkcod_car_user = data.fkcod_car_user || null;
 
   try {
     const client = new Client();
@@ -153,7 +165,7 @@ export const updateUser = async (
 
     // Validar si el usuario existe
     const checkUserQuery = `SELECT * FROM tmusuarios WHERE ced_user = $1`;
-    const checkUserValues = [ced];
+    const checkUserValues = [ced_user];
     const userRes = await client.query(checkUserQuery, checkUserValues);
 
     if (!userRes.rows.length) {
@@ -166,13 +178,17 @@ export const updateUser = async (
         SELECT * FROM tmusuarios 
         WHERE email_user = $1 AND ced_user != $2
       `;
-      const checkEmailValues = [email_user, ced];
+      const checkEmailValues = [email_user, ced_user];
       const emailRes = await client.query(checkEmailQuery, checkEmailValues);
 
       if (emailRes.rows.length) {
         throw new Error("El correo ya está registrado en otro usuario");
       }
     }
+
+    const password_user = data.password_user
+      ? await bcrypt.hash(data.password_user, 10)
+      : null;
 
     // Actualizar el usuario
     const updateUserQuery = `
@@ -189,11 +205,14 @@ export const updateUser = async (
       email_user,
       password_user,
       fkcod_car_user,
-      ced,
+      ced_user,
     ];
 
     await client.query(updateUserQuery, updateUserValues);
     await client.end();
+
+    revalidatePath("/plataforma/usuarios");
+    revalidatePath("/plataforma/usuarios/editar/" + ced_user);
   } catch (error: any) {
     console.log(error);
     throw new Error("Error al actualizar el usuario");
@@ -225,4 +244,4 @@ export const encryptExistingPasswords = async () => {
     console.log(error);
     throw new Error("Error al encriptar las contraseñas");
   }
-}
+};

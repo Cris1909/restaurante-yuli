@@ -71,15 +71,6 @@ export const UserForm: React.FC<Props> = ({ cargos, initialValues }) => {
     try {
       setIsLoading(true);
 
-      try {
-        UserSchema.parse({ ...data, fkcod_car_user: +data.fkcod_car_user });
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          error.errors.forEach((err) => toast.error(err.message));
-          return;
-        }
-      }
- 
       if (initialValues?.ced_user) {
         // Editar usuario
         await updateUser(initialValues.ced_user, {
@@ -88,12 +79,19 @@ export const UserForm: React.FC<Props> = ({ cargos, initialValues }) => {
         });
         toast.success("Usuario editado correctamente");
       } else {
+        try {
+          UserSchema.parse({ ...data, fkcod_car_user: +data.fkcod_car_user });
+        } catch (error) {
+          if (error instanceof z.ZodError) {
+            error.errors.forEach((err) => toast.error(err.message));
+            return;
+          }
+        }
         // Crear usuario
         await createUser({ ...data, fkcod_car_user: +data.fkcod_car_user });
         toast.success("Usuario creado correctamente");
       }
 
-      setIsLoading(false);
       router.push("/plataforma/usuarios");
     } catch (error) {
       toast.error(
@@ -101,6 +99,7 @@ export const UserForm: React.FC<Props> = ({ cargos, initialValues }) => {
           ? "Error al editar el usuario"
           : "Error al crear el usuario"
       );
+    } finally {
       setIsLoading(false);
     }
   };
