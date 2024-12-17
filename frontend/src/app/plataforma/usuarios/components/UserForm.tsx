@@ -79,10 +79,7 @@ export const UserForm: React.FC<Props> = ({ cargos, initialValues }) => {
           return;
         }
       }
-      console.log({
-        ...data,
-        fkcod_car_user: +data.fkcod_car_user,
-      })
+ 
       if (initialValues?.ced_user) {
         // Editar usuario
         await updateUser(initialValues.ced_user, {
@@ -182,6 +179,7 @@ export const UserForm: React.FC<Props> = ({ cargos, initialValues }) => {
             </Select>
             <Divider />
             <Button
+              type="submit"
               isLoading={isLoading}
               isDisabled={isLoading || !isValid}
               className="btn btn-primary"

@@ -18,7 +18,7 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
   const handleDeleteUser = async (cedUser: string) => {
     try {
       await deleteUser(cedUser);
-      toast.success("Producto eliminado correctamente");
+      toast.success("Usuario eliminado correctamente");
       setUsers((prevUsers) => prevUsers.filter((u) => u.ced_user !== cedUser));
     } catch (error) {
       toast.error("Error al eliminar el usuario");
