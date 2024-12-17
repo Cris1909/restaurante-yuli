@@ -61,7 +61,7 @@ interface Props {
     currentPage: number;
     totalPages: number;
     handlePageChange: (page: number) => void;
-  }
+  };
 }
 
 export const PedidosTable: React.FC<Props> = ({
@@ -69,7 +69,7 @@ export const PedidosTable: React.FC<Props> = ({
   showStatusActions = false,
   itemHref,
   hasPagination = false,
-  paginationProps
+  paginationProps,
 }) => {
   const router = useRouter();
 
@@ -86,6 +86,18 @@ export const PedidosTable: React.FC<Props> = ({
   const items: any[] = useMemo(() => {
     const cols = [
       { header: "Código", accessor: "cod_fac", type: "text" },
+      {
+        header: "Cliente",
+        accessor: "nom_cliente",
+        type: "text",
+        template: (item: Pedido) => item.nom_cliente || "-",
+      },
+      {
+        header: "Mesa",
+        accessor: "mesa_fac",
+        type: "text",
+        template: (item: Pedido) => item.mesa_fac || "-",
+      },
       { header: "Monto Total", accessor: "monto_total", type: "price" },
       {
         header: "Fecha",

@@ -10,10 +10,26 @@ import { toast } from "react-toastify";
 
 import { CustomTable } from "@/components/CustomTable";
 import { formatMoney } from "@/helpers";
-import { Button, Divider } from "@nextui-org/react";
+import { Button, Divider, Input } from "@nextui-org/react";
 
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
+import { z } from "zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+export const FacturaSchema = z.object({
+  nom_cliente: z
+    .string()
+    .max(100, "El nombre no debe exceder los 100 caracteres"),
+  obs_fac: z.string().max(500, "El nombre no debe exceder los 500 caracteres"),
+  mesa_fac: z.number(),
+});
+
+interface FacturaData {
+  nom_cliente: string;
+  mesa_fac: string;
+  obs_fac: string;
+}
 
 interface Props {
   clientTypes: ClientType[];
@@ -22,19 +38,31 @@ interface Props {
 export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showObservations, setShowObservations] = useState(false);
-  const [observations, setObservations] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<FacturaData>({});
 
   const { products, clientType, getTotalPrice, calculateRecargo, clearOrder } =
     useOrderStore();
 
-  const handleCreateOrder = async () => {
+  const handleCreateOrder: SubmitHandler<FacturaData> = async (data) => {
     setIsLoading(true);
+
+    const { nom_cliente, obs_fac, mesa_fac } = data;
 
     const factura = {
       monto_total: getTotalPrice(),
-      obs_fac: observations,
+      nom_cliente,
+      obs_fac,
       fktc_fac: clientType?.cod_tc,
+      mesa_fac
     };
 
     const detalle_factura = products.map((product) => ({
@@ -48,6 +76,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
       await createFacturaWithDetails(factura, detalle_factura);
       toast.success("Pedido creado exitosamente");
       clearOrder();
+      reset();
     } catch (error) {
       toast.error("Error al crear el pedido");
       console.error("Error al crear el pedido:", error);
@@ -79,7 +108,10 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
         }}
         snapPoints={({ minHeight }) => minHeight}
       >
-        <div className="px-4 pt-2 md:px-8 lg:px-16">
+        <form
+          onSubmit={handleSubmit(handleCreateOrder)}
+          className="px-4 pt-2 md:px-8 lg:px-16"
+        >
           <div className="flex items-center justify-between">
             <h2 className="title">Resumen del pedido</h2>
             <button
@@ -91,7 +123,30 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
             </button>
           </div>
 
-          <Divider className="mt-2 mb-4" />
+          <Divider className="mt-2 mb-2" />
+
+          <div className="mb-2 flex flex-col md:flex-row gap-x-4 gap-y-2">
+            <Input
+              size="sm"
+              width={200}
+              label="Nombre del cliente"
+              {...register("nom_cliente")}
+              isDisabled={isLoading}
+              isInvalid={!!errors.nom_cliente}
+              errorMessage={errors.nom_cliente?.message}
+            />
+
+            <Input
+              size="sm"
+              width={200}
+              label="Número de mesa"
+              {...register("mesa_fac")}
+              type="number"
+              isDisabled={isLoading}
+              isInvalid={!!errors.mesa_fac}
+              errorMessage={errors.mesa_fac?.message}
+            />
+          </div>
 
           <CustomTable
             columns={[
@@ -163,7 +218,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                     size="sm"
                     onClick={() => {
                       setShowObservations(false);
-                      setObservations("");
+                      setValue("obs_fac", "");
                     }}
                     className="btn btn-danger"
                   >
@@ -183,8 +238,7 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
                 padding: showObservations ? "8px" : "0",
                 marginTop: showObservations ? "8px" : "0",
               }}
-              value={observations}
-              onChange={(e) => setObservations(e.target.value)}
+              {...register("nom_cliente")}
               placeholder="Ingrese sus observaciones aquí"
               className="observations-textarea"
             />
@@ -196,14 +250,14 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
               <span className="font-bold">{formatMoney(getTotalPrice())}</span>
             </span>
             <Button
-              onClick={handleCreateOrder}
+              type="submit"
               className="btn btn-primary"
               disabled={isLoading}
             >
               {isLoading ? "Creando pedido..." : "Confirmar orden"}
             </Button>
           </div>
-        </div>
+        </form>
       </BottomSheet>
     </>
   );

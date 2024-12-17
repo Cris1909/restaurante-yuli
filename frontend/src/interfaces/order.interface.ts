@@ -10,6 +10,8 @@ export interface OrdenPendiente {
   fecha_fac: string;
   hora_fac: string;
   obs_fac: string;
+  mesa_fac: number;
+  nom_cliente: string;
   fktc_fac: number;
   dtipo_cliente: string;
   productos: Producto[];

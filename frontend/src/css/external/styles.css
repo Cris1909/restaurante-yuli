@@ -185,6 +185,10 @@ header {
     gap: 32px;
 
     & .img-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
 
       & img {
         width: 160px;

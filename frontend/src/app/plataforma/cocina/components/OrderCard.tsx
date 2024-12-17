@@ -89,15 +89,41 @@ const OrderCard: React.FC<Props> = ({ order, handleCompleteOrder }) => {
             <strong>{order.dtipo_cliente}</strong>
           </div>
           <Divider className="my-2" />
+          {order.mesa_fac ? (
+            <>
+              <div className="flex items-center gap-1">
+                <i className="i-material-symbols-table-bar-rounded" />
+                <span>
+                  Mesa: <strong>{order.mesa_fac}</strong>
+                </span>
+              </div>
+              <Divider className="my-2" />
+            </>
+          ) : null}
+          {order.nom_cliente ? (
+            <>
+              <div className="flex items-center gap-1">
+                <i className="i-ph-user-list-fill" />
+                <span>{order.nom_cliente}</span>
+              </div>
+              <Divider className="my-2" />
+            </>
+          ) : null}
+
           <p className="text-sm text-default-700">
             <strong>Hora:</strong> {formatHour(order.hora_fac)}
           </p>
           <Divider className="my-2" />
-          <div className="text-sm text-default-700">
-            <strong>Observaciones:</strong>
-            <p>{order.obs_fac || "Ninguna"}</p>
-          </div>
-          <Divider className="my-2" />
+          {order.obs_fac ? (
+            <>
+              <div className="text-sm text-default-700">
+                <strong>Observaciones:</strong>
+                <p>{order.obs_fac}</p>
+              </div>
+              <Divider className="my-2" />
+            </>
+          ) : null}
+
           <ul className="space-y-4 mt-2">
             {order.productos.map((p) => (
               <li key={p.cod_prod} className="flex gap-2">

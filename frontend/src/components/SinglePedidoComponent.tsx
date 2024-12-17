@@ -12,7 +12,7 @@ import {
   Divider,
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
@@ -76,6 +76,18 @@ export const SinglePedidoComponent: React.FC<Props> = ({ pedido }) => {
         header: "Vendedor",
         accessor: "nom_user",
         type: "text",
+      },
+      {
+        header: "Cliente",
+        accessor: "nom_cliente",
+        type: "text",
+        template: (item: any) => item.nom_cliente || "-",
+      },
+      {
+        header: "Mesa",
+        accessor: "mesa_fac",
+        type: "text",
+        template: (item: any) => item.mesa_fac || "-",
       },
       {
         header: "Fecha",

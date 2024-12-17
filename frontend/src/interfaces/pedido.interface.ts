@@ -4,6 +4,8 @@ export interface Pedido {
   fecha_fac: string;
   hora_fac: string;
   fktc_fac: number;
+  nom_cliente: string;
+  mesa_fac: number;
   fkcods_fac: number;
   dtipo_cliente: string;
   dstatus: string;

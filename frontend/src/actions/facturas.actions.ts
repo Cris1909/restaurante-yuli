@@ -18,15 +18,21 @@ export const createFacturaWithDetails = async (
     const client = new Client();
     await client.connect();
 
+    const obs_fac = factura.obs_fac || null;
+    const nom_cliente = factura.nom_cliente || null;
+    const mesa_fac = +factura.mesa_fac || null;
+
     // Insertar la factura
     const insertFacturaQuery = `
-      INSERT INTO tdfactura (monto_total, obs_fac, fktc_fac, fkced_vendedor, fkcods_fac)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO tdfactura (monto_total, obs_fac, nom_cliente, mesa_fac, fktc_fac, fkced_vendedor, fkcods_fac)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING cod_fac;
     `;
     const insertFacturaValues = [
       factura.monto_total,
-      factura.obs_fac,
+      obs_fac,
+      nom_cliente,
+      mesa_fac,
       factura.fktc_fac,
       session.user.ced_user,
       Status.PENDIENTE,
@@ -80,6 +86,8 @@ export const getPedidosPendientes = async () => {
 	      f.hora_fac,
 	      f.obs_fac,
         f.fktc_fac,
+        f.mesa_fac,
+        f.nom_cliente,
 	      tc.dtipo_cliente,
 	      json_agg(json_build_object(
 	        'cod_prod', p.cod_prod,
@@ -179,6 +187,8 @@ export const getPedidosPaginated = async ({
         f.hora_fac,
         f.fktc_fac,
         f.fkcods_fac,
+        f.mesa_fac,
+        f.nom_cliente,
         tc.dtipo_cliente,
         s.dstatus
       FROM
@@ -248,6 +258,8 @@ export const getSinglePedido = async (cod_fac: number) => {
         f.obs_fac,
         f.fktc_fac,
         f.fkcods_fac,
+        f.mesa_fac,
+        f.nom_cliente,
         tc.dtipo_cliente,
         s.dstatus,
         u.nom_user,
@@ -296,6 +308,8 @@ export const getPedidosCaja = async () => {
         f.hora_fac,
         f.fktc_fac,
         f.fkcods_fac,
+        f.mesa_fac,
+        f.nom_cliente,
         tc.dtipo_cliente,
         s.dstatus
       FROM

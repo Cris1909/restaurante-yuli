@@ -14,12 +14,16 @@ export const metadata: Metadata = {
 export default async function NamePage() {
   const [pedidos] = await Promise.all([getPedidosCaja()]);
 
+  if (!pedidos) return null;
+
   return (
     <div className="main-container">
-      <h1 className="title mb-4">
-        Caja y facturación
-      </h1>
-      <PedidosTable pedidos={pedidos} showStatusActions itemHref="/plataforma/caja" />
+      <h1 className="title mb-4">Caja y facturación</h1>
+      <PedidosTable
+        pedidos={pedidos}
+        showStatusActions
+        itemHref="/plataforma/caja"
+      />
     </div>
   );
 }
