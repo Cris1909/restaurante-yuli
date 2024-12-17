@@ -4,6 +4,7 @@ import { modulesRedirectHelper } from "@/helpers";
 import { auth, signIn, signOut } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Client } from "pg";
+import bcrypt from "bcrypt";
 
 export const loginUser = async (data: any) => {
   try {
@@ -22,26 +23,61 @@ export const loginEmail = async (data: { password: string; email: string }) => {
   try {
     const client = new Client();
     await client.connect();
-    const res = await client.query(`
+
+    // const res = await client.query(`
+    //   SELECT
+    //     u.ced_user,
+    //     u.nom_user,
+    //     u.email_user,
+    //     u.fkcod_car_user,
+    //     c.dcar
+    //   FROM tmusuarios AS u
+    //   JOIN tmcargos AS c
+    //     ON u.fkcod_car_user = c.cod_car
+    //   WHERE
+    //     u.fkcods_user != 0 AND
+    //     email_user = $1 AND
+    //     password_user = $2
+    //   `,
+    //   [data.email, data.password]
+    // );
+
+    const res = await client.query(
+      `
       SELECT 
         u.ced_user,
         u.nom_user,
         u.email_user,
         u.fkcod_car_user,
+        u.password_user,
         c.dcar
       FROM tmusuarios AS u
       JOIN tmcargos AS c 
         ON u.fkcod_car_user = c.cod_car
       WHERE
         u.fkcods_user != 0 AND
-        email_user = $1 AND 
-        password_user = $2
+        email_user = $1
       `,
-      [data.email, data.password]
+      [data.email]
     );
-    
+
     const user = res.rows[0];
-    return user || null;
+
+    if (!user) {
+      throw new Error("Credenciales incorrectas");
+    }
+
+    // validar contraseña encriptada
+
+    const match = await bcrypt.compare(data.password, user.password_user);
+
+    if (!match) {
+      throw new Error("Credenciales incorrectas");
+    }
+
+    const { password_user, ...rest } = user;
+
+    return rest || null;
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -75,4 +111,4 @@ export const moduleRedirect = async () => {
   }
 
   return null;
-}
+};

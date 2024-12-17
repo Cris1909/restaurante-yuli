@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { Client } from "pg";
+import bcrypt from "bcrypt";
 
 export const getUsers = async () => {
   const session = await auth();
@@ -83,6 +84,8 @@ export const createUser = async (data: {
       }
     }
 
+    const encryptedPassword = await bcrypt.hash(password_user, 10);
+
     // Insertar el usuario
     const insertUser = `
       INSERT INTO tmusuarios (ced_user, nom_user, email_user, password_user, fkcod_car_user)
@@ -92,7 +95,7 @@ export const createUser = async (data: {
       ced_user,
       nom_user,
       email_user,
-      password_user,
+      encryptedPassword,
       fkcod_car_user,
     ];
 
@@ -196,3 +199,30 @@ export const updateUser = async (
     throw new Error("Error al actualizar el usuario");
   }
 };
+
+export const encryptExistingPasswords = async () => {
+  const session = await auth();
+  if (!session) return null;
+
+  try {
+    const client = new Client();
+    await client.connect();
+
+    const users = await client.query(`SELECT * FROM tmusuarios`);
+
+    for (const user of users.rows) {
+      const { ced_user, password_user } = user;
+      const encryptedPassword = await bcrypt.hash(password_user, 10);
+
+      await client.query(
+        `UPDATE tmusuarios SET password_user = $1 WHERE ced_user = $2`,
+        [encryptedPassword, ced_user]
+      );
+    }
+
+    await client.end();
+  } catch (error: any) {
+    console.log(error);
+    throw new Error("Error al encriptar las contraseñas");
+  }
+}

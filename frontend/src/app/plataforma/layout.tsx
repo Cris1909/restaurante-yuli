@@ -4,6 +4,7 @@ import "../../css/platform/main.css";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { NavBar } from "@/components";
+import { encryptExistingPasswords } from "@/actions/users-actions";
 
 export default async function PlatformLayout({
   children,
