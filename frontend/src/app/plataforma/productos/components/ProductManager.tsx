@@ -136,14 +136,12 @@ const ProductManager: React.FC<Props> = ({
               template: ({ fkcods_prod, cod_prod }: Product) => {
                 return (
                   <div className="flex gap-2">
-                    <button
-                      // onClick={() =>
-                      //   handleChangeStatus(cod_prod, Status.DESACTIVADO)
-                      // }
-                      className="btn btn-icon btn-blue"
+                    <Link 
+                    href={`/plataforma/productos/editar/${cod_prod}`}
+                    className="btn btn-icon btn-blue"
                     >
                       <i className="i-mdi-pencil" />
-                    </button>
+                    </Link>
                     {fkcods_prod === Status.ACTIVO ? (
                       <Tooltip
                         content="Desactivar"

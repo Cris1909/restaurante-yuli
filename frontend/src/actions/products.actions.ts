@@ -174,3 +174,134 @@ export const createProduct = async (
     console.log(error.response);
   }
 };
+
+export const getProductByCod = async (cod_prod: number | string) => {
+  try {
+    const client = new Client();
+    await client.connect();
+
+    const res = await client.query(
+      `
+      SELECT
+        p.cod_prod,
+        p.nom_prod,
+        p.dprod,
+        p.precio_base,
+        p.fkcods_prod,
+        p.img_prod,
+        p.es_adicional,
+        json_agg(
+          json_build_object(
+            'cod_rec', r.cod_rec, 
+            'recargo_cliente', r.recargo_cliente, 
+            'fkcod_tc_rec', r.fkcod_tc_rec
+          )
+        ) AS recargos
+      FROM
+        tmproductos AS p
+      LEFT JOIN tmrecargos AS r 
+        ON p.cod_prod = r.fkcod_prod_rec
+      WHERE
+        p.cod_prod = $1 AND
+        p.fkcods_prod != 0
+      GROUP BY
+        p.cod_prod
+      ORDER BY
+        p.es_adicional;  
+    `,
+      [cod_prod]
+    );
+
+    await client.end();
+
+    const product: Product = res.rows[0];
+
+    if (!product) return null;
+
+    return {
+      ...product,
+      recargos: product.recargos.filter((r: any) => r.cod_rec !== null),
+    };
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+};
+
+export const updateProduct = async (
+  cod_prod: number,
+  data: {
+    nom_prod: string;
+    dprod: string;
+    precio_base: number;
+    recargos: { recargo_cliente: number; fkcod_tc_rec: number }[];
+    es_adicional: boolean;
+  },
+  fileFormData?: FormData
+) => {
+  const session = await auth();
+  if (!session) return null;
+
+  try {
+    const client = new Client();
+    await client.connect();
+
+    const nom_prod = data.nom_prod || null;
+    const dprod = data.dprod || null;
+    const precio_base = data.precio_base || null;
+    const es_adicional =
+      typeof data.es_adicional === "boolean" ? data.es_adicional : null;
+
+    let img_prod = null;
+
+    if (fileFormData) {
+      fileFormData.append(
+        "upload_preset",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
+      );
+
+      const { public_id } = await uploadFile(fileFormData);
+      img_prod = public_id;
+    }
+
+    // Actualiza el producto
+    await client.query(
+      `
+      UPDATE tmproductos 
+        SET 
+          nom_prod = COALESCE($1, nom_prod), 
+          dprod = COALESCE($2, dprod), 
+          precio_base = COALESCE($3, precio_base),
+          es_adicional = COALESCE($4, es_adicional),
+          img_prod = COALESCE($5, img_prod)
+        WHERE cod_prod = $6
+      `,
+      [nom_prod, dprod, precio_base, es_adicional, img_prod, cod_prod]
+    );
+
+    // Borra los recargos antiguos
+    await client.query(`DELETE FROM tmrecargos WHERE fkcod_prod_rec = $1`, [
+      cod_prod,
+    ]);
+
+    // Inserta los nuevos recargos
+    const insertRecargos = `
+      INSERT INTO tmrecargos (fkcod_prod_rec, fkcod_tc_rec, recargo_cliente)
+      VALUES ($1, $2, $3)
+    `;
+
+    for (const recargo of data.recargos) {
+      await client.query(insertRecargos, [
+        cod_prod,
+        recargo.fkcod_tc_rec,
+        recargo.recargo_cliente,
+      ]);
+    }
+
+    await client.end();
+    revalidatePath("/plataforma/productos");
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+};

@@ -1,6 +1,7 @@
 "use client";
 
-import { createProduct } from "@/actions/products.actions";
+import { createProduct, updateProduct } from "@/actions/products.actions";
+import { getImage } from "@/helpers";
 import { ClientType, Product } from "@/interfaces";
 import {
   Button,
@@ -18,7 +19,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 interface Props {
-  product?: Product;
+  initialValues?: Partial<Product>;
   clientTypes: ClientType[];
 }
 
@@ -52,26 +53,28 @@ const ProductSchema = z.object({
     .optional(),
 });
 
-const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
+const ProductForm: React.FC<Props> = ({ initialValues, clientTypes }) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<Product>({
     defaultValues: {
-      nom_prod: product?.nom_prod || "",
-      dprod: product?.dprod || "",
-      precio_base: product?.precio_base || 0,
-      recargos: product?.recargos || [],
+      nom_prod: initialValues?.nom_prod || "",
+      dprod: initialValues?.dprod || "",
+      precio_base: initialValues?.precio_base || 0,
+      recargos: initialValues?.recargos || [],
     },
   });
 
   const router = useRouter();
 
   const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    initialValues?.img_prod ? getImage(initialValues?.img_prod) : null
+  );
   const [recargos, setRecargos] = useState<Record<string, number>>(
-    product?.recargos?.reduce(
+    initialValues?.recargos?.reduce(
       (acc, recargo) => ({
         ...acc,
         [recargo.fkcod_tc_rec]: recargo.recargo_cliente,
@@ -82,7 +85,7 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isAdditional, setIsAdditional] = useState<boolean>(
-    product?.es_adicional || false
+    initialValues?.es_adicional || false
   );
 
   const onSubmit: SubmitHandler<Product> = async (data) => {
@@ -95,32 +98,49 @@ const ProductForm: React.FC<Props> = ({ product, clientTypes }) => {
 
     const productData = { ...data, recargos: formattedRecargos };
 
-    if (!image) {
-      return toast.error("Debes subir una imagen del producto");
-    }
-
     try {
-      ProductSchema.parse({ ...productData, img_prod: image.name });
-    } catch (error) {
-      console.log(error);
-      if (error instanceof z.ZodError) {
-        error.errors.forEach((err) => {
-          toast.error(err.message);
-        });
+      if (initialValues?.cod_prod) {
+        const formData = new FormData();
+        formData.append("file", image!);
+        setIsLoading(true);
+
+        // Editar producto
+        await updateProduct(
+          initialValues.cod_prod,
+          { ...productData, es_adicional: isAdditional },
+          image ? formData : undefined
+        );
+        toast.success("Producto editado correctamente");
+        router.push("/plataforma/productos");
         return;
-      }
-    }
+      } else {
+        if (!image) {
+          return toast.error("Debes subir una imagen del producto");
+        }
 
-    const formData = new FormData();
-    formData.append("file", image);
-    setIsLoading(true);
-    try {
-      await createProduct(formData, {
-        ...productData,
-        es_adicional: isAdditional,
-      });
-      toast.success("Producto creado correctamente");
-      router.push("/plataforma/productos");
+        try {
+          ProductSchema.parse({ ...productData, img_prod: image.name });
+        } catch (error) {
+          console.log(error);
+          if (error instanceof z.ZodError) {
+            error.errors.forEach((err) => {
+              toast.error(err.message);
+            });
+            return;
+          }
+        }
+
+        const formData = new FormData();
+        formData.append("file", image);
+        setIsLoading(true);
+
+        await createProduct(formData, {
+          ...productData,
+          es_adicional: isAdditional,
+        });
+        toast.success("Producto creado correctamente");
+        router.push("/plataforma/productos");
+      }
     } catch (error: any) {
       toast.error(error.message);
     } finally {
