@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -19,6 +19,8 @@ import OrderCard from "./OrderCard";
 import { toast } from "react-toastify";
 import { updateStatusFactura } from "@/actions/facturas.actions";
 import { Status } from "@/enum";
+import { pusherClient } from "@/lib/pusher";
+import { useSound } from "@/hooks/use-sound";
 
 interface Props {
   orders: OrdenPendiente[];
@@ -95,13 +97,39 @@ export const CocinaOrders: React.FC<Props> = ({ orders }) => {
     if (activeId === overId) return;
   };
 
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const { playNotificationSound } = useSound();
+
+  const uniqueOrders = useMemo(
+    () =>
+      orderList.filter((value, index, self) => self.indexOf(value) === index),
+    [orderList]
+  );
+
+  useEffect(() => {
+    pusherClient.subscribe("pedidos");
+
+    pusherClient.bind("nuevo-pedido", (data: OrdenPendiente) => {
+      toast.success("Nueva orden recibida", {toastId: data.cod_fac});
+      playNotificationSound();
+      setOrderList((orders) => [...orders, data]);
+    });
+
+    return () => pusherClient.unsubscribe("pedidos");
+  }, [playNotificationSound]);
+  
   return (
     <div className="main-container !px-0">
       <div className="px-4 pd:px-6 lg:px-8 mb-4">
         <h1 className="title">Órdenes de cocina</h1>
       </div>
 
-      {orderList.length ? (
+      {uniqueOrders.length ? (
         <DndContext
           sensors={sensors}
           onDragStart={onDragStart}
@@ -111,7 +139,7 @@ export const CocinaOrders: React.FC<Props> = ({ orders }) => {
           <div className="flex gap-4 overflow-x-auto no-scrollbar min-h-screen">
             <div className="flex gap-4 px-4 pd:px-6 lg:px-8 pb-4">
               <SortableContext items={orderCodFac}>
-                {orderList.map((col) => (
+                {uniqueOrders.map((col) => (
                   <OrderCard
                     key={col.cod_fac}
                     order={col}
@@ -121,17 +149,19 @@ export const CocinaOrders: React.FC<Props> = ({ orders }) => {
               </SortableContext>
             </div>
           </div>
-          {createPortal(
-            <DragOverlay>
-              {activeOrder && (
-                <OrderCard
-                  order={activeOrder}
-                  handleCompleteOrder={handleCompleteOrder}
-                />
-              )}
-            </DragOverlay>,
-            document.body
-          )}
+          {isClient
+            ? createPortal(
+                <DragOverlay>
+                  {activeOrder && (
+                    <OrderCard
+                      order={activeOrder}
+                      handleCompleteOrder={handleCompleteOrder}
+                    />
+                  )}
+                </DragOverlay>,
+                document?.body
+              )
+            : null}
         </DndContext>
       ) : (
         <div className="px-4 pd:px-6 lg:px-8 grid mt-32 place-content-center">

@@ -2,6 +2,7 @@
 
 import { Status } from "@/enum";
 import { auth } from "@/lib/auth";
+import { pusherServer } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
 import { Client } from "pg";
 
@@ -58,6 +59,10 @@ export const createFacturaWithDetails = async (
     });
 
     await Promise.all(insertDetallePromises);
+
+    const pedido = await getSinglePedido(cod_fac);
+
+    pusherServer.trigger("pedidos", "nuevo-pedido", pedido);
 
     await client.end();
 
