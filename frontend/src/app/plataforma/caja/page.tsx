@@ -5,6 +5,7 @@ import {
 } from "@/actions/facturas.actions";
 import { PedidosTable } from "@/components/PedidosTable";
 import { Metadata } from "next";
+import { CajaTable } from "./CajaTable";
 
 export const metadata: Metadata = {
   title: "Caja",
@@ -19,11 +20,7 @@ export default async function NamePage() {
   return (
     <div className="main-container">
       <h1 className="title mb-4">Caja y facturación</h1>
-      <PedidosTable
-        pedidos={pedidos}
-        showStatusActions
-        itemHref="/plataforma/caja"
-      />
+      <CajaTable pedidos={pedidos} />
     </div>
   );
 }

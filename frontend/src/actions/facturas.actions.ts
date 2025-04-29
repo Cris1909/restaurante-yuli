@@ -1,6 +1,8 @@
 "use server";
 
 import { Status } from "@/enum";
+import { WebSocketChannels } from "@/enum/websocket-channels";
+import { WebSocketEvents } from "@/enum/websocket-events.enum";
 import { auth } from "@/lib/auth";
 import { pusherServer } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
@@ -62,7 +64,11 @@ export const createFacturaWithDetails = async (
 
     const pedido = await getSinglePedido(cod_fac);
 
-    pusherServer.trigger("pedidos", "nuevo-pedido", pedido);
+    pusherServer.trigger(
+      WebSocketChannels.ORDERS,
+      WebSocketEvents.NEW_ORDER,
+      pedido
+    );
 
     await client.end();
 
@@ -122,7 +128,11 @@ export const getPedidosPendientes = async () => {
   }
 };
 
-export const updateStatusFactura = async (cod_fac: number, status: Status) => {
+export const updateStatusFactura = async (
+  cod_fac: number,
+  status: Status,
+  uniqueEvent: boolean = true
+) => {
   const session = await auth();
   if (!session) return null;
   try {
@@ -142,6 +152,16 @@ export const updateStatusFactura = async (cod_fac: number, status: Status) => {
     }
 
     await client.end();
+
+    const event =
+      status === Status.ENTREGADO && uniqueEvent
+        ? WebSocketEvents.COMPLETE_ORDER
+        : WebSocketEvents.UPDATE_ORDER;
+
+    pusherServer.trigger(WebSocketChannels.ORDERS, event, {
+      cod_fac,
+      status,
+    });
 
     revalidatePath("/plataforma/pedidos");
     revalidatePath("/plataforma/cocina");

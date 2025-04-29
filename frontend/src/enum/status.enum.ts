@@ -8,7 +8,7 @@ export enum Status {
   CANCELADO = 6,
 }
 
-export const StatusLabels = {
+export const statusLabels = {
   [Status.ELIMINADO]: "Eliminado",
   [Status.ACTIVO]: "Activo",
   [Status.DESACTIVADO]: "Desactivado",

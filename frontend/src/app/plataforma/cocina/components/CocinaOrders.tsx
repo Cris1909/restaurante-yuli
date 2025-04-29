@@ -21,6 +21,8 @@ import { updateStatusFactura } from "@/actions/facturas.actions";
 import { Status } from "@/enum";
 import { pusherClient } from "@/lib/pusher";
 import { useSound } from "@/hooks/use-sound";
+import { WebSocketEvents } from "@/enum/websocket-events.enum";
+import { WebSocketChannels } from "@/enum/websocket-channels";
 
 interface Props {
   orders: OrdenPendiente[];
@@ -37,7 +39,7 @@ export const CocinaOrders: React.FC<Props> = ({ orders }) => {
 
   const handleCompleteOrder = async (orderCod: number) => {
     try {
-      await updateStatusFactura(orderCod, Status.ENTREGADO);
+      await updateStatusFactura(orderCod, Status.ENTREGADO, false);
       setOrderList((orders) =>
         orders.filter((order) => order.cod_fac !== orderCod)
       );
@@ -112,17 +114,52 @@ export const CocinaOrders: React.FC<Props> = ({ orders }) => {
   );
 
   useEffect(() => {
-    pusherClient.subscribe("pedidos");
+    pusherClient.subscribe(WebSocketChannels.ORDERS);
 
-    pusherClient.bind("nuevo-pedido", (data: OrdenPendiente) => {
-      toast.success("Nueva orden recibida", {toastId: data.cod_fac});
+    pusherClient.bind(WebSocketEvents.NEW_ORDER, (data: OrdenPendiente) => {
+      toast.success("Nueva orden recibida", { toastId: data.cod_fac });
       playNotificationSound();
       setOrderList((orders) => [...orders, data]);
     });
 
-    return () => pusherClient.unsubscribe("pedidos");
+    pusherClient.bind(WebSocketEvents.COMPLETE_ORDER, ({ cod_fac }: any) => {
+      const order = orderList.find((order) => order.cod_fac === cod_fac);
+      if (!order) return;
+      playNotificationSound();
+      toast.success("Orden completada", { toastId: cod_fac });
+      setOrderList((orders) =>
+        orders.filter((order) => order.cod_fac !== cod_fac)
+      );
+    });
+
+    pusherClient.bind(
+      WebSocketEvents.UPDATE_ORDER,
+      ({ cod_fac, status }: any) => {
+        const order = orderList.find((order) => order.cod_fac === cod_fac);
+        if (!order) return;
+        const message =
+          status === Status.ENTREGADO
+            ? `Orden #${cod_fac} completada`
+            : status === Status.PAGADO
+            ? `Orden #${cod_fac} pagada`
+            : status === Status.CANCELADO
+            ? `Orden #${cod_fac} cancelada`
+            : "";
+
+        if (message) {
+          playNotificationSound();
+          toast.success(message, { toastId: cod_fac });
+        }
+
+        setOrderList((orders) =>
+          orders.filter((order) => order.cod_fac !== cod_fac)
+        );
+      }
+    );
+
+    return () => pusherClient.unsubscribe(WebSocketChannels.ORDERS);
   }, [playNotificationSound]);
-  
+
   return (
     <div className="main-container !px-0">
       <div className="px-4 pd:px-6 lg:px-8 mb-4">
