@@ -4,9 +4,9 @@ import { Status } from "@/enum";
 import { WebSocketChannels } from "@/enum/websocket-channels";
 import { WebSocketEvents } from "@/enum/websocket-events.enum";
 import { auth } from "@/lib/auth";
+import pool from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
-import { Client } from "pg";
 
 export const createFacturaWithDetails = async (
   factura: any,
@@ -18,8 +18,7 @@ export const createFacturaWithDetails = async (
     const session = await auth();
     if (!session) return null;
 
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     const obs_fac = factura.obs_fac || null;
     const nom_cliente = factura.nom_cliente || null;
@@ -40,7 +39,7 @@ export const createFacturaWithDetails = async (
       session.user.ced_user,
       Status.PENDIENTE,
     ];
-    const res = await client.query(insertFacturaQuery, insertFacturaValues);
+    const res = await pool.query(insertFacturaQuery, insertFacturaValues);
     const cod_fac = res.rows[0].cod_fac;
 
     // Insertar los detalles de la factura
@@ -57,7 +56,7 @@ export const createFacturaWithDetails = async (
         detalle.fkcod_prod_dfac,
         cod_fac,
       ];
-      return client.query(insertDetalleQuery, insertDetalleValues);
+      return pool.query(insertDetalleQuery, insertDetalleValues);
     });
 
     await Promise.all(insertDetallePromises);
@@ -70,7 +69,7 @@ export const createFacturaWithDetails = async (
       pedido
     );
 
-    await client.end();
+    
 
     revalidatePath("/plataforma/pedidos");
     revalidatePath("/plataforma/cocina");
@@ -87,8 +86,7 @@ export const getPedidosPendientes = async () => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     const query = `
       SELECT
@@ -118,9 +116,9 @@ export const getPedidosPendientes = async () => {
       ORDER BY
         f.fecha_fac;
     `;
-    const res = await client.query(query);
+    const res = await pool.query(query);
 
-    await client.end();
+    
     return res.rows;
   } catch (error: any) {
     console.log(error);
@@ -136,8 +134,7 @@ export const updateStatusFactura = async (
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     const query = `
       UPDATE tdfactura
@@ -145,13 +142,13 @@ export const updateStatusFactura = async (
       WHERE cod_fac = $2;
     `;
     const values = [status, cod_fac];
-    const res = await client.query(query, values);
+    const res = await pool.query(query, values);
 
     if (res.rowCount === 0) {
       throw new Error("No se pudo actualizar el estado de la factura");
     }
 
-    await client.end();
+    
 
     const event =
       status === Status.ENTREGADO && uniqueEvent
@@ -190,8 +187,7 @@ export const getPedidosPaginated = async ({
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     // Calculating offset for pagination
     const offset = (page - 1) * limit;
@@ -244,7 +240,7 @@ export const getPedidosPaginated = async ({
     }
 
     // Execute count query
-    const countRes = await client.query(countQuery, params);
+    const countRes = await pool.query(countQuery, params);
     const totalRecords = parseInt(countRes.rows[0].total, 10);
     const totalPages = Math.ceil(totalRecords / limit);
 
@@ -254,9 +250,9 @@ export const getPedidosPaginated = async ({
     query += ` LIMIT $${params.length - 1} OFFSET $${params.length}`;
 
     // Execute paginated query
-    const res = await client.query(query, params);
+    const res = await pool.query(query, params);
 
-    await client.end();
+    
     return {
       totalPages,
       data: res.rows,
@@ -271,8 +267,7 @@ export const getSinglePedido = async (cod_fac: number) => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     const query = `
       SELECT
@@ -308,9 +303,9 @@ export const getSinglePedido = async (cod_fac: number) => {
       GROUP BY
         f.cod_fac, tc.dtipo_cliente, s.dstatus, u.nom_user;
     `;
-    const res = await client.query(query, [cod_fac]);
+    const res = await pool.query(query, [cod_fac]);
 
-    await client.end();
+    
     return res.rows[0];
   } catch (error: any) {
     console.error(error);
@@ -322,8 +317,7 @@ export const getPedidosCaja = async () => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     const query = `
       SELECT
@@ -344,8 +338,8 @@ export const getPedidosCaja = async () => {
       WHERE
         f.fkcods_fac IN (${Status.PENDIENTE}, ${Status.ENTREGADO});
     `;
-    const res = await client.query(query);
-    await client.end();
+    const res = await pool.query(query);
+    
     return res.rows;
   } catch (error: any) {
     console.error(error);

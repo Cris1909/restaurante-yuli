@@ -3,16 +3,15 @@
 import { Status } from "@/enum";
 import { groupByWeek } from "@/helpers";
 import { auth } from "@/lib/auth";
+import pool from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { Client } from "pg";
 
 export const getGastosFijos = async () => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    const res = await client.query(`
+    await pool.connect();
+    const res = await pool.query(`
       SELECT 
         cod_gf,
         salarios,
@@ -27,7 +26,7 @@ export const getGastosFijos = async () => {
         cod_gf DESC
       `);
     const gastosFijos = res.rows[0];
-    await client.end();
+    
     return gastosFijos;
   } catch (error: any) {
     console.log(error);
@@ -39,11 +38,10 @@ export const createReporteDiario = async (data: any) => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     //* Validar si está creado el reporte diario
-    const resReporte = await client.query(
+    const resReporte = await pool.query(
       `
       SELECT 
         cod_rd
@@ -56,7 +54,7 @@ export const createReporteDiario = async (data: any) => {
     );
 
     if (resReporte.rows.length > 0) {
-      await client.end();
+      
       throw new Error("Ya existe un reporte diario para esta fecha");
     }
 
@@ -64,7 +62,7 @@ export const createReporteDiario = async (data: any) => {
     let ventas_rd = data.autogenerarVentas ? 0 : data.ventas_rd;
 
     if (data.autogenerarVentas) {
-      const res = await client.query(
+      const res = await pool.query(
         `
         SELECT 
           SUM(monto_total) as ventas
@@ -84,7 +82,7 @@ export const createReporteDiario = async (data: any) => {
     }
 
     //* Creación del reporte diario
-    const res = await client.query(
+    const res = await pool.query(
       `
       INSERT INTO 
         tmreporte_diario(
@@ -126,7 +124,7 @@ export const createReporteDiario = async (data: any) => {
       ]
     );
 
-    await client.end();
+    
     revalidatePath("/plataforma/reportes");
     revalidatePath("/plataforma/reportes/crear");
 
@@ -141,9 +139,8 @@ export const getReportesDateRanges = async () => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    const res = await client.query(`
+    await pool.connect();
+    const res = await pool.query(`
       SELECT 
         fecha_rd
       FROM 
@@ -155,7 +152,7 @@ export const getReportesDateRanges = async () => {
     const reportesDates = res.rows.map((row) => new Date(row.fecha_rd));
 
     if (reportesDates.length === 0) {
-      await client.end();
+      
       return [];
     }
 
@@ -189,7 +186,7 @@ export const getReportesDateRanges = async () => {
       reportesDates[reportesDates.length - 1].toISOString().split("T")[0],
     ]);
 
-    await client.end();
+    
 
     return dateRanges;
   } catch (error: any) {
@@ -202,9 +199,8 @@ export const createGastosFijos = async (data: any) => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    const res = await client.query(
+    await pool.connect();
+    const res = await pool.query(
       `
       INSERT INTO 
         tmgastos_fijos(
@@ -233,7 +229,7 @@ export const createGastosFijos = async (data: any) => {
         data.banco,
       ]
     );
-    await client.end();
+    
     revalidatePath("/plataforma/reportes");
     revalidatePath("/plataforma/reportes/crear");
     revalidatePath("/plataforma/reportes/gastos-fijos");
@@ -248,8 +244,7 @@ export const getReportes = async (startDate: string, endDate: string) => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     // Base query for fetching paginated records
     const query = `
@@ -271,9 +266,9 @@ export const getReportes = async (startDate: string, endDate: string) => {
         fecha_rd >= $1 AND
         fecha_rd <= $2 
     `;
-    const res = await client.query(query, [startDate, endDate]);
+    const res = await pool.query(query, [startDate, endDate]);
 
-    await client.end();
+    
     return groupByWeek(res.rows);
   } catch (error: any) {
     console.error(error);

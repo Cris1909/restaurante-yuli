@@ -2,15 +2,14 @@
 
 import { ClientType } from "@/interfaces";
 import { auth } from "@/lib/auth";
-import { Client } from "pg";
+import pool from "@/lib/db";
 
 export const getClientTypes = async () => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    const res = await client.query(`
+    await pool.connect();
+    const res = await pool.query(`
       SELECT
         tc.cod_tc,
         tc.dtipo_cliente
@@ -18,7 +17,7 @@ export const getClientTypes = async () => {
         tmtipo_clientes AS tc;
     `);
     const recargos: ClientType[] = res.rows;
-    await client.end();
+    
     return recargos;
   } catch (error: any) {
     console.log(error);

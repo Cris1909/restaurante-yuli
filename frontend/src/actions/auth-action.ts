@@ -2,9 +2,9 @@
 
 import { modulesRedirectHelper } from "@/helpers";
 import { auth, signIn, signOut } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { Client } from "pg";
+import pool from "@/lib/db";
 import bcrypt from "bcrypt";
+import { redirect } from "next/navigation";
 
 export const loginUser = async (data: any) => {
   try {
@@ -21,10 +21,9 @@ export const loginUser = async (data: any) => {
 
 export const loginEmail = async (data: { password: string; email: string }) => {
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
-    // const res = await client.query(`
+    // const res = await pool.query(`
     //   SELECT
     //     u.ced_user,
     //     u.nom_user,
@@ -42,7 +41,7 @@ export const loginEmail = async (data: { password: string; email: string }) => {
     //   [data.email, data.password]
     // );
 
-    const res = await client.query(
+    const res = await pool.query(
       `
       SELECT 
         u.ced_user,

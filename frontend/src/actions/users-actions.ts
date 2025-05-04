@@ -1,17 +1,16 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { Client } from "pg";
 import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
+import pool from "@/lib/db";
 
 export const getUsers = async () => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    const res = await client.query(`
+    await pool.connect();
+    const res = await pool.query(`
       SELECT 
         u.ced_user,
         u.nom_user,
@@ -27,7 +26,7 @@ export const getUsers = async () => {
         u.fkcods_user != 0
       `);
     const users = res.rows;
-    await client.end();
+    
     return users;
   } catch (error: any) {
     console.log(error);
@@ -39,13 +38,12 @@ export const deleteUser = async (ced_emple: string) => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    await client.query(
+    await pool.connect();
+    await pool.query(
       `UPDATE tmusuarios SET fkcods_user = 0 WHERE ced_emple = $1`,
       [ced_emple]
     );
-    await client.end();
+    
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
@@ -65,11 +63,10 @@ export const createUser = async (data: {
     data;
 
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     // Validar el correo y la cedula
-    const res = await client.query(
+    const res = await pool.query(
       `SELECT * FROM tmusuarios WHERE ced_user = $1 OR email_user = $2`,
       [ced_user, email_user]
     );
@@ -100,9 +97,9 @@ export const createUser = async (data: {
       fkcod_car_user,
     ];
 
-    await client.query(insertUser, insertUserValues);
+    await pool.query(insertUser, insertUserValues);
 
-    await client.end();
+    
   } catch (error: any) {
     console.log(error);
     throw new Error("Error al crear el usuario");
@@ -114,8 +111,7 @@ export const getUserByCed = async (ced: string) => {
   if (!session) return null;
 
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     const query = `
       SELECT 
@@ -129,8 +125,8 @@ export const getUserByCed = async (ced: string) => {
     `;
     const values = [ced];
 
-    const res = await client.query(query, values);
-    await client.end();
+    const res = await pool.query(query, values);
+    
 
     if (!res.rows.length) {
       throw new Error("Usuario no encontrado");
@@ -160,13 +156,12 @@ export const updateUser = async (
   const fkcod_car_user = data.fkcod_car_user || null;
 
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     // Validar si el usuario existe
     const checkUserQuery = `SELECT * FROM tmusuarios WHERE ced_user = $1`;
     const checkUserValues = [ced_user];
-    const userRes = await client.query(checkUserQuery, checkUserValues);
+    const userRes = await pool.query(checkUserQuery, checkUserValues);
 
     if (!userRes.rows.length) {
       throw new Error("Usuario no encontrado");
@@ -179,7 +174,7 @@ export const updateUser = async (
         WHERE email_user = $1 AND ced_user != $2
       `;
       const checkEmailValues = [email_user, ced_user];
-      const emailRes = await client.query(checkEmailQuery, checkEmailValues);
+      const emailRes = await pool.query(checkEmailQuery, checkEmailValues);
 
       if (emailRes.rows.length) {
         throw new Error("El correo ya está registrado en otro usuario");
@@ -208,8 +203,8 @@ export const updateUser = async (
       ced_user,
     ];
 
-    await client.query(updateUserQuery, updateUserValues);
-    await client.end();
+    await pool.query(updateUserQuery, updateUserValues);
+    
 
     revalidatePath("/plataforma/usuarios");
     revalidatePath("/plataforma/usuarios/editar/" + ced_user);
@@ -224,22 +219,21 @@ export const encryptExistingPasswords = async () => {
   if (!session) return null;
 
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
-    const users = await client.query(`SELECT * FROM tmusuarios`);
+    const users = await pool.query(`SELECT * FROM tmusuarios`);
 
     for (const user of users.rows) {
       const { ced_user, password_user } = user;
       const encryptedPassword = await bcrypt.hash(password_user, 10);
 
-      await client.query(
+      await pool.query(
         `UPDATE tmusuarios SET password_user = $1 WHERE ced_user = $2`,
         [encryptedPassword, ced_user]
       );
     }
 
-    await client.end();
+    
   } catch (error: any) {
     console.log(error);
     throw new Error("Error al encriptar las contraseñas");

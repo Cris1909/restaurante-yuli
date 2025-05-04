@@ -1,13 +1,11 @@
 "use server";
 
-import pg from "pg";
-const { Client } = pg;
-
 import { Status } from "@/enum";
 import { Product } from "@/interfaces";
 import { revalidatePath } from "next/cache";
 import { uploadFile } from "./files.actions";
 import { auth } from "@/lib/auth";
+import pool from "@/lib/db";
 
 export const getProducts = async ({
   includeDeactivated = false,
@@ -17,8 +15,7 @@ export const getProducts = async ({
   includeAdditionals?: boolean;
 } = {}) => {
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     // Construye dinámicamente la cláusula WHERE
     let whereClause = includeAdditionals ? "" : "p.es_adicional = false AND ";
@@ -27,7 +24,7 @@ export const getProducts = async ({
       ? "p.fkcods_prod IN (1, 2)" // Mostrar activos (1) y desactivados (2)
       : "p.fkcods_prod = 1"; // Mostrar solo activos (1)
 
-    const res = await client.query(`
+    const res = await pool.query(`
       SELECT
         p.cod_prod,
         p.nom_prod,
@@ -60,7 +57,7 @@ export const getProducts = async ({
       recargos: p.recargos.filter((r: any) => r.cod_rec !== null),
     }));
 
-    await client.end();
+    
     return products;
   } catch (error: any) {
     console.log(error);
@@ -72,14 +69,13 @@ export const deleteProduct = async (cod_prod: number) => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    await client.query(
+    await pool.connect();
+    await pool.query(
       `UPDATE tmproductos SET fkcods_prod = 0 WHERE cod_prod = $1`,
       [cod_prod]
     );
 
-    await client.end();
+    
     revalidatePath("/plataforma/tomar-pedido");
   } catch (error: any) {
     console.log(error);
@@ -91,13 +87,12 @@ export const changeProductStatus = async (cod_prod: number, status: Status) => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    await client.query(
+    await pool.connect();
+    await pool.query(
       `UPDATE tmproductos SET fkcods_prod = $1 WHERE cod_prod = $2`,
       [status, cod_prod]
     );
-    await client.end();
+    
 
     revalidatePath("/plataforma/tomar-pedido");
   } catch (error: any) {
@@ -130,8 +125,7 @@ export const createProduct = async (
     // Subir la imagen a un servicio de almacenamiento en la nube
     const { public_id } = await uploadFile(fileFormData);
 
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     // Insertar el producto
     const insertProduct = `
@@ -147,7 +141,7 @@ export const createProduct = async (
       es_adicional,
     ];
 
-    const productRes = await client.query(insertProduct, insertProductValues);
+    const productRes = await pool.query(insertProduct, insertProductValues);
     const cod_prod = productRes.rows[0].cod_prod;
 
     // Insertar los recargos
@@ -162,12 +156,12 @@ export const createProduct = async (
         recargo.fkcod_tc_rec,
         recargo.recargo_cliente,
       ];
-      return client.query(insertRecargos, insertRecargosValues);
+      return pool.query(insertRecargos, insertRecargosValues);
     });
 
     await Promise.all(insertRecargosPromises);
 
-    await client.end();
+    
 
     revalidatePath("/plataforma/tomar-pedido");
   } catch (error: any) {
@@ -177,10 +171,9 @@ export const createProduct = async (
 
 export const getProductByCod = async (cod_prod: number | string) => {
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
-    const res = await client.query(
+    const res = await pool.query(
       `
       SELECT
         p.cod_prod,
@@ -212,7 +205,7 @@ export const getProductByCod = async (cod_prod: number | string) => {
       [cod_prod]
     );
 
-    await client.end();
+    
 
     const product: Product = res.rows[0];
 
@@ -243,8 +236,7 @@ export const updateProduct = async (
   if (!session) return null;
 
   try {
-    const client = new Client();
-    await client.connect();
+    await pool.connect();
 
     const nom_prod = data.nom_prod || null;
     const dprod = data.dprod || null;
@@ -265,7 +257,7 @@ export const updateProduct = async (
     }
 
     // Actualiza el producto
-    await client.query(
+    await pool.query(
       `
       UPDATE tmproductos 
         SET 
@@ -280,7 +272,7 @@ export const updateProduct = async (
     );
 
     // Borra los recargos antiguos
-    await client.query(`DELETE FROM tmrecargos WHERE fkcod_prod_rec = $1`, [
+    await pool.query(`DELETE FROM tmrecargos WHERE fkcod_prod_rec = $1`, [
       cod_prod,
     ]);
 
@@ -291,14 +283,14 @@ export const updateProduct = async (
     `;
 
     for (const recargo of data.recargos) {
-      await client.query(insertRecargos, [
+      await pool.query(insertRecargos, [
         cod_prod,
         recargo.fkcod_tc_rec,
         recargo.recargo_cliente,
       ]);
     }
 
-    await client.end();
+    
     revalidatePath("/plataforma/productos");
   } catch (error: any) {
     console.error(error);

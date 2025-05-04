@@ -2,15 +2,14 @@
 
 import { Recargo } from "@/interfaces";
 import { auth } from "@/lib/auth";
-import { Client } from "pg";
+import pool from "@/lib/db";
 
 export const getRecargos = async () => {
   const session = await auth();
   if (!session) return null;
   try {
-    const client = new Client();
-    await client.connect();
-    const res = await client.query(`
+    await pool.connect();
+    const res = await pool.query(`
       SELECT
         cod_rec,
         recargo_cliente,
@@ -19,7 +18,7 @@ export const getRecargos = async () => {
         tmrecargos;
     `);
     const recargos: Recargo[] = res.rows;
-    await client.end();
+    
     return recargos;
   } catch (error: any) {
     console.log(error);
