@@ -2,7 +2,7 @@
 
 import { PedidosTable } from "@/components/PedidosTable";
 import { useSearchParams } from "@/hooks";
-import { ClientType } from "@/interfaces";
+import { ClientType, Pedido } from "@/interfaces";
 import { parseDate } from "@internationalized/date";
 import {
   Button,
@@ -13,18 +13,6 @@ import {
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-
-interface Pedido {
-  cod_fac: number;
-  monto_total: number;
-  fecha_fac: string;
-  hora_fac: string;
-  fktc_fac: number;
-  fkcods_fac: number;
-  dtipo_cliente: string;
-  dstatus: string;
-}
-
 interface Props {
   pedidos: Pedido[];
   totalPages: number;

@@ -29,7 +29,7 @@ export default async function NamePage({ searchParams }: Props) {
     endDate,
   } = searchParams;
 
-  const [{ data, totalPages }, clientTypes] = await Promise.all([
+  const [{ data, totalPages }, clientTypes]: any[] = await Promise.all([
     getPedidosPaginated({
       page,
       limit,

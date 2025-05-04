@@ -21,7 +21,7 @@ export default async function CrearReportePage() {
       <h1 className="title">Crear Reporte Diario</h1>
       <ReporteForm
         gastosFijos={gastosFijos}
-        reportesCreados={reportesCreados}
+        reportesCreados={reportesCreados as any}
       />
     </div>
   );
