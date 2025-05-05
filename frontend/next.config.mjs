@@ -8,6 +8,10 @@ const nextConfig = {
         hostname: "imagedelivery.net",
       },
       {
+        protocol: "https",
+        hostname: "restaurante-yuli.vercel.app",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
       },
