@@ -91,13 +91,13 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
         <p className="subtitle">
           Total a pagar: <b> {formatMoney(getTotalPrice())} </b>
         </p>
-        <button
+        <Button
           className="btn btn-primary"
           id="open-bottom-sheet"
           onClick={() => setIsOpen(true)}
         >
           Ver orden
-        </button>
+        </Button>
       </div>
       <BottomSheet
         open={isOpen}
