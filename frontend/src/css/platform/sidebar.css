@@ -55,15 +55,13 @@
       border-radius: var(--round);
       transition: background-color 0.3s ease;
 
-      & a {
+      & div {
+        padding: 8px;
         display: flex;
         align-items: center;
+        gap: 8px;
         width: 100%;
         font-weight: 500;
-
-        & * {
-          margin: 8px;
-        }
       }
     }
 

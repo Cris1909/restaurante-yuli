@@ -11,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IUser } from "../../../nextauth";
- 
+
 const MENU_ITEMS = [
   {
     icon: "i-mdi-view-dashboard",
@@ -112,8 +112,10 @@ export const Sidebar: React.FC<Props> = ({ user }) => {
               })}
             >
               <Link href={item.href}>
-                <i className={item.icon}></i>
-                <span>{item.name}</span>
+                <div>
+                  <i className={item.icon}></i>
+                  <span>{item.name}</span>
+                </div>
               </Link>
             </li>
           </Tooltip>
