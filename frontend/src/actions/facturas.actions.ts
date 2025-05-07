@@ -24,11 +24,12 @@ export const createFacturaWithDetails = async (
     const nom_cliente = factura.nom_cliente || null;
     const mesa_fac = +factura.mesa_fac || null;
 
+    
     // Insertar la factura
     const insertFacturaQuery = `
-      INSERT INTO tdfactura (monto_total, obs_fac, nom_cliente, mesa_fac, fktc_fac, fkced_vendedor, fkcods_fac)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING cod_fac;
+    INSERT INTO tdfactura (monto_total, obs_fac, nom_cliente, mesa_fac, fktc_fac, fkced_vendedor, fkcods_fac)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING cod_fac;
     `;
     const insertFacturaValues = [
       factura.monto_total,
@@ -39,9 +40,17 @@ export const createFacturaWithDetails = async (
       session.user.ced_user,
       Status.PENDIENTE,
     ];
+    
+    
+    
     const res = await pool.query(insertFacturaQuery, insertFacturaValues);
     const cod_fac = res.rows[0].cod_fac;
 
+    console.log({
+      res, cod_fac
+    })
+    
+    return null;
     // Insertar los detalles de la factura
     const insertDetalleQuery = `
       INSERT INTO tddfactura (cantidad_platos, precio_base, recargo_clie, fkcod_prod_dfac, fkcod_fac_dfac)
@@ -68,8 +77,6 @@ export const createFacturaWithDetails = async (
       WebSocketEvents.NEW_ORDER,
       pedido
     );
-
-    
 
     revalidatePath("/plataforma/pedidos");
     revalidatePath("/plataforma/cocina");
@@ -118,7 +125,6 @@ export const getPedidosPendientes = async () => {
     `;
     const res = await pool.query(query);
 
-    
     return res.rows;
   } catch (error: any) {
     console.log(error);
@@ -147,8 +153,6 @@ export const updateStatusFactura = async (
     if (res.rowCount === 0) {
       throw new Error("No se pudo actualizar el estado de la factura");
     }
-
-    
 
     const event =
       status === Status.ENTREGADO && uniqueEvent
@@ -252,7 +256,6 @@ export const getPedidosPaginated = async ({
     // Execute paginated query
     const res = await pool.query(query, params);
 
-    
     return {
       totalPages,
       data: res.rows,
@@ -305,7 +308,6 @@ export const getSinglePedido = async (cod_fac: number) => {
     `;
     const res = await pool.query(query, [cod_fac]);
 
-    
     return res.rows[0];
   } catch (error: any) {
     console.error(error);
@@ -339,7 +341,7 @@ export const getPedidosCaja = async () => {
         f.fkcods_fac IN (${Status.PENDIENTE}, ${Status.ENTREGADO});
     `;
     const res = await pool.query(query);
-    
+
     return res.rows;
   } catch (error: any) {
     console.error(error);
