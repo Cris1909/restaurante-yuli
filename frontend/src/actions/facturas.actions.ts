@@ -45,12 +45,7 @@ export const createFacturaWithDetails = async (
     
     const res = await pool.query(insertFacturaQuery, insertFacturaValues);
     const cod_fac = res.rows[0].cod_fac;
-
-    console.log({
-      res, cod_fac
-    })
     
-    return null;
     // Insertar los detalles de la factura
     const insertDetalleQuery = `
       INSERT INTO tddfactura (cantidad_platos, precio_base, recargo_clie, fkcod_prod_dfac, fkcod_fac_dfac)
