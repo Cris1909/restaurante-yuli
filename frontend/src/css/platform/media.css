@@ -31,6 +31,16 @@
     padding-top: 0px;
   }
 
+  .order-detail {
+    justify-content: space-between;
+    flex-direction: row;
+
+    & .subtitle {
+      gap: 8px;
+    }
+    
+    
+  }
   
 }
 

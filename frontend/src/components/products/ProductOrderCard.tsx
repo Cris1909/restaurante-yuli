@@ -72,7 +72,10 @@ export const ProductOrderCard: React.FC<Props> = ({ product, inputText }) => {
         <h3>{highlightMatches(nom_prod, inputText)}</h3>{" "}
         {/* Descripción con texto resaltado */}
         {/* <p className="line-2">{highlightMatches(dprod, inputText)}</p>{" "} */}
-        <p className="line-2">{dprod}</p>{" "}
+        <p className="line-clamp-1 md:line-clamp-2">{dprod}</p>
+        <div className="flex-1">
+
+        </div>
         <div className="price-add-container">
           <span>{productPrice}</span>
           {productInOrder ? (

@@ -245,8 +245,8 @@ export const BottomSheetOrder: React.FC<Props> = ({ clientTypes }) => {
             />
           </div>
           <Divider className="mb-2" />
-          <div className="flex justify-between mb-4">
-            <span className="subtitle">
+          <div className="flex flex-col gap-2 md:flex-row md:justify-between mb-4">
+            <span className="subtitle flex items-center justify-between gap-2">
               Total a pagar:{" "}
               <span className="font-bold">{formatMoney(getTotalPrice())}</span>
             </span>
