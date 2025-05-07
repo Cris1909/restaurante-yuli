@@ -3,12 +3,12 @@ import { Card, CardBody, cn, Divider } from "@nextui-org/react";
 import Link from "next/link";
  
 const MENU_ITEMS = [
-  {
-    icon: "i-mdi-view-dashboard",
-    name: "Dashboard",
-    href: "/plataforma/dashboard",
-    roles: [Cargos.ADMIN],
-  },
+  // {
+  //   icon: "i-mdi-view-dashboard",
+  //   name: "Dashboard",
+  //   href: "/plataforma/dashboard",
+  //   roles: [Cargos.ADMIN],
+  // },
   {
     icon: "i-mdi-users-group",
     name: "Usuarios",
